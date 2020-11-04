@@ -1,24 +1,39 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<ItemGroup>
-		<ClCompile Include="src\ofApp.cpp">
-			<Filter>src</Filter>
-		</ClCompile>
-		<ClCompile Include="src\main.cpp">
-			<Filter>src</Filter>
-		</ClCompile>
-	</ItemGroup>
-	<ItemGroup>
-		<Filter Include="src">
-			<UniqueIdentifier>{d8376475-7454-4a24-b08a-aac121d3ad6f}</UniqueIdentifier>
-		</Filter>
-	</ItemGroup>
-	<ItemGroup>
-		<ClInclude Include="src\ofApp.h">
-			<Filter>src</Filter>
-		</ClInclude>
-	</ItemGroup>
-	<ItemGroup>
-		<ResourceCompile Include="icon.rc" />
-	</ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="icon.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{cbdbde50-7ffd-4567-90a6-56ad85472e33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\rtGraphics">
+      <UniqueIdentifier>{98fd35b3-6c03-446f-80bd-7ca0480b92f0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ofApp.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rtGraphics\rtCam.cpp">
+      <Filter>src\rtGraphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rtGraphics\rtScene.cpp">
+      <Filter>src\rtGraphics</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\ofApp.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rtGraphics\rtCam.h">
+      <Filter>src\rtGraphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rtGraphics\rtScene.h">
+      <Filter>src\rtGraphics</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>
