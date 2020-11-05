@@ -200,6 +200,7 @@
   <ItemGroup>
     <ClInclude Include="src\ofApp.h" />
     <ClInclude Include="src\rtGraphics\rtCam.h" />
+    <ClInclude Include="src\rtGraphics\rtMain.h" />
     <ClInclude Include="src\rtGraphics\rtScene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

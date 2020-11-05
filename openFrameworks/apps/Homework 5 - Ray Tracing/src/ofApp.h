@@ -1,8 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "./rtGraphics/rtCam.h"
-#include "./rtGraphics/rtScene.h"
+#include "./rtGraphics/rtMain.h"
 
 using namespace rtGraphics;
 

@@ -35,5 +35,8 @@
     <ClInclude Include="src\rtGraphics\rtScene.h">
       <Filter>src\rtGraphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\rtGraphics\rtMain.h">
+      <Filter>src\rtGraphics</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
