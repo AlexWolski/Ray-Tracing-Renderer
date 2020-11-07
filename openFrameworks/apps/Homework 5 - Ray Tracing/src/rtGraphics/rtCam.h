@@ -14,7 +14,11 @@ namespace rtGraphics
 	private:
 		//The scene to render
 		shared_ptr<rtScene> scene = nullptr;
+		//The position and orientation of the camera
 		ofNode transform;
+
+		//The camera settings
+		bool enabled;
 		float fov;
 
 		//An data structure containing the pixels to be drawn to the screen
@@ -31,12 +35,17 @@ namespace rtGraphics
 
 	public:
 		///Constructors
-		rtCam(ofNode transform);
-		rtCam(ofVec3f position, ofVec3f rotation);
+		rtCam(ofNode transform, bool enabled = true);
+		rtCam(ofVec3f position, ofVec3f rotation, bool enabled = true);
+		///Event Listeners
+		void draw(ofEventArgs& event);
 		///Scene methods
 		shared_ptr<rtScene> getScene();
 		void setScene(shared_ptr<rtScene> scene);
 		///Camera Methods
+		void enable();
+		void disable();
+		bool isEnabled();
 		void setFov(float fov);
 		float getFov();
 		void render();

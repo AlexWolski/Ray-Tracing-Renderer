@@ -3,14 +3,20 @@
 namespace rtGraphics
 {
 	///Constructors
-	rtCam::rtCam(ofNode transform) : transform(transform)
+	rtCam::rtCam(ofNode transform, bool enabled) : transform(transform), enabled(enabled)
 	{
 	}
 
-	rtCam::rtCam(ofVec3f position, ofVec3f rotation)
+	rtCam::rtCam(ofVec3f position, ofVec3f rotation, bool enabled) : enabled(enabled)
 	{
 		transform.setPosition(position);
 		transform.setOrientation(ofQuaternion(rotation));
+	}
+
+	///Event Listeners
+	void rtCam::draw(ofEventArgs& event)
+	{
+		render();
 	}
 
 	///Buffer Methods
@@ -46,6 +52,23 @@ namespace rtGraphics
 	}
 
 	///Camera Methods
+	void rtCam::enable()
+	{
+		ofAddListener(ofEvents().draw, this, &rtCam::draw);
+		enabled = true;
+	}
+
+	void rtCam::disable()
+	{
+		ofRemoveListener(ofEvents().draw, this, &rtCam::draw);
+		enabled = false;
+	}
+
+	bool rtCam::isEnabled()
+	{
+		return enabled;
+	}
+
 	void rtCam::setFov(float fov)
 	{
 		this->fov = fov;
