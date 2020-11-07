@@ -16,8 +16,11 @@ namespace rtGraphics
 		shared_ptr<rtScene> scene = nullptr;
 		ofNode transform;
 		float fov;
-		//A pointer to a 3D array containing the RGB values for each pixel on the screen
-		shared_ptr<char***> frameBuffer = NULL;
+
+		//An data structure containing the pixels to be drawn to the screen
+		shared_ptr<ofPixels> frameBuffer;
+		//The texture object used to draw the pixels
+		shared_ptr<ofTexture> renderTexture;
 		//The dimensions of the frame buffer
 		int bufferWidth, bufferHeight;
 
@@ -25,15 +28,11 @@ namespace rtGraphics
 		//Instantiates the frame buffer. If no dimensions are given, the window size is used
 		void createFrameBuffer();
 		void createFrameBuffer(int width, int height);
-		//Deallocates the memory of the 3D array
-		void deleteFrameBuffer();
 
 	public:
 		///Constructors
 		rtCam(ofNode transform);
 		rtCam(ofVec3f position, ofVec3f rotation);
-		///Destructor
-		~rtCam();
 		///Scene methods
 		shared_ptr<rtScene> getScene();
 		void setScene(shared_ptr<rtScene> scene);
