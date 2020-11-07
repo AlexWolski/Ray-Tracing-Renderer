@@ -2,6 +2,7 @@
 
 #include <unordered_set>
 #include <memory>
+#include "rtCam.h"
 #include "ofMain.h"
 
 #define lightSet unordered_set<ofLight*>
@@ -9,55 +10,32 @@
 
 namespace rtGraphics
 {
+	//Forward declare rtCam to prevent a cyclic reference
+	class rtCam;
+
 	//A data-structure to contain the lights and objects in a scene
 	class rtScene
 	{
 	private:
+		//Only one camera can render the scene
+		shared_ptr<rtCam> camera;
 		//The addresses of the lights and objects are stored in an unordered hash-set
 		unordered_set<ofLight*> lights;
 		unordered_set<of3dPrimitive*> objects;
 
 	public:
+		///Camera Methods
+		void setCamera(shared_ptr<rtCam> camera);
+		shared_ptr<rtCam> getCamera();
 		///Light Methods
-		shared_ptr<lightSet> getLights()
-		{
-			return make_shared<lightSet>(lights);
-		}
-
-		void addLight(ofLight* lightToAdd)
-		{
-			lights.insert(lightToAdd);
-		}
-
-		void removeLight(ofLight* lightToRemove)
-		{
-			lights.erase(lightToRemove);
-		}
-
-		void clearLights()
-		{
-			lights.clear();
-		}
-
+		shared_ptr<lightSet> getLights();
+		void addLight(ofLight* lightToAdd);
+		void removeLight(ofLight* lightToRemove);
+		void clearLights();
 		///Object Methods
-		shared_ptr<objectSet> getObjects()
-		{
-			return make_shared<objectSet>(objects);
-		}
-
-		void addObject(of3dPrimitive* objectToAdd)
-		{
-			objects.insert(objectToAdd);
-		}
-
-		void removeObject(of3dPrimitive* objectToRemove)
-		{
-			objects.erase(objectToRemove);
-		}
-
-		void clearObjects()
-		{
-			objects.clear();
-		}
+		shared_ptr<objectSet> getObjects();
+		void addObject(of3dPrimitive* objectToAdd);
+		void removeObject(of3dPrimitive* objectToRemove);
+		void clearObjects();
 	};
 }
