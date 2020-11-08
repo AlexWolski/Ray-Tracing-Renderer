@@ -51,15 +51,29 @@ namespace rtGraphics
 		rtCam(ofVec3f lookAtPoint, ofVec3f upVector, bool enabled = true);
 		///Event Listeners
 		void draw(ofEventArgs& event);
-		///Scene methods
-		shared_ptr<rtScene> getScene();
-		void setScene(shared_ptr<rtScene> scene);
 		///Camera Methods
 		void enable();
 		void disable();
 		bool isEnabled();
-		void setFov(float fov);
-		float getFov();
 		void render();
+		void draw();
+		///Setters
+		void setFov(float fov);
+		void setNearClip(float nearClip);
+		void setFarClip(float farClip);
+		void setScene(shared_ptr<rtScene> scene);
+		void setPosition(ofVec3f position);
+		void setLookAtPoint(ofVec3f lookAtPoint);
+		void setUpVector(ofVec3f appoxUpVector);
+		void setOrientation(ofVec3f lookAtPoint, ofVec3f appoxUpVector);
+		///Getters
+		float getFov();
+		float getNearClip();
+		float getFarClip();
+		shared_ptr<rtScene> getScene();
+		ofVec3f getPosition();
+		ofVec3f getLookAtVector();
+		ofVec3f getUpVector();
+		ofVec3f getPerpVector();
 	};
 }
