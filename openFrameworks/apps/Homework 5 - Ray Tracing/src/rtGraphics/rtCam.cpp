@@ -5,12 +5,23 @@ namespace rtGraphics
 	///Constructors
 	rtCam::rtCam(ofNode transform, bool enabled) : transform(transform), enabled(enabled)
 	{
+		createFrameBuffer();
+
+		if (enabled)
+			enable();
 	}
 
 	rtCam::rtCam(ofVec3f position, ofVec3f rotation, bool enabled) : enabled(enabled)
 	{
+		//Create an ofNode instance given the position and rotation
+		ofNode transform = ofNode();
 		transform.setPosition(position);
 		transform.setOrientation(ofQuaternion(rotation));
+
+		createFrameBuffer();
+
+		if (enabled)
+			enable();
 	}
 
 	///Event Listeners
@@ -33,11 +44,12 @@ namespace rtGraphics
 		bufferWidth = width;
 		bufferHeight = height;
 		//Create a frame buffer with the given dimensions
-		frameBuffer = make_shared<ofPixels>();
+		frameBuffer = make_shared<ofImage>();
 		frameBuffer->allocate(width, height, OF_IMAGE_COLOR);
-		//Create a render texture where the pixel data is taken from frameBuffer
-		renderTexture = make_shared<ofTexture>();
-		renderTexture->allocate(*frameBuffer.get());
+		//Set the default color to black
+		frameBuffer->setColor(ofColor(0.0f, 0.0f, 0.0f));
+		//Store a reference to the pixel data
+		bufferPixels = &frameBuffer->getPixels();
 	}
 
 	///Scene Methods
@@ -81,7 +93,8 @@ namespace rtGraphics
 
 	void rtCam::render()
 	{
-		renderTexture->draw(0, 0);
+		frameBuffer->update();
+		frameBuffer->draw(0, 0);
 	}
 
 }

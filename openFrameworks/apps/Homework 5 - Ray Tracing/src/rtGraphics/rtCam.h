@@ -21,10 +21,10 @@ namespace rtGraphics
 		bool enabled;
 		float fov;
 
-		//An data structure containing the pixels to be drawn to the screen
-		shared_ptr<ofPixels> frameBuffer;
-		//The texture object used to draw the pixels
-		shared_ptr<ofTexture> renderTexture;
+		//An image to temporarily store the render before being drawn to the screen
+		shared_ptr<ofImage> frameBuffer;
+		//A reference to the pixel data of the frame buffer
+		ofPixels* bufferPixels;
 		//The dimensions of the frame buffer
 		int bufferWidth, bufferHeight;
 
