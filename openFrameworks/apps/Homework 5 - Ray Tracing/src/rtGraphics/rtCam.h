@@ -20,6 +20,14 @@ namespace rtGraphics
 		//The camera settings
 		bool enabled;
 		float fov;
+		float nearClip;
+		float farClip;
+		//Vectors defining the camera position and orientation
+		ofVec3f position;
+		ofVec3f lookAtPoint;
+		ofVec3f lookVector;
+		ofVec3f upVector;
+		ofVec3f perpVector;
 
 		//An image to temporarily store the render before being drawn to the screen
 		shared_ptr<ofImage> frameBuffer;
@@ -32,11 +40,15 @@ namespace rtGraphics
 		//Instantiates the frame buffer. If no dimensions are given, the window size is used
 		void createFrameBuffer();
 		void createFrameBuffer(int width, int height);
+		///Camera methods
+		//Calculates the normalized up-vector, look-vector, and perpendicular-vector
+		//Inputs: a look-at point and approximate up-vector
+		void calculateOrientation(ofVec3f lookAtPoint, ofVec3f appoxUpVector);
 
 	public:
 		///Constructors
-		rtCam(ofNode transform, bool enabled = true);
-		rtCam(ofVec3f position, ofVec3f rotation, bool enabled = true);
+		rtCam(bool enabled = true);
+		rtCam(ofVec3f lookAtPoint, ofVec3f upVector, bool enabled = true);
 		///Event Listeners
 		void draw(ofEventArgs& event);
 		///Scene methods

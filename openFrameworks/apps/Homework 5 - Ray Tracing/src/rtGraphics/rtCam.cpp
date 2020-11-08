@@ -3,21 +3,14 @@
 namespace rtGraphics
 {
 	///Constructors
-	rtCam::rtCam(ofNode transform, bool enabled) : transform(transform), enabled(enabled)
+	//If no look-at point and up-vector are provided, default to the camera facing down the z axis
+	rtCam::rtCam(bool enabled) : rtCam(ofVec3f(0.0f, 0.0f, 1.0f), ofVec3f(0.0f, 1.0f, 0.0f), enabled)
 	{
-		createFrameBuffer();
-
-		if (enabled)
-			enable();
 	}
 
-	rtCam::rtCam(ofVec3f position, ofVec3f rotation, bool enabled) : enabled(enabled)
+	rtCam::rtCam(ofVec3f lookAtPoint, ofVec3f upVector, bool enabled) : enabled(enabled)
 	{
-		//Create an ofNode instance given the position and rotation
-		ofNode transform = ofNode();
-		transform.setPosition(position);
-		transform.setOrientation(ofQuaternion(rotation));
-
+		calculateOrientation(lookAtPoint, upVector);
 		createFrameBuffer();
 
 		if (enabled)
@@ -35,6 +28,14 @@ namespace rtGraphics
 	void rtCam::createFrameBuffer()
 	{
 		createFrameBuffer(ofGetWindowWidth(), ofGetWindowHeight());
+	}
+
+	///Camera Methods
+	//Calculates the normalized up-vector, look-vector, and perpendicular-vector
+	//Inputs: a look-at point and approximate up-vector
+	void rtCam::calculateOrientation(ofVec3f lookAtPoint, ofVec3f appoxUpVector)
+	{
+
 	}
 
 	//Creates a 3D image buffer array
