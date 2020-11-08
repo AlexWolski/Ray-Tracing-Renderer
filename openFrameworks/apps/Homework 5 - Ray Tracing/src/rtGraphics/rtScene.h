@@ -38,4 +38,18 @@ namespace rtGraphics
 		void removeObject(of3dPrimitive* objectToRemove);
 		void clearObjects();
 	};
+
+	///In-line function definitions
+	//Camera Methods
+	inline shared_ptr<rtCam> rtScene::getCamera()				{ return camera; }
+	//Light Methods
+	inline shared_ptr<lightSet> rtScene::getLights()			{ return make_shared<lightSet>(lights); }
+	inline void rtScene::addLight(ofLight* lightToAdd)			{ lights.insert(lightToAdd); }
+	inline void rtScene::removeLight(ofLight* lightToRemove)	{ lights.erase(lightToRemove); }
+	inline void rtScene::clearLights()							{ lights.clear(); }
+	//Object Methods
+	inline shared_ptr<objectSet> rtScene::getObjects()					{ return make_shared<objectSet>(objects); }
+	inline void rtScene::addObject(of3dPrimitive* objectToAdd)			{ objects.insert(objectToAdd); }
+	inline void rtScene::removeObject(of3dPrimitive* objectToRemove)	{	objects.erase(objectToRemove); }
+	inline void rtScene::clearObjects()									{	objects.clear();	}
 }

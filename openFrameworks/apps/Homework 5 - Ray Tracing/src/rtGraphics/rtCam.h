@@ -22,7 +22,7 @@ namespace rtGraphics
 		float fov;
 		float nearClip;
 		float farClip;
-		//Vectors defining the camera position and orientation
+		//Vectors defining the viewing coordinates
 		ofVec3f position;
 		ofVec3f lookAtPoint;
 		ofVec3f lookVector;
@@ -43,7 +43,7 @@ namespace rtGraphics
 		///Camera methods
 		//Calculates the normalized up-vector, look-vector, and perpendicular-vector
 		//Inputs: a look-at point and approximate up-vector
-		void calculateOrientation(ofVec3f lookAtPoint, ofVec3f appoxUpVector);
+		void calcAxes(ofVec3f lookAtPoint, ofVec3f appoxUpVector);
 
 	public:
 		///Constructors
@@ -76,4 +76,51 @@ namespace rtGraphics
 		ofVec3f getUpVector();
 		ofVec3f getPerpVector();
 	};
+
+	///In-line function definitions
+	//Setters
+	inline void rtCam::setFov(float fov)					{ this->fov = fov; }
+	inline void rtCam::setNearClip(float nearClip)			{ this->nearClip = nearClip; }
+	inline void rtCam::setFarClip(float farClip)			{ this->farClip = farClip; }
+	inline void rtCam::setPosition(ofVec3f position)		{ this->position = position; }
+	inline void rtCam::setScene(shared_ptr<rtScene> scene)	{ this->scene = scene; }
+	inline void rtCam::setLookAtPoint(ofVec3f lookAtPoint)							{ calcAxes(lookAtPoint, upVector); }
+	inline void rtCam::setUpVector(ofVec3f appoxUpVector)							{ calcAxes(lookAtPoint, appoxUpVector); }
+	inline void rtCam::setOrientation(ofVec3f lookAtPoint, ofVec3f appoxUpVector)	{ calcAxes(lookAtPoint, appoxUpVector); }
+	//Getters
+	inline bool  rtCam::isEnabled()					{ return enabled; }
+	inline float rtCam::getFov()					{ return fov; }
+	inline float rtCam::getNearClip()				{ return nearClip; }
+	inline float rtCam::getFarClip()				{ return farClip; }
+	inline shared_ptr<rtScene> rtCam::getScene()	{ return scene; }
+	inline ofVec3f rtCam::getPosition()				{ return position; }
+	inline ofVec3f rtCam::getLookAtVector()			{ return lookAtPoint; }
+	inline ofVec3f rtCam::getUpVector()				{ return upVector; }
+	inline ofVec3f rtCam::getPerpVector()			{ return perpVector; }
+
+	///Camera Methods
+	inline void rtCam::enable()
+	{
+		ofAddListener(ofEvents().draw, this, &rtCam::draw);
+		enabled = true;
+	}
+
+	inline void rtCam::disable()
+	{
+		ofRemoveListener(ofEvents().draw, this, &rtCam::draw);
+		enabled = false;
+	}
+
+	//Render the scene using ray tracing
+	inline void rtCam::render()
+	{
+		//TO-DO
+	}
+
+	//Draw the rendered image
+	inline void rtCam::draw()
+	{
+		frameBuffer->update();
+		frameBuffer->draw(0, 0);
+	}
 }
