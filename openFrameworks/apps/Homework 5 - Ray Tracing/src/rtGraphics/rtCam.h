@@ -24,10 +24,11 @@ namespace rtGraphics
 		float farClip;
 		//Vectors defining the viewing coordinates
 		ofVec3f position;
-		ofVec3f lookAtPoint;
-		ofVec3f lookVector;
-		ofVec3f upVector;
-		ofVec3f perpVector;
+		ofVec3f pref;	//Look-at point
+		ofVec3f n;		//Look vector
+		ofVec3f V;		//Imprecise up vector
+		ofVec3f v;		//Precise up vector
+		ofVec3f u;		//Perpendicular vector
 
 		//An image to temporarily store the render before being drawn to the screen
 		shared_ptr<ofImage> frameBuffer;
@@ -41,9 +42,8 @@ namespace rtGraphics
 		void createFrameBuffer();
 		void createFrameBuffer(int width, int height);
 		///Camera methods
-		//Calculates the normalized up-vector, look-vector, and perpendicular-vector
-		//Inputs: a look-at point and approximate up-vector
-		void calcAxes(ofVec3f lookAtPoint, ofVec3f appoxUpVector);
+		//Calculates the axes of the viewing coordinates
+		void calcAxes();
 
 	public:
 		///Constructors
@@ -72,7 +72,7 @@ namespace rtGraphics
 		float getFarClip();
 		shared_ptr<rtScene> getScene();
 		ofVec3f getPosition();
-		ofVec3f getLookAtVector();
+		ofVec3f getLookVector();
 		ofVec3f getUpVector();
 		ofVec3f getPerpVector();
 	};
@@ -84,9 +84,9 @@ namespace rtGraphics
 	inline void rtCam::setFarClip(float farClip)			{ this->farClip = farClip; }
 	inline void rtCam::setPosition(ofVec3f position)		{ this->position = position; }
 	inline void rtCam::setScene(shared_ptr<rtScene> scene)	{ this->scene = scene; }
-	inline void rtCam::setLookAtPoint(ofVec3f lookAtPoint)							{ calcAxes(lookAtPoint, upVector); }
-	inline void rtCam::setUpVector(ofVec3f appoxUpVector)							{ calcAxes(lookAtPoint, appoxUpVector); }
-	inline void rtCam::setOrientation(ofVec3f lookAtPoint, ofVec3f appoxUpVector)	{ calcAxes(lookAtPoint, appoxUpVector); }
+	inline void rtCam::setLookAtPoint(ofVec3f lookAtPoint)							{ pref = lookAtPoint; calcAxes(); }
+	inline void rtCam::setUpVector(ofVec3f appoxUpVector)							{ V = appoxUpVector; calcAxes(); }
+	inline void rtCam::setOrientation(ofVec3f lookAtPoint, ofVec3f appoxUpVector)	{ pref = lookAtPoint; V = appoxUpVector; calcAxes(); }
 	//Getters
 	inline bool  rtCam::isEnabled()					{ return enabled; }
 	inline float rtCam::getFov()					{ return fov; }
@@ -94,9 +94,9 @@ namespace rtGraphics
 	inline float rtCam::getFarClip()				{ return farClip; }
 	inline shared_ptr<rtScene> rtCam::getScene()	{ return scene; }
 	inline ofVec3f rtCam::getPosition()				{ return position; }
-	inline ofVec3f rtCam::getLookAtVector()			{ return lookAtPoint; }
-	inline ofVec3f rtCam::getUpVector()				{ return upVector; }
-	inline ofVec3f rtCam::getPerpVector()			{ return perpVector; }
+	inline ofVec3f rtCam::getLookVector()			{ return pref; }
+	inline ofVec3f rtCam::getUpVector()				{ return V; }
+	inline ofVec3f rtCam::getPerpVector()			{ return u; }
 
 	///Camera Methods
 	inline void rtCam::enable()

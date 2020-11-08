@@ -8,9 +8,9 @@ namespace rtGraphics
 	{
 	}
 
-	rtCam::rtCam(ofVec3f lookAtPoint, ofVec3f upVector, bool enabled) : enabled(enabled)
+	rtCam::rtCam(ofVec3f lookAtPoint, ofVec3f appoxUpVector, bool enabled) : enabled(enabled)
 	{
-		calcAxes(lookAtPoint, upVector);
+		setOrientation(lookAtPoint, appoxUpVector);
 		createFrameBuffer();
 
 		if (enabled)
@@ -48,10 +48,12 @@ namespace rtGraphics
 	}
 
 	///Camera Methods
-	//Calculates the axes of the viewing coordinates
-	//(normalized up-vector, look-vector, and perpendicular-vector)
-	//Inputs: a look-at point and an approximate up-vector
-	void rtCam::calcAxes(ofVec3f lookAtPoint, ofVec3f appoxUpVector)
+	/*
+	 * Calculates the axes of the viewing coordinates
+	 * (normalized look-vector, up-vector, and perpendicular-vector)
+	 * using the look-at point and approximate up vector
+	 */
+	void rtCam::calcAxes()
 	{
 		//TO-DO
 	}
