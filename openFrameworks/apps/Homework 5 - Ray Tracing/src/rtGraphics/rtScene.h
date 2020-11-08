@@ -5,11 +5,11 @@
 #include "rtCam.h"
 #include "ofMain.h"
 
-#define lightSet unordered_set<ofLight*>
-#define objectSet unordered_set<of3dPrimitive*>
-
 namespace rtGraphics
 {
+	typedef unordered_set<ofLight*> lightSet;
+	typedef unordered_set<of3dPrimitive*> objectSet;
+
 	//Forward declare rtCam to prevent a cyclic reference
 	class rtCam;
 
@@ -20,8 +20,8 @@ namespace rtGraphics
 		//Only one camera can render the scene
 		shared_ptr<rtCam> camera;
 		//The addresses of the lights and objects are stored in an unordered hash-set
-		unordered_set<ofLight*> lights;
-		unordered_set<of3dPrimitive*> objects;
+		lightSet lights;
+		objectSet objects;
 
 	public:
 		///Camera Methods
