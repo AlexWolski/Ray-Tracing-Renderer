@@ -54,51 +54,58 @@ namespace rtGraphics
 		///Camera Methods
 		void enable();
 		void disable();
-		bool isEnabled();
+		bool isEnabled() const;
 		void render();
 		void draw();
+		///Getters
+		float getFov() const;
+		float getNearClip() const;
+		float getFarClip() const;
+		shared_ptr<rtScene> getScene() const;
+		ofVec3f getPosition() const;
+		ofVec3f getLookVector() const;
+		ofVec3f getUpVector() const;
+		ofVec3f getPerpVector() const;
 		///Setters
 		void setFov(float fov);
 		void setNearClip(float nearClip);
 		void setFarClip(float farClip);
 		void setScene(shared_ptr<rtScene> scene);
-		void setPosition(ofVec3f position);
-		void setLookAtPoint(ofVec3f lookAtPoint);
-		void setUpVector(ofVec3f appoxUpVector);
-		void setOrientation(ofVec3f lookAtPoint, ofVec3f appoxUpVector);
-		///Getters
-		float getFov();
-		float getNearClip();
-		float getFarClip();
-		shared_ptr<rtScene> getScene();
-		ofVec3f getPosition();
-		ofVec3f getLookVector();
-		ofVec3f getUpVector();
-		ofVec3f getPerpVector();
+		void setPosition(const ofVec3f& position);
+		void setLookAtPoint(const ofVec3f& lookAtPoint);
+		void setUpVector(const ofVec3f& appoxUpVector);
+		void setOrientation(const ofVec3f& lookAtPoint, ofVec3f appoxUpVector);
 	};
 
-	///In-line function definitions
-	//Setters
-	inline void rtCam::setFov(float fov)					{ this->fov = fov; }
-	inline void rtCam::setNearClip(float nearClip)			{ this->nearClip = nearClip; }
-	inline void rtCam::setFarClip(float farClip)			{ this->farClip = farClip; }
-	inline void rtCam::setPosition(ofVec3f position)		{ this->position = position; }
-	inline void rtCam::setScene(shared_ptr<rtScene> scene)	{ this->scene = scene; }
-	inline void rtCam::setLookAtPoint(ofVec3f lookAtPoint)							{ pref = lookAtPoint; calcAxes(); }
-	inline void rtCam::setUpVector(ofVec3f appoxUpVector)							{ V = appoxUpVector; calcAxes(); }
-	inline void rtCam::setOrientation(ofVec3f lookAtPoint, ofVec3f appoxUpVector)	{ pref = lookAtPoint; V = appoxUpVector; calcAxes(); }
+	///In-line method definitions
 	//Getters
-	inline bool  rtCam::isEnabled()					{ return enabled; }
-	inline float rtCam::getFov()					{ return fov; }
-	inline float rtCam::getNearClip()				{ return nearClip; }
-	inline float rtCam::getFarClip()				{ return farClip; }
-	inline shared_ptr<rtScene> rtCam::getScene()	{ return scene; }
-	inline ofVec3f rtCam::getPosition()				{ return position; }
-	inline ofVec3f rtCam::getLookVector()			{ return pref; }
-	inline ofVec3f rtCam::getUpVector()				{ return V; }
-	inline ofVec3f rtCam::getPerpVector()			{ return u; }
+	inline bool  rtCam::isEnabled() const				{ return enabled; }
+	inline float rtCam::getFov() const					{ return fov; }
+	inline float rtCam::getNearClip() const				{ return nearClip; }
+	inline float rtCam::getFarClip() const				{ return farClip; }
+	inline shared_ptr<rtScene> rtCam::getScene() const	{ return scene; }
+	inline ofVec3f rtCam::getPosition() const			{ return position; }
+	inline ofVec3f rtCam::getLookVector() const			{ return pref; }
+	inline ofVec3f rtCam::getUpVector() const			{ return V; }
+	inline ofVec3f rtCam::getPerpVector() const			{ return u; }
 
-	///Camera Methods
+	//Setters
+	inline void rtCam::setFov(float fov)							{ this->fov = fov; }
+	inline void rtCam::setNearClip(float nearClip)					{ this->nearClip = nearClip; }
+	inline void rtCam::setFarClip(float farClip)					{ this->farClip = farClip; }
+	inline void rtCam::setScene(const shared_ptr<rtScene> scene)	{ this->scene = scene; }
+	inline void rtCam::setPosition(const ofVec3f& position)			{ this->position = position; }
+	inline void rtCam::setLookAtPoint(const ofVec3f& lookAtPoint)	{ pref = lookAtPoint; calcAxes(); }
+	inline void rtCam::setUpVector(const ofVec3f& appoxUpVector)	{ V = appoxUpVector; calcAxes(); }
+
+	inline void rtCam::setOrientation(const ofVec3f& lookAtPoint, ofVec3f appoxUpVector)
+	{
+		pref = lookAtPoint;
+		V = appoxUpVector;
+		calcAxes();
+	}
+
+	//Camera Methods
 	inline void rtCam::enable()
 	{
 		ofAddListener(ofEvents().draw, this, &rtCam::draw);
