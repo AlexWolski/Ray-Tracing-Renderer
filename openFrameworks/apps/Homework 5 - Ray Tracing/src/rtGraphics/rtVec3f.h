@@ -12,7 +12,7 @@ namespace rtGraphics
 	public:
 		///Constructors
 		rtVec3f() : x(0.0f), y(0.0f), z(0.0f) { };
-		explicit rtVec3f(float value = 0) : x(value), y(value), z(value) {}
+		explicit rtVec3f(float value) : x(value), y(value), z(value) {}
 		rtVec3f(float x, float y, float z) : x(x), y(y), z(z) {}
 
 		///Setters

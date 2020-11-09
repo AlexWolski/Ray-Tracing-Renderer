@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include "rtVec3f.h"
 #include "rtScene.h"
 #include "ofMain.h"
 
@@ -23,12 +24,12 @@ namespace rtGraphics
 		float nearClip;
 		float farClip;
 		//Vectors defining the viewing coordinates
-		ofVec3f position;
-		ofVec3f pref;	//Look-at point
-		ofVec3f n;		//Look vector
-		ofVec3f V;		//Imprecise up vector
-		ofVec3f v;		//Precise up vector
-		ofVec3f u;		//Perpendicular vector
+		rtVec3f position;
+		rtVec3f pref;	//Look-at point
+		rtVec3f n;		//Look vector
+		rtVec3f V;		//Imprecise up vector
+		rtVec3f v;		//Precise up vector
+		rtVec3f u;		//Perpendicular vector
 
 		//An image to temporarily store the render before being drawn to the screen
 		shared_ptr<ofImage> frameBuffer;
@@ -48,7 +49,7 @@ namespace rtGraphics
 	public:
 		///Constructors
 		rtCam(bool enabled = true);
-		rtCam(const ofVec3f& lookAtPoint, const ofVec3f& upVector, bool enabled = true);
+		rtCam(const rtVec3f& lookAtPoint, const rtVec3f& upVector, bool enabled = true);
 		///Event Listeners
 		void draw(ofEventArgs& event);
 		///Camera Methods
@@ -62,19 +63,19 @@ namespace rtGraphics
 		float getNearClip() const;
 		float getFarClip() const;
 		shared_ptr<rtScene> getScene() const;
-		ofVec3f getPosition() const;
-		ofVec3f getLookVector() const;
-		ofVec3f getUpVector() const;
-		ofVec3f getPerpVector() const;
+		rtVec3f getPosition() const;
+		rtVec3f getLookVector() const;
+		rtVec3f getUpVector() const;
+		rtVec3f getPerpVector() const;
 		///Setters
 		void setFov(float fov);
 		void setNearClip(float nearClip);
 		void setFarClip(float farClip);
 		void setScene(shared_ptr<rtScene> scene);
-		void setPosition(const ofVec3f& position);
-		void setLookAtPoint(const ofVec3f& lookAtPoint);
-		void setUpVector(const ofVec3f& appoxUpVector);
-		void setOrientation(const ofVec3f& lookAtPoint, const ofVec3f& appoxUpVector);
+		void setPosition(const rtVec3f& position);
+		void setLookAtPoint(const rtVec3f& lookAtPoint);
+		void setUpVector(const rtVec3f& appoxUpVector);
+		void setOrientation(const rtVec3f& lookAtPoint, const rtVec3f& appoxUpVector);
 	};
 
 	///In-line method definitions
@@ -84,21 +85,21 @@ namespace rtGraphics
 	inline float rtCam::getNearClip() const				{ return nearClip; }
 	inline float rtCam::getFarClip() const				{ return farClip; }
 	inline shared_ptr<rtScene> rtCam::getScene() const	{ return scene; }
-	inline ofVec3f rtCam::getPosition() const			{ return position; }
-	inline ofVec3f rtCam::getLookVector() const			{ return pref; }
-	inline ofVec3f rtCam::getUpVector() const			{ return V; }
-	inline ofVec3f rtCam::getPerpVector() const			{ return u; }
+	inline rtVec3f rtCam::getPosition() const			{ return position; }
+	inline rtVec3f rtCam::getLookVector() const			{ return pref; }
+	inline rtVec3f rtCam::getUpVector() const			{ return V; }
+	inline rtVec3f rtCam::getPerpVector() const			{ return u; }
 
 	//Setters
 	inline void rtCam::setFov(float fov)							{ this->fov = fov; }
 	inline void rtCam::setNearClip(float nearClip)					{ this->nearClip = nearClip; }
 	inline void rtCam::setFarClip(float farClip)					{ this->farClip = farClip; }
 	inline void rtCam::setScene(const shared_ptr<rtScene> scene)	{ this->scene = scene; }
-	inline void rtCam::setPosition(const ofVec3f& position)			{ this->position = position; }
-	inline void rtCam::setLookAtPoint(const ofVec3f& lookAtPoint)	{ pref = lookAtPoint; calcAxes(); }
-	inline void rtCam::setUpVector(const ofVec3f& appoxUpVector)	{ V = appoxUpVector; calcAxes(); }
+	inline void rtCam::setPosition(const rtVec3f& position)			{ this->position = position; }
+	inline void rtCam::setLookAtPoint(const rtVec3f& lookAtPoint)	{ pref = lookAtPoint; calcAxes(); }
+	inline void rtCam::setUpVector(const rtVec3f& appoxUpVector)	{ V = appoxUpVector; calcAxes(); }
 
-	inline void rtCam::setOrientation(const ofVec3f& lookAtPoint, const ofVec3f& appoxUpVector)
+	inline void rtCam::setOrientation(const rtVec3f& lookAtPoint, const rtVec3f& appoxUpVector)
 	{
 		pref = lookAtPoint;
 		V = appoxUpVector;
