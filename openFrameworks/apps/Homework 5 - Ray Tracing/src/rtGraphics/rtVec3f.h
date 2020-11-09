@@ -11,7 +11,8 @@ namespace rtGraphics
 
 	public:
 		///Constructors
-		rtVec3f(float value = 0) : x(value), y(value), z(value) {}
+		rtVec3f() : x(0.0f), y(0.0f), z(0.0f) { };
+		explicit rtVec3f(float value = 0) : x(value), y(value), z(value) {}
 		rtVec3f(float x, float y, float z) : x(x), y(y), z(z) {}
 
 		///Setters
@@ -47,6 +48,9 @@ namespace rtGraphics
 		///Operators
 		//Copy assignment
 		rtVec3f& operator=(const rtVec3f& rhs);
+		//Comparison
+		bool operator==(const rtVec3f& rhs);
+		bool operator!=(const rtVec3f& rhs);
 		//Scalar Addition
 		rtVec3f  operator+ (float value) const;
 		rtVec3f& operator+=(float value);
@@ -186,7 +190,7 @@ namespace rtGraphics
 
 	//Operators
 	//Copy Assignment
-	rtVec3f& rtVec3f::operator=(const rtVec3f& rhs)
+	inline rtVec3f& rtVec3f::operator=(const rtVec3f& rhs)
 	{
 		x = rhs.x;
 		y = rhs.y;
@@ -194,6 +198,18 @@ namespace rtGraphics
 
 		return *this;
 	}
+
+	//Comparison
+	inline bool rtVec3f::operator==(const rtVec3f& rhs)
+	{
+		return ((x == rhs.x) && (y == rhs.y) && (z == rhs.z));
+	}
+
+	inline bool rtVec3f::operator!=(const rtVec3f& rhs)
+	{
+		return ((x != rhs.x) || (y != rhs.y) || (z != rhs.z));
+	}
+
 
 	//Scalar Addition
 	inline rtVec3f rtVec3f::operator+(float value) const
