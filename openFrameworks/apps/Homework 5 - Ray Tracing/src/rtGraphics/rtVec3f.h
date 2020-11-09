@@ -29,6 +29,12 @@ namespace rtGraphics
 		///Static Methods
 		static rtVec3f one();
 		static rtVec3f zero();
+		static rtVec3f up();
+		static rtVec3f down();
+		static rtVec3f forward();
+		static rtVec3f back();
+		static rtVec3f left();
+		static rtVec3f right();
 
 		///Vector Methods
 		float getMagnitude() const;
@@ -39,30 +45,32 @@ namespace rtGraphics
 		float dot(const rtVec3f& rhs) const;
 
 		///Operators
+		//Copy assignment
+		rtVec3f& operator=(const rtVec3f& rhs);
 		//Scalar Addition
 		rtVec3f  operator+ (float value) const;
 		rtVec3f& operator+=(float value);
 		//Vector Addition
-		rtVec3f  operator+ (const rtVec3f rhs) const;
-		rtVec3f& operator+=(const rtVec3f rhs);
+		rtVec3f  operator+ (const rtVec3f& rhs) const;
+		rtVec3f& operator+=(const rtVec3f& rhs);
 		//Scalar Subtraction
 		rtVec3f  operator- (float value) const;
 		rtVec3f& operator-=(float value);
 		//Vector Subtraction
-		rtVec3f  operator- (const rtVec3f rhs) const;
-		rtVec3f& operator-=(const rtVec3f rhs);
+		rtVec3f  operator- (const rtVec3f& rhs) const;
+		rtVec3f& operator-=(const rtVec3f& rhs);
 		//Scalar Multiplication
 		rtVec3f  operator* (float value) const;
 		rtVec3f& operator*=(float value);
 		//Vector Multiplication
-		rtVec3f  operator* (const rtVec3f rhs) const;
-		rtVec3f& operator*=(const rtVec3f rhs);
+		rtVec3f  operator* (const rtVec3f& rhs) const;
+		rtVec3f& operator*=(const rtVec3f& rhs);
 		//Scalar Division
 		rtVec3f  operator/ (float value) const;
 		rtVec3f& operator/=(float value);
 		//Vector Division
-		rtVec3f  operator/ (const rtVec3f rhs) const;
-		rtVec3f& operator/=(const rtVec3f rhs);
+		rtVec3f  operator/ (const rtVec3f& rhs) const;
+		rtVec3f& operator/=(const rtVec3f& rhs);
 		//Unary Negation
 		rtVec3f  operator-() const;
 	};
@@ -115,8 +123,14 @@ namespace rtGraphics
 	}
 
 	//Static Methods
-	inline rtVec3f rtVec3f::one() { return rtVec3f(1.0f); }
-	inline rtVec3f rtVec3f::zero() { return rtVec3f(0.0f); }
+	inline rtVec3f rtVec3f::one()		{ return rtVec3f(1.0f); }
+	inline rtVec3f rtVec3f::zero()		{ return rtVec3f(0.0f); }
+	inline rtVec3f rtVec3f::up()		{ return rtVec3f(0.0f, 1.0f, 0.0f); }
+	inline rtVec3f rtVec3f::down()		{ return rtVec3f(0.0f, -1.0f, 0.0f); }
+	inline rtVec3f rtVec3f::forward()	{ return rtVec3f(0.0f, 0.0f, 1.0f); }
+	inline rtVec3f rtVec3f::back()		{ return rtVec3f(0.0f, 0.0f, -1.0f); }
+	inline rtVec3f rtVec3f::left()		{ return rtVec3f(-1.0f, 0.0f, 0.0f); }
+	inline rtVec3f rtVec3f::right()		{ return rtVec3f(1.0f, 0.0f, 0.0f); }
 
 	//Vector Methods
 	inline float rtVec3f::getMagnitude() const
@@ -171,6 +185,16 @@ namespace rtGraphics
 	}
 
 	//Operators
+	//Copy Assignment
+	rtVec3f& rtVec3f::operator=(const rtVec3f& rhs)
+	{
+		x = rhs.x;
+		y = rhs.y;
+		z = rhs.z;
+
+		return *this;
+	}
+
 	//Scalar Addition
 	inline rtVec3f rtVec3f::operator+(float value) const
 	{
@@ -187,12 +211,12 @@ namespace rtGraphics
 	}
 
 	//Vector Addition
-	inline rtVec3f rtVec3f::operator+(const rtVec3f rhs) const
+	inline rtVec3f rtVec3f::operator+(const rtVec3f& rhs) const
 	{
 		return rtVec3f(x + rhs.x, y + rhs.y, z + rhs.z);
 	}
 
-	inline rtVec3f& rtVec3f::operator+=(const rtVec3f rhs)
+	inline rtVec3f& rtVec3f::operator+=(const rtVec3f& rhs)
 	{
 		x += rhs.x;
 		y += rhs.y;
@@ -217,12 +241,12 @@ namespace rtGraphics
 	}
 
 	//Vector Subtraction
-	inline rtVec3f rtVec3f::operator-(const rtVec3f rhs) const
+	inline rtVec3f rtVec3f::operator-(const rtVec3f& rhs) const
 	{
 		return rtVec3f(x - rhs.x, y - rhs.y, z - rhs.z);
 	}
 
-	inline rtVec3f& rtVec3f::operator-=(const rtVec3f rhs)
+	inline rtVec3f& rtVec3f::operator-=(const rtVec3f& rhs)
 	{
 		x -= rhs.x;
 		y -= rhs.y;
@@ -247,12 +271,12 @@ namespace rtGraphics
 	}
 
 	//Vector Multiplication
-	inline rtVec3f rtVec3f::operator*(const rtVec3f rhs) const
+	inline rtVec3f rtVec3f::operator*(const rtVec3f& rhs) const
 	{
 		return rtVec3f(x * rhs.x, y * rhs.y, z * rhs.z);
 	}
 
-	inline rtVec3f& rtVec3f::operator*=(const rtVec3f rhs)
+	inline rtVec3f& rtVec3f::operator*=(const rtVec3f& rhs)
 	{
 		x *= rhs.x;
 		y *= rhs.y;
@@ -287,7 +311,7 @@ namespace rtGraphics
 	}
 
 	//Vector Division
-	inline rtVec3f rtVec3f::operator/(const rtVec3f rhs) const
+	inline rtVec3f rtVec3f::operator/(const rtVec3f& rhs) const
 	{
 		float divX = (rhs.x == 0) ? NAN : x / rhs.x;
 		float divY = (rhs.y == 0) ? NAN : y / rhs.y;
@@ -296,7 +320,7 @@ namespace rtGraphics
 		return rtVec3f(divX, divY, divZ);
 	}
 
-	inline rtVec3f& rtVec3f::operator/=(const rtVec3f rhs)
+	inline rtVec3f& rtVec3f::operator/=(const rtVec3f& rhs)
 	{
 		x = (rhs.x == 0) ? NAN : x / rhs.x;
 		y = (rhs.y == 0) ? NAN : y / rhs.y;

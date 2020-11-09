@@ -6,7 +6,7 @@ namespace rtGraphics
 	//If no look-at point and up-vector are provided, default to the camera facing down the z axis
 	rtCam::rtCam(bool enabled) : rtCam(ofVec3f(0.0f, 0.0f, 1.0f), ofVec3f(0.0f, 1.0f, 0.0f), enabled) {}
 
-	rtCam::rtCam(ofVec3f lookAtPoint, ofVec3f appoxUpVector, bool enabled) : enabled(enabled)
+	rtCam::rtCam(const ofVec3f& lookAtPoint, const ofVec3f& appoxUpVector, bool enabled) : enabled(enabled)
 	{
 		setOrientation(lookAtPoint, appoxUpVector);
 		createFrameBuffer();

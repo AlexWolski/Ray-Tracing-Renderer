@@ -48,7 +48,7 @@ namespace rtGraphics
 	public:
 		///Constructors
 		rtCam(bool enabled = true);
-		rtCam(ofVec3f lookAtPoint, ofVec3f upVector, bool enabled = true);
+		rtCam(const ofVec3f& lookAtPoint, const ofVec3f& upVector, bool enabled = true);
 		///Event Listeners
 		void draw(ofEventArgs& event);
 		///Camera Methods
@@ -74,7 +74,7 @@ namespace rtGraphics
 		void setPosition(const ofVec3f& position);
 		void setLookAtPoint(const ofVec3f& lookAtPoint);
 		void setUpVector(const ofVec3f& appoxUpVector);
-		void setOrientation(const ofVec3f& lookAtPoint, ofVec3f appoxUpVector);
+		void setOrientation(const ofVec3f& lookAtPoint, const ofVec3f& appoxUpVector);
 	};
 
 	///In-line method definitions
@@ -98,7 +98,7 @@ namespace rtGraphics
 	inline void rtCam::setLookAtPoint(const ofVec3f& lookAtPoint)	{ pref = lookAtPoint; calcAxes(); }
 	inline void rtCam::setUpVector(const ofVec3f& appoxUpVector)	{ V = appoxUpVector; calcAxes(); }
 
-	inline void rtCam::setOrientation(const ofVec3f& lookAtPoint, ofVec3f appoxUpVector)
+	inline void rtCam::setOrientation(const ofVec3f& lookAtPoint, const ofVec3f& appoxUpVector)
 	{
 		pref = lookAtPoint;
 		V = appoxUpVector;
