@@ -38,7 +38,8 @@ namespace rtGraphics
 		static rtVec3f right();
 
 		///Vector Methods
-		float getMagnitude() const;
+		float magnitude() const;
+		float magnitudeSquared() const;
 		rtVec3f& normalize();
 		rtVec3f  getNormalized() const;
 		rtVec3f& cross(const rtVec3f& rhs);
@@ -137,21 +138,26 @@ namespace rtGraphics
 	inline rtVec3f rtVec3f::right()		{ return rtVec3f(1.0f, 0.0f, 0.0f); }
 
 	//Vector Methods
-	inline float rtVec3f::getMagnitude() const
+	inline float rtVec3f::magnitude() const
 	{
 		return sqrt(x*x + y*y + z*z);
 	}
 
+	inline float rtVec3f::magnitudeSquared() const
+	{
+		return (x*x + y*y + z*z);
+	}
+
 	inline rtVec3f& rtVec3f::normalize()
 	{
-		*this /= getMagnitude();
+		*this /= magnitude();
 		return *this;
 	}
 
 	inline rtVec3f rtVec3f::getNormalized() const
 	{
 		rtVec3f normalized = *this;
-		normalized /= getMagnitude();
+		normalized /= magnitude();
 		return normalized;
 	}
 
