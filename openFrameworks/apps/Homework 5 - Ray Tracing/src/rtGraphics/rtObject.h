@@ -5,6 +5,7 @@
 #include "rtNode.h"
 #include "rtVec3f.h"
 #include "rtMat.h"
+#include "rtMesh.h"
 
 using namespace std;
 
@@ -13,7 +14,7 @@ namespace rtGraphics
 	/*
 	 * A wrapper class for ray traceable objects
 	 * TO-DO: Replace the material member with a material name that
-	 *        corresponds to a shared material in a hash table
+	 *        corresponds to a shared material in a data structure
 	 */
 	class rtObject : rtNode
 	{
@@ -104,39 +105,32 @@ namespace rtGraphics
 	void rtSphere::setRadius(float radius)				{ this->radius = radius; }
 
 
-	typedef shared_ptr<vector<rtVec3f>> vecList;
-
 	/*
-	 * A mesh object containing vertices and faces
-	 * TO-DO: Create an encapsulating rtMeshObject class
-	 *        whose instances can share meshes
+	 * A mesh-based object that applies a transform to the mesh
+	 * TO-DO: Replace the mesh member with a mesh name that
+	 *        corresponds to a shared mesh in a data structure
 	*/
-	class rtMesh : rtObject
+	class rtMeshObject : rtObject
 	{
 	private:
-		vecList vertices;
-		vector<int[3]> faces;
-		vecList normals;
-
-		void calculateNormal(int index);
-		void calculateNormals();
+		rtMesh mesh;
 
 	public:
 		///Constructors
-		rtMesh();
-		rtMesh(const rtVec3f vertices[], const rtVec3f indices[]);
+		rtMeshObject();
+		rtMeshObject(rtMesh& mesh);
 
-		///Vertex Methods
-		void addVert(const rtVec3f& vertex);
-		vecList& getVerts();
-		void clearVerts();
-
-		///Index Methods
-		void addFace(int index1, int index2, int index3);
-		vector<int[3]>& getFaces();
-		void clearFaces();
-
-		///Normal Methods
-		rtVec3f& getNormals();
+		///Getter & Setter
+		rtMesh& getMesh();
+		void setMesh(rtMesh& mesh);
 	};
+
+	///Constructors
+	rtMeshObject::rtMeshObject() : mesh(rtMesh()) {}
+	rtMeshObject::rtMeshObject(rtMesh& mesh) : mesh(mesh) {}
+
+	///In-line method definitions
+	//Getter & Setter
+	inline rtMesh& rtMeshObject::getMesh()			{ return mesh; }
+	inline void rtMeshObject::setMesh(rtMesh& mesh)	{ this->mesh = mesh; }
 }
