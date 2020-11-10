@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include <array>
 #include "rtVec3f.h"
 
 using namespace std;
@@ -9,7 +10,7 @@ using namespace std;
 namespace rtGraphics
 {
 	typedef shared_ptr<vector<rtVec3f>> vecList;
-	typedef shared_ptr<vector<int[3]>> intList;
+	typedef shared_ptr<vector<array<int, 3>>> intList;
 
 	//A mesh object containing vertices and faces
 	class rtMesh
@@ -28,7 +29,7 @@ namespace rtGraphics
 	public:
 		///Constructors
 		rtMesh();
-		rtMesh(const rtVec3f vertices[], int numVerts, const rtVec3f faces[][3], int numFaces);
+		rtMesh(const rtVec3f vertices[], int numVerts, const array<int, 3> faces[], int numFaces);
 
 		///Vertex Methods
 		void addVert(const rtVec3f& vertex);
@@ -46,20 +47,20 @@ namespace rtGraphics
 
 	///Constructors
 	//Initialize the data members and calculate the normals
-	rtMesh::rtMesh()
+	inline rtMesh::rtMesh()
 	{
 		vertices = make_shared<vector<rtVec3f>>();
-		faces = make_shared<vector<int[3]>>();
+		faces = make_shared<vector<array<int, 3>>>();
 		normals = make_shared<vector<rtVec3f>>();
 
 		updateNormals();
 	}
 
 	//Copy the vertices and faces, then calculate the normals
-	rtMesh::rtMesh(const rtVec3f vertices[], int numVerts, const rtVec3f faces[][3], int numFaces)
+	inline rtMesh::rtMesh(const rtVec3f vertices[], int numVerts, const array<int, 3> faces[], int numFaces)
 	{
-		this->vertices = make_shared<vector<rtVec3f>>(vertices, numVerts);
-		this->faces = make_shared<vector<int[3]>>(faces, numFaces);
+		//this->vertices = make_shared<vector<rtVec3f>>(vertices, numVerts);
+		//this->faces = make_shared<vector<array<int, 3>>>(faces, numFaces);
 		normals = make_shared<vector<rtVec3f>>();
 
 		updateNormals();
@@ -85,12 +86,12 @@ namespace rtGraphics
 	inline rtVec3f rtMesh::calculateNormal(int faceIndex)
 	{
 		//Get the array of vertex indices for the given face
-		int* face = faces->operator[](faceIndex);
+		array<int, 3>& face = faces->at(faceIndex);
 
 		//Get the values of the three vertices
-		rtVec3f& vert0 = vertices->operator[](face[0]);
-		rtVec3f& vert1 = vertices->operator[](face[1]);
-		rtVec3f& vert2 = vertices->operator[](face[2]);
+		rtVec3f& vert0 = vertices->at(face.at(0));
+		rtVec3f& vert1 = vertices->at(face.at(1));
+		rtVec3f& vert2 = vertices->at(face.at(2));
 
 		//Calculate and return the normal
 		return calculateNormal(vert0, vert1, vert2);
@@ -100,7 +101,7 @@ namespace rtGraphics
 	inline void rtMesh::updateNormals()
 	{
 		for (int faceIndex = 0; faceIndex < faces->size(); faceIndex++)
-			normals->operator[](faceIndex) = calculateNormal(faceIndex);
+			normals->at(faceIndex) = calculateNormal(faceIndex);
 	}
 
 	inline vecList rtMesh::getNormals()
@@ -130,9 +131,12 @@ namespace rtGraphics
 	}
 
 	///Face Methods
-	inline void rtMesh::addFace(int index1, int index2, int index3)
+	inline void rtMesh::addFace(int index0, int index1, int index2)
 	{
-		faces->push_back({ index1, index2, index3 });
+		//Create a new array in the heap to store the face indices
+		array<int, 3> face = { index0, index1, index2 };
+		//Push the array pointer onto the vector
+		faces->push_back(face);
 	}
 
 	inline intList rtMesh::getFaces()

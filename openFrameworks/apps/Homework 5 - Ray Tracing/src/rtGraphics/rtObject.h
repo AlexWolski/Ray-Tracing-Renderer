@@ -22,15 +22,11 @@ namespace rtGraphics
 		rtMat material;
 
 	public:
-		rtObject();
-		rtObject(rtMat& material);
+		rtObject() : material(rtMat()) {}
+		rtObject(rtMat& material) : material(material) {}
 		rtMat& getMat();
 		void setMat(const rtMat& material);
 	};
-
-	///Constructors
-	rtObject::rtObject() : material(rtMat()) {}
-	rtObject::rtObject(rtMat& material) : material(material) {}
 
 	///In-line method definitions
 	inline rtMat& rtObject::getMat()
@@ -71,25 +67,25 @@ namespace rtGraphics
 	};
 
 	///Constructors
-	rtSphere::rtSphere() : rtObject()
+	inline rtSphere::rtSphere() : rtObject()
 	{
 		position = rtVec3f::zero;
 		radius = 1.0f;
 	}
 
-	rtSphere::rtSphere(rtMat& material) : rtObject(material)
+	inline rtSphere::rtSphere(rtMat& material) : rtObject(material)
 	{
 		position = rtVec3f::zero;
 		radius = 1.0f;
 	}
 
-	rtSphere::rtSphere(const rtVec3f& position, float radius) :
+	inline rtSphere::rtSphere(const rtVec3f& position, float radius) :
 		rtObject(),
 		position(position),
 		radius(radius) {
 	}
 
-	rtSphere::rtSphere(const rtVec3f& position, float radius, rtMat& material) :
+	inline rtSphere::rtSphere(const rtVec3f& position, float radius, rtMat& material) :
 		rtObject(material),
 		position(position),
 		radius(radius) {
@@ -101,8 +97,8 @@ namespace rtGraphics
 	inline float rtSphere::getRadius() const		{ return radius; }
 	
 	//Setters
-	void rtSphere::setPosition(const rtVec3f& position)	{ this->position = position;  }
-	void rtSphere::setRadius(float radius)				{ this->radius = radius; }
+	inline void rtSphere::setPosition(const rtVec3f& position)	{ this->position = position;  }
+	inline void rtSphere::setRadius(float radius)				{ this->radius = radius; }
 
 
 	/*
@@ -117,17 +113,13 @@ namespace rtGraphics
 
 	public:
 		///Constructors
-		rtMeshObject();
-		rtMeshObject(rtMesh& mesh);
+		rtMeshObject() : mesh(rtMesh()) {}
+		rtMeshObject(rtMesh& mesh) : mesh(mesh) {}
 
 		///Getter & Setter
 		rtMesh& getMesh();
 		void setMesh(rtMesh& mesh);
 	};
-
-	///Constructors
-	rtMeshObject::rtMeshObject() : mesh(rtMesh()) {}
-	rtMeshObject::rtMeshObject(rtMesh& mesh) : mesh(mesh) {}
 
 	///In-line method definitions
 	//Getter & Setter

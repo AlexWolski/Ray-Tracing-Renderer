@@ -202,6 +202,7 @@
     <ClInclude Include="src\ofApp.h" />
     <ClInclude Include="src\rtGraphics\rtCam.h" />
     <ClInclude Include="src\rtGraphics\rtColor.h" />
+    <ClInclude Include="src\rtGraphics\rtLight.h" />
     <ClInclude Include="src\rtGraphics\rtMain.h" />
     <ClInclude Include="src\rtGraphics\rtMat.h" />
     <ClInclude Include="src\rtGraphics\rtMesh.h" />

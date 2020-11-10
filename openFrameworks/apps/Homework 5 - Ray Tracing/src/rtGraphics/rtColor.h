@@ -16,7 +16,7 @@ namespace rtGraphics
 		///Constructors
 		rtColor();
 		rtColor(int value);
-		rtColor(int r, int g, int b, int a = 1);
+		rtColor(int r, int g, int b, int a = maxValue);
 
 		///Color Methods
 		//Returns the given value 
@@ -33,15 +33,15 @@ namespace rtGraphics
 		void setG(int g);
 		void setB(int b);
 		void setA(int a);
-		void setColor(int r, int g, int b, int a = 1);
+		void setColor(int r, int g, int b, int a = maxValue);
 	};
 
 	///Constructors
 	//The default color is an opaque black
-	rtColor::rtColor() : rtColor(0, 0, 0) {}
-	rtColor::rtColor(int value) : rtColor(value, value, value) {}
+	inline rtColor::rtColor() : rtColor(0, 0, 0) {}
+	inline rtColor::rtColor(int value) : rtColor(value, value, value) {}
 
-	rtColor::rtColor(int r, int g, int b, int a = 1)
+	inline rtColor::rtColor(int r, int g, int b, int a)
 	{
 		setColor(r, g, b, a);
 		clampColors();
@@ -80,7 +80,7 @@ namespace rtGraphics
 	inline void rtColor::setB(int b) { this->b = clampColor(b); }
 	inline void rtColor::setA(int a) { this->a = clampColor(a); }
 
-	inline void rtColor::setColor(int r, int g, int b, int a = 1)
+	inline void rtColor::setColor(int r, int g, int b, int a)
 	{
 		this->r = r;
 		this->g = g;

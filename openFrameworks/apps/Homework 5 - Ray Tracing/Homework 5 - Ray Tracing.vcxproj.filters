@@ -59,5 +59,8 @@
     <ClInclude Include="src\rtGraphics\rtMesh.h">
       <Filter>src\rtGraphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\rtGraphics\rtLight.h">
+      <Filter>src\rtGraphics</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
