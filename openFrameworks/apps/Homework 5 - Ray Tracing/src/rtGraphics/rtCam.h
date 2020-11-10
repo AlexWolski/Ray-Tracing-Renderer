@@ -9,9 +9,6 @@ using namespace std;
 
 namespace rtGraphics
 {
-	//Forward declare rtScene to prevent a cyclic reference
-	class rtScene;
-
 	class rtCam
 	{
 	private:
@@ -80,7 +77,27 @@ namespace rtGraphics
 		void setOrientation(const rtVec3f& lookAtPoint, const rtVec3f& appoxUpVector);
 	};
 
+	///Constructors
+	//If no look-at point and up-vector are provided, default to the camera facing down the z axis
+	inline rtCam::rtCam(bool enabled) : rtCam(rtVec3f::forward, rtVec3f::up, enabled) {}
+
+	inline rtCam::rtCam(const rtVec3f& lookAtPoint, const rtVec3f& appoxUpVector, bool enabled) : enabled(enabled)
+	{
+		setOrientation(lookAtPoint, appoxUpVector);
+		createFrameBuffer();
+
+		if (enabled)
+			enable();
+	}
+
 	///In-line method definitions
+	//Event Listner
+	inline void rtCam::draw(ofEventArgs& event)
+	{
+		render();
+		draw();
+	}
+
 	//Getters
 	inline bool  rtCam::isEnabled() const				{ return enabled; }
 	inline float rtCam::getFov() const					{ return fov; }
@@ -132,5 +149,35 @@ namespace rtGraphics
 	{
 		frameBuffer->update();
 		frameBuffer->draw(0, 0);
+	}
+
+	/*
+	 * Calculates the axes of the viewing coordinates
+	 * (normalized look-vector, up-vector, and perpendicular-vector)
+	 * using the look-at point and approximate up vector
+	 */
+	inline void rtCam::calcAxes()
+	{
+		//TO-DO
+	}
+
+	///Buffer Methods
+	//Creates a 3D image buffer array based on the window size
+	inline void rtCam::createFrameBuffer()
+	{
+		createFrameBuffer(ofGetWindowWidth(), ofGetWindowHeight());
+	}
+
+	//Creates a 3D image buffer array
+	inline void rtCam::createFrameBuffer(int width, int height)
+	{
+		//Save the dimensions of the buffer
+		bufferWidth = width;
+		bufferHeight = height;
+		//Create a frame buffer with the given dimensions
+		frameBuffer = make_shared<ofImage>();
+		frameBuffer->allocate(width, height, OF_IMAGE_COLOR);
+		//Store a reference to the pixel data
+		bufferPixels = &frameBuffer->getPixels();
 	}
 }

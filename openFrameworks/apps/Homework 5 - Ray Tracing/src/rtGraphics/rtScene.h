@@ -14,15 +14,10 @@ namespace rtGraphics
 	typedef shared_ptr<map<string, rtLight*>> lightSet;
 	typedef shared_ptr<map<string, rtObject*>> objectSet;
 
-	//Forward declare rtCam to prevent a cyclic reference
-	class rtCam;
-
 	//A data-structure to contain the lights and objects in a scene
 	class rtScene
 	{
 	private:
-		//Only one camera can render the scene
-		shared_ptr<rtCam> camera;
 		//The addresses of the lights and objects are stored in an unordered hash-set
 		lightSet lights;
 		objectSet objects;
@@ -30,9 +25,6 @@ namespace rtGraphics
 	public:
 		///Constructor
 		rtScene();
-		///Camera Methods
-		void setCamera(shared_ptr<rtCam> camera);
-		shared_ptr<rtCam> getCamera() const;
 		///Light Methods
 		lightSet getLights() const;
 		void addLight(string lightName, rtLight* lightToAdd);
@@ -50,15 +42,11 @@ namespace rtGraphics
 	///Constructor
 	inline rtScene::rtScene()
 	{
-		camera = make_shared<rtCam>();
 		lights = make_shared<map<string, rtLight*>>();
 		objects = make_shared<map<string, rtObject*>>();
 	}
 
 	///In-line method definitions
-	//Camera Methods
-	inline shared_ptr<rtCam> rtScene::getCamera() const { return camera; }
-
 	//Light Methods
 	inline lightSet rtScene::getLights() const { return lights; }
 

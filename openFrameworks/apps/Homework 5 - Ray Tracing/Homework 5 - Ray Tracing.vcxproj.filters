@@ -18,12 +18,6 @@
     <ClCompile Include="src\ofApp.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\rtGraphics\rtCam.cpp">
-      <Filter>src\rtGraphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\rtGraphics\rtScene.cpp">
-      <Filter>src\rtGraphics</Filter>
-    </ClCompile>
     <ClCompile Include="src\rtGraphics\rtVec3f.cpp">
       <Filter>src\rtGraphics</Filter>
     </ClCompile>
