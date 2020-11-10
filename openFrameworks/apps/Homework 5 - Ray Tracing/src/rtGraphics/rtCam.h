@@ -151,14 +151,18 @@ namespace rtGraphics
 		frameBuffer->draw(0, 0);
 	}
 
-	/*
-	 * Calculates the axes of the viewing coordinates
-	 * (normalized look-vector, up-vector, and perpendicular-vector)
-	 * using the look-at point and approximate up vector
-	 */
+	//Calculates the axes of the viewing coordinates
 	inline void rtCam::calcAxes()
 	{
-		//TO-DO
+		//Calculate the normalized look-vector
+		n = pref - position;
+		n.normalize();
+		//Cross the look-vector with the imprecise up-vector to get the perpendicular vector
+		u = n.cross(V);
+		u.normalize();
+		//Cross the perpendicular vector with the look-vector to get a precise look-vector
+		v = v.cross(n);
+		v.normalize();
 	}
 
 	///Buffer Methods

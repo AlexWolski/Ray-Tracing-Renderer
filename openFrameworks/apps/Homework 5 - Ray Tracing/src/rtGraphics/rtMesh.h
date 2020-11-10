@@ -77,7 +77,7 @@ namespace rtGraphics
 		//Find the normal by crossing e0 and e1
 		rtVec3f normal = e0.cross(e1);
 		//Normalize the vector
-		normal /= normal.magnitude();
+		normal.normalize();
 
 		return normal;
 	}
