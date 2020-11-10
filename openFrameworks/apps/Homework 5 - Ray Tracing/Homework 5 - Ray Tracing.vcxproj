@@ -203,6 +203,10 @@
     <ClInclude Include="src\rtGraphics\rtCam.h" />
     <ClInclude Include="src\rtGraphics\rtColor.h" />
     <ClInclude Include="src\rtGraphics\rtMain.h" />
+    <ClInclude Include="src\rtGraphics\rtMat.h" />
+    <ClInclude Include="src\rtGraphics\rtMesh.h" />
+    <ClInclude Include="src\rtGraphics\rtNode.h" />
+    <ClInclude Include="src\rtGraphics\rtObject.h" />
     <ClInclude Include="src\rtGraphics\rtScene.h" />
     <ClInclude Include="src\rtGraphics\rtVec3f.h" />
   </ItemGroup>

@@ -47,5 +47,17 @@
     <ClInclude Include="src\rtGraphics\rtColor.h">
       <Filter>src\rtGraphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\rtGraphics\rtMat.h">
+      <Filter>src\rtGraphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rtGraphics\rtNode.h">
+      <Filter>src\rtGraphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rtGraphics\rtObject.h">
+      <Filter>src\rtGraphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rtGraphics\rtMesh.h">
+      <Filter>src\rtGraphics</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
