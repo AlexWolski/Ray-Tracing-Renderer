@@ -48,7 +48,7 @@ namespace rtGraphics
 					//Find new direction vector
 					d = (r - camPos).normalize();
 					//Calculate the color of the pixel
-					rtColor pixelColor = rayTraceScene(scene, camPos, d, nearClip, farClip);
+					rtColor pixelColor = rayTraceScene(scene, camPos, d, v, n, nearClip, farClip);
 					//Write the color to the pixel buffer
 					bufferPixels->setColor(col, row, ofColor(pixelColor.getR(), pixelColor.getG(), pixelColor.getB()));
 				}
@@ -60,15 +60,19 @@ namespace rtGraphics
 		}
 
 		//Ray trace a single ray
-		static rtColor rayTraceScene(shared_ptr<rtScene> scene, rtVec3f p, rtVec3f d, float nearClip, float farClip)
+		static rtColor rayTraceScene(shared_ptr<rtScene> scene, rtVec3f p, rtVec3f d, rtVec3f v, rtVec3f n, float nearClip, float farClip)
 		{
 			//Cache the objects and lights in the scene
 			objectSet objects = scene->getObjects();
 			lightSet lights = scene->getLights();
 
-			//The closest object and the distance to the intersection
+			//The closest object that the ray intersects
+			rtObject* hitObject;
+			//The distance from the camera to the intersection point
 			float minT = INFINITY;
-			rtObject* hitTarget;
+			//The point of intersection and the normal at that point
+			rtVec3f* hitPos = nullptr;
+			rtVec3f* hitNormal = nullptr;
 
 			//Iterate over the all the objects
 			for (auto objectPtr = objects->begin(); objectPtr != objects->end(); objectPtr++)
@@ -76,12 +80,12 @@ namespace rtGraphics
 				//Get a pointer to the current object
 				rtObject* currObject = objectPtr->second;
 				//Determine if the ray intersects the object
-				float t = currObject->rayIntersect(p, d);
+				float t = currObject->rayIntersect(p, d, hitPos, hitNormal);
 
 				//If the ray hit and the object is not obscured, save the ray parameter and object address
 				if (t < minT && t > 0.0f)
 				{
-					hitTarget = currObject;
+					hitObject = currObject;
 					minT = t;
 				}
 			}
@@ -96,9 +100,7 @@ namespace rtGraphics
 				//The final color to the drawn to the pixel
 				rtColor finalColor = rtColor();
 				//The material properties of the object
-				rtMat objectMaterial = hitTarget->getMat();
-				//The point of intersection
-				rtVec3f hitPos = d * minT;
+				rtMat objectMaterial = hitObject->getMat();
 
 				//Iterate over the all the lights
 				for (auto lightPtr = lights->begin(); lightPtr != lights->end(); lightPtr++)
@@ -106,10 +108,12 @@ namespace rtGraphics
 					//Get a pointer to the current light
 					rtLight* currLight = lightPtr->second;
 					//Calculate the light vector, used in both diffuse and specular lighting
-					rtVec3f lightVector = (currLight->getPosition() - hitPos).getNormalized();
+					rtVec3f lightVector = (currLight->getPosition() - *hitPos).getNormalized();
 
 					//Add the three types of lighting from this light to the final color
 					finalColor += ambientColor(objectMaterial.getAmbient(), (*currLight).getAmbient());
+					finalColor += diffuseColor(lightVector, *hitNormal, objectMaterial.getDiffuse(), (*currLight).getDiffuse());
+					finalColor += specularColor(lightVector, n, v, objectMaterial.getDiffuse(), (*currLight).getDiffuse());
 				}
 			}
 		}
