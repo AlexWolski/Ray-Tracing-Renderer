@@ -10,7 +10,7 @@ namespace rtGraphics
 	 * A light object that defines the light position, color, and intensity
 	 * TO-DO: Extend the class to support point, area, directional, and spot lights
 	 */
-	class rtLight : rtNode
+	class rtLight : public rtNode
 	{
 	private:
 		//Light colors

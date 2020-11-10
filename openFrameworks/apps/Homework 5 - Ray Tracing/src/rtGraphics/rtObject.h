@@ -16,7 +16,7 @@ namespace rtGraphics
 	 * TO-DO: Replace the material member with a material name that
 	 *        corresponds to a shared material in a data structure
 	 */
-	class rtObject : rtNode
+	class rtObject : public rtNode
 	{
 	private:
 		rtMat material;
@@ -44,7 +44,7 @@ namespace rtGraphics
 	 * A sphere object defined by a position and radius
 	 * TO-DO: Move the position member into rtNode
 	 */
-	class rtSphere : rtObject
+	class rtSphere : public rtObject
 	{
 	private:
 		rtVec3f position;
@@ -106,7 +106,7 @@ namespace rtGraphics
 	 * TO-DO: Replace the mesh member with a mesh name that
 	 *        corresponds to a shared mesh in a data structure
 	*/
-	class rtMeshObject : rtObject
+	class rtMeshObject : public rtObject
 	{
 	private:
 		rtMesh mesh;
