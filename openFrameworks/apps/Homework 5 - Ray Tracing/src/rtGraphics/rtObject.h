@@ -26,6 +26,8 @@ namespace rtGraphics
 		rtObject(rtMat& material) : material(material) {}
 		rtMat& getMat();
 		void setMat(const rtMat& material);
+
+		virtual float rayIntersect(rtVec3f p, rtVec3f d) = 0;
 	};
 
 	///In-line method definitions
@@ -64,6 +66,9 @@ namespace rtGraphics
 		///Setters
 		void setPosition(const rtVec3f& position);
 		void setRadius(float radius);
+
+		///Inherited Methods
+		float rayIntersect(rtVec3f p, rtVec3f d);
 	};
 
 	///Constructors
@@ -100,6 +105,12 @@ namespace rtGraphics
 	inline void rtSphere::setPosition(const rtVec3f& position)	{ this->position = position;  }
 	inline void rtSphere::setRadius(float radius)				{ this->radius = radius; }
 
+	///Inherited methods
+	inline float rtSphere::rayIntersect(rtVec3f p, rtVec3f d)
+	{
+		return 0.0f;
+	}
+
 
 	/*
 	 * A mesh-based object that applies a transform to the mesh
@@ -120,10 +131,19 @@ namespace rtGraphics
 		///Getter & Setter
 		rtMesh& getMesh();
 		void setMesh(rtMesh& mesh);
+
+		///Inherited Methods
+		float rayIntersect(rtVec3f p, rtVec3f d);
 	};
 
 	///In-line method definitions
 	//Getter & Setter
 	inline rtMesh& rtMeshObject::getMesh()			{ return mesh; }
 	inline void rtMeshObject::setMesh(rtMesh& mesh)	{ this->mesh = mesh; }
+
+	///Inherited methods
+	inline float rtMeshObject::rayIntersect(rtVec3f p, rtVec3f d)
+	{
+		return 0.0f;
+	}
 }

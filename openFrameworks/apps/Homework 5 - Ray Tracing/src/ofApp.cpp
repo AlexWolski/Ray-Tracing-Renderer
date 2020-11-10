@@ -5,6 +5,7 @@ void ofApp::setup()
 	//Create the scene and camera
 	demoScene = make_shared<rtScene>();
 	mainCamera = make_shared<rtCam>(rtVec3f::forward, rtVec3f::up);
+	mainCamera->setScene(demoScene);
 
 	//Create a sphere and add it to the scene
 	rtMat red(rtColor(50, 50, 50), rtColor(255, 0, 0), rtColor(255, 255, 255));

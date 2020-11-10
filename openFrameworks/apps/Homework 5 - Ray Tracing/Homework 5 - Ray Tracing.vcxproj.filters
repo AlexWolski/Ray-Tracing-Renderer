@@ -56,5 +56,8 @@
     <ClInclude Include="src\rtGraphics\rtLight.h">
       <Filter>src\rtGraphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\rtGraphics\rtRenderer.h">
+      <Filter>src\rtGraphics</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

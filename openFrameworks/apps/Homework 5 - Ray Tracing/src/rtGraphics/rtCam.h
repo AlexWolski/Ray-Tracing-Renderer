@@ -3,6 +3,7 @@
 #include <memory>
 #include "rtVec3f.h"
 #include "rtScene.h"
+#include "rtRenderer.h"
 #include "ofMain.h"
 
 using namespace std;
@@ -62,6 +63,7 @@ namespace rtGraphics
 		float getNearClip() const;
 		float getFarClip() const;
 		shared_ptr<rtScene> getScene() const;
+		ofPixels* getBufferPixels();
 		rtVec3f getPosition() const;
 		rtVec3f getLookVector() const;
 		rtVec3f getUpVector() const;
@@ -91,7 +93,7 @@ namespace rtGraphics
 	}
 
 	///In-line method definitions
-	//Event Listner
+	//Event Lister
 	inline void rtCam::draw(ofEventArgs& event)
 	{
 		render();
@@ -104,8 +106,9 @@ namespace rtGraphics
 	inline float rtCam::getNearClip() const				{ return nearClip; }
 	inline float rtCam::getFarClip() const				{ return farClip; }
 	inline shared_ptr<rtScene> rtCam::getScene() const	{ return scene; }
+	inline ofPixels* rtCam::getBufferPixels()			{ return bufferPixels; }
 	inline rtVec3f rtCam::getPosition() const			{ return position; }
-	inline rtVec3f rtCam::getLookVector() const			{ return pref; }
+	inline rtVec3f rtCam::getLookVector() const			{ return n; }
 	inline rtVec3f rtCam::getUpVector() const			{ return V; }
 	inline rtVec3f rtCam::getPerpVector() const			{ return u; }
 
@@ -141,7 +144,7 @@ namespace rtGraphics
 	//Render the scene using ray tracing
 	inline void rtCam::render()
 	{
-		//TO-DO
+		rtRenderer::rayTrace(scene, position, u, v, n, fov, nearClip, farClip, bufferPixels);
 	}
 
 	//Draw the rendered image
@@ -155,13 +158,13 @@ namespace rtGraphics
 	inline void rtCam::calcAxes()
 	{
 		//Calculate the normalized look-vector
-		n = pref - position;
+		n = position - pref;
 		n.normalize();
 		//Cross the look-vector with the imprecise up-vector to get the perpendicular vector
-		u = n.cross(V);
+		u = V.getCrossed(n);
 		u.normalize();
 		//Cross the perpendicular vector with the look-vector to get a precise look-vector
-		v = v.cross(n);
+		v = n.getCrossed(u);
 		v.normalize();
 	}
 

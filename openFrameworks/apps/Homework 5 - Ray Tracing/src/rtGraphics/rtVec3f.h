@@ -296,7 +296,7 @@ namespace rtGraphics
 		if (value == 0)
 			return rtVec3f(NAN, NAN, NAN);
 
-		return rtVec3f(x * value, y * value, z * value);
+		return rtVec3f(x / value, y / value, z / value);
 	}
 
 	inline rtVec3f& rtVec3f::operator/=(float value)

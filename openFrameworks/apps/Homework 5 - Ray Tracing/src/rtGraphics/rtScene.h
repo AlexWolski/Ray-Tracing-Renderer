@@ -2,7 +2,6 @@
 
 #include <memory>
 #include <map>
-#include "rtCam.h"
 #include "rtLight.h"
 #include "rtObject.h"
 #include "ofMain.h"

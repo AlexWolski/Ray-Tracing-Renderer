@@ -6,7 +6,7 @@ int main()
 	//Create a windowed application running in OpenGL 3.2
 	ofGLFWWindowSettings settings;
 	settings.setGLVersion(3, 2);
-	settings.setSize(1024, 768);
+	settings.setSize(512, 512);
 	ofCreateWindow(settings);
 
 	//Start the application
