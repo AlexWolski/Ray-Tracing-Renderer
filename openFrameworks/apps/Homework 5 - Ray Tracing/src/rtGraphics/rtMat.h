@@ -47,7 +47,7 @@ namespace rtGraphics
 		specular(specular) {
 	}
 
-	///In - line method definitions
+	///In-line method definitions
 	//Getters
 	rtColor& rtMat::getAmbient()	{ return ambient; }
 	rtColor& rtMat::getDiffuse()	{ return diffuse; }

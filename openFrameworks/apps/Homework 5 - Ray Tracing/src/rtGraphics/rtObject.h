@@ -10,16 +10,43 @@ using namespace std;
 
 namespace rtGraphics
 {
+	/*
+	 * A wrapper class for ray traceable objects
+	 * TO-DO: Replace the material member with a material name that
+	 *        corresponds to a shared material in a hash table
+	 */
 	class rtObject : rtNode
 	{
 	private:
-		rtMat& material;
+		rtMat material;
 
 	public:
+		rtObject();
+		rtObject(rtMat& material);
 		rtMat& getMat();
-		void setMat();
+		void setMat(const rtMat& material);
 	};
 
+	///Constructors
+	rtObject::rtObject() : material(rtMat()) {}
+	rtObject::rtObject(rtMat& material) : material(material) {}
+
+	///In-line method definitions
+	inline rtMat& rtObject::getMat()
+	{
+		return material;
+	}
+
+	inline void rtObject::setMat(const rtMat& material)
+	{
+		this->material = material;
+	}
+
+
+	/*
+	 * A sphere object defined by a position and radius
+	 * TO-DO: Move the position member into rtNode
+	 */
 	class rtSphere : rtObject
 	{
 	private:
@@ -29,7 +56,9 @@ namespace rtGraphics
 	public:
 		///Constructors
 		rtSphere();
+		rtSphere(rtMat& material);
 		rtSphere(const rtVec3f& position, float radius);
+		rtSphere(const rtVec3f& position, float radius, rtMat& material);
 
 		///Getters
 		rtVec3f getPosition() const;
@@ -40,8 +69,48 @@ namespace rtGraphics
 		void setRadius(float radius);
 	};
 
+	///Constructors
+	rtSphere::rtSphere() : rtObject()
+	{
+		position = rtVec3f::zero;
+		radius = 1.0f;
+	}
+
+	rtSphere::rtSphere(rtMat& material) : rtObject(material)
+	{
+		position = rtVec3f::zero;
+		radius = 1.0f;
+	}
+
+	rtSphere::rtSphere(const rtVec3f& position, float radius) :
+		rtObject(),
+		position(position),
+		radius(radius) {
+	}
+
+	rtSphere::rtSphere(const rtVec3f& position, float radius, rtMat& material) :
+		rtObject(material),
+		position(position),
+		radius(radius) {
+	}
+
+	///In-line method definitions
+	//Getters
+	inline rtVec3f rtSphere::getPosition() const	{ return position; }
+	inline float rtSphere::getRadius() const		{ return radius; }
+	
+	//Setters
+	void rtSphere::setPosition(const rtVec3f& position)	{ this->position = position;  }
+	void rtSphere::setRadius(float radius)				{ this->radius = radius; }
+
+
 	typedef shared_ptr<vector<rtVec3f>> vecList;
 
+	/*
+	 * A mesh object containing vertices and faces
+	 * TO-DO: Create an encapsulating rtMeshObject class
+	 *        whose instances can share meshes
+	*/
 	class rtMesh : rtObject
 	{
 	private:
