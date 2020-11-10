@@ -59,8 +59,10 @@ namespace rtGraphics
 	//Copy the vertices and faces, then calculate the normals
 	inline rtMesh::rtMesh(const rtVec3f vertices[], int numVerts, const array<int, 3> faces[], int numFaces)
 	{
-		//this->vertices = make_shared<vector<rtVec3f>>(vertices, numVerts);
-		//this->faces = make_shared<vector<array<int, 3>>>(faces, numFaces);
+		//Copy the vertices and faces using memcpy
+		memcpy(&this->vertices->operator[](0), &vertices[0], numVerts * sizeof(vertices[0]));
+		memcpy(&this->faces->operator[](0), &faces[0], numFaces * sizeof(faces[0]));
+		//Initialize the normals vector
 		normals = make_shared<vector<rtVec3f>>();
 
 		updateNormals();
@@ -100,8 +102,23 @@ namespace rtGraphics
 	//Updates the normal for each face
 	inline void rtMesh::updateNormals()
 	{
+		//Loop through the face indices
 		for (int faceIndex = 0; faceIndex < faces->size(); faceIndex++)
-			normals->at(faceIndex) = calculateNormal(faceIndex);
+		{
+			rtVec3f normal = calculateNormal(faceIndex);
+
+			//If the normals vector is too small, populate it with dummy variables. Then add the new normal.
+			if (normals->size() <= faceIndex)
+			{
+				while (normals->size() < faceIndex)
+					normals->push_back(rtVec3f::zero);
+
+				normals->push_back(normal);
+			}
+			//Otherwise just set the normal at the given index
+			else
+				normals->at(faceIndex) = normal;
+		}
 	}
 
 	inline vecList rtMesh::getNormals()
@@ -137,6 +154,10 @@ namespace rtGraphics
 		array<int, 3> face = { index0, index1, index2 };
 		//Push the array pointer onto the vector
 		faces->push_back(face);
+		//Get the index of the new face
+		int faceIndex = faces->size() - 1;
+		//Calculate the normal and store it
+		normals->push_back(calculateNormal(faceIndex));
 	}
 
 	inline intList rtMesh::getFaces()
