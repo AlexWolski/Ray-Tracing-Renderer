@@ -77,7 +77,7 @@ namespace rtGraphics
 	///In-line method definitions
 	//Getters
 	inline rtColor& rtLight::getAmbient()			{ return ambient; }
-	inline inline rtColor& rtLight::getDiffuse()	{ return diffuse; }
+	inline rtColor& rtLight::getDiffuse()			{ return diffuse; }
 	inline rtColor& rtLight::getSpecular()			{ return specular; }
 	inline float rtLight::getIntensity() const		{ return intensity; }
 	inline bool rtLight::attenuateEnabled() const	{ return attenuate; }
