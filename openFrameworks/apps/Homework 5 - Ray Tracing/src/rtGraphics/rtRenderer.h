@@ -88,14 +88,49 @@ namespace rtGraphics
 
 			//If the ray didn't intersect any objects, return a black pixel
 			//TO-DO: Return the background color of the camera
-			if (minT < 0.0f && minT > farClip)
+			if (minT < 0.0f || minT > farClip)
 				return rtColor(0.0f, 0.0f, 0.0f);
-
-			//Iterate over the all the lights
-			for (auto lightPtr = lights->begin(); lightPtr != lights->end(); lightPtr++)
+			//Otherwise calculate the lighting of the pixel
+			else
 			{
+				//The final color to the drawn to the pixel
+				rtColor finalColor = rtColor();
+				//The material properties of the object
+				rtMat objectMaterial = hitTarget->getMat();
+				//The point of intersection
+				rtVec3f hitPos = d * minT;
 
+				//Iterate over the all the lights
+				for (auto lightPtr = lights->begin(); lightPtr != lights->end(); lightPtr++)
+				{
+					//Get a pointer to the current light
+					rtLight* currLight = lightPtr->second;
+					//Calculate the light vector, used in both diffuse and specular lighting
+					rtVec3f lightVector = (currLight->getPosition() - hitPos).getNormalized();
+
+					//Add the three types of lighting from this light to the final color
+					finalColor += ambientColor(objectMaterial.getAmbient(), (*currLight).getAmbient());
+				}
 			}
+		}
+
+		static rtColor ambientColor(rtColor ambientLight, rtColor ambientMaterial)
+		{
+			//The ambient color is calculated using a component-wise multiplication
+			return ambientLight * ambientMaterial;
+		}
+
+		static rtColor diffuseColor(rtVec3f lightVector, rtVec3f normal, rtColor diffuseLight, rtColor diffuseMaterial)
+		{
+			float dotProd = normal.dot(lightVector);
+			return (diffuseLight * diffuseMaterial) * dotProd;
+		}
+
+		static rtColor specularColor(rtVec3f lightVector, rtVec3f lookVector, rtVec3f upVector, rtColor specularLight, rtColor specularMaterial)
+		{
+			rtVec3f halfWay = (lightVector + lookVector).getNormalized();
+			float dotProd = upVector.dot(lightVector);
+			return (specularLight * specularMaterial) * dotProd;
 		}
 	};
 }
