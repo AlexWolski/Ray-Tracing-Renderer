@@ -9,9 +9,6 @@ namespace rtGraphics
 		int r, g, b, a;
 		const static int maxValue = 255;
 
-		//Keep the r, g, b, and a values between 0 and 1
-		void clampColors();
-
 	public:
 		///Constructors
 		rtColor();
@@ -19,8 +16,10 @@ namespace rtGraphics
 		rtColor(int r, int g, int b, int a = maxValue);
 
 		///Color Methods
-		//Returns the given value 
+		//Returns the given value clamped between 0 and the maximum
 		static int clampColor(int value);
+		//Clamp the r, g, b, and a values between 0 and the maximum
+		void clampColors();
 
 		///Getters
 		int getR() const;
@@ -34,6 +33,16 @@ namespace rtGraphics
 		void setB(int b);
 		void setA(int a);
 		void setColor(int r, int g, int b, int a = maxValue);
+
+		///Operators
+		rtColor  operator+ (const rtColor& rhs) const;
+		rtColor& operator+=(const rtColor& rhs);
+		rtColor  operator- (const rtColor& rhs) const;
+		rtColor& operator-=(const rtColor& rhs);
+		rtColor  operator* (const rtColor& rhs) const;
+		rtColor& operator*=(const rtColor& rhs);
+		rtColor  operator/ (const rtColor& rhs) const;
+		rtColor& operator/=(const rtColor& rhs);
 	};
 
 	///Constructors
@@ -88,5 +97,70 @@ namespace rtGraphics
 		this->a = a;
 
 		clampColors();
+	}
+
+	///Operators
+	//Addition
+	inline rtColor rtColor::operator+(const rtColor& rhs) const
+	{
+		return rtColor(r + rhs.r, g + rhs.g, b + rhs.b, a + rhs.a);
+	}
+
+	inline rtColor& rtColor::operator+=(const rtColor& rhs)
+	{
+		r += rhs.r;
+		g += rhs.g;
+		b += rhs.b;
+		a += rhs.a;
+
+		return *this;
+	}
+
+	//Subtraction
+	inline rtColor rtColor::operator-(const rtColor& rhs) const
+	{
+		return rtColor(r - rhs.r, g - rhs.g, b - rhs.b, a - rhs.a);
+	}
+
+	inline rtColor& rtColor::operator-=(const rtColor& rhs)
+	{
+		r -= rhs.r;
+		g -= rhs.g;
+		b -= rhs.b;
+		a -= rhs.a;
+
+		return *this;
+	}
+
+	//Multiplication
+	inline rtColor rtColor::operator*(const rtColor& rhs) const
+	{
+		return rtColor(r * rhs.r, g * rhs.g, b * rhs.b, a * rhs.a);
+	}
+
+	inline rtColor& rtColor::operator*=(const rtColor& rhs)
+	{
+		r *= rhs.r;
+		g *= rhs.g;
+		b *= rhs.b;
+		a *= rhs.a;
+
+		return *this;
+	}
+
+	//Division
+	inline rtColor rtColor::operator/(const rtColor& rhs) const
+	{
+		return rtColor(r / rhs.r, g / rhs.g, b / rhs.b, a / rhs.a);
+	}
+
+	inline rtColor& rtColor::operator/=(const rtColor& rhs)
+	{
+		r /= rhs.r;
+		g /= rhs.g;
+		b /= rhs.b;
+		a /= rhs.a;
+
+		return *this;
 	}
 }
