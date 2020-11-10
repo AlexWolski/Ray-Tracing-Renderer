@@ -116,10 +116,10 @@ namespace rtGraphics
 
 		float discriminant = (dotProd*dotProd) - (magM*magM - radius * radius);
 		float sqrtDisc = sqrt(discriminant);
-		float tmin = -dotProd - sqrtDisc;
-		float tmax = -dotProd + sqrtDisc;
+		float tSub = -dotProd - sqrtDisc;
+		float tAdd = -dotProd + sqrtDisc;
 
-		float t = (tmin < tmax) ? tmin : tmax;
+		float t = (tSub < tAdd) ? tSub : tAdd;
 
 		hitPos = &(p + (d * t));
 		hitNormal = &(*hitPos - center).getNormalized();
@@ -160,6 +160,53 @@ namespace rtGraphics
 	///Inherited methods
 	inline float rtMeshObject::rayIntersect(rtVec3f p, rtVec3f d, rtVec3f* hitPos, rtVec3f* hitNormal)
 	{
+		float tmin = INFINITY;
+		int faceIndex;
+
+		vecList& vertices = mesh.getVerts();
+		intList& faces = mesh.getFaces();
+		vecList& normals = mesh.getNormals();
+
+		for (int faceIndex = 0; faceIndex < faces->size(); faceIndex++)
+		{
+			//Get the array of vertex indices for the given face
+			array<int, 3>& face = faces->at(faceIndex);
+			//Get the first vertex
+			rtVec3f p0 = vertices->at(face.at(0));
+			//Get the normal using the face index
+			rtVec3f normal = normals->at(faceIndex);
+
+			float k = p0.dot(normal);
+			float t = (k - p.dot(normal)) / (d.dot(normal));
+
+			//If the ray is not obscured, determine if the ray hit the triangle
+			if (t < tmin)
+			{
+				//Calculate the intersection point using t
+				rtVec3f r = p + (d*t);
+
+				//Get the remaining two points
+				rtVec3f p1 = vertices->at(face.at(1));
+				rtVec3f p2 = vertices->at(face.at(2));
+
+				//Find the edge vertices
+				rtVec3f e0 = p0 - p1;
+				rtVec3f e1 = p2 - p1;
+				rtVec3f e2 = p0 - p2;
+
+				float result1 = (e0.getCrossed(r - p0)).dot(normal);
+				float result2 = (e1.getCrossed(r - p0)).dot(normal);
+				float result3 = (e2.getCrossed(r - p0)).dot(normal);
+
+				if (result1 > 0 && result2 > 0 && result3 > 0)
+				{
+					tmin = t;
+					hitPos = &r;
+					hitNormal = &normal;
+				}
+			}
+		}
+
 		return 0.0f;
 	}
 }
