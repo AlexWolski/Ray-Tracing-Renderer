@@ -20,9 +20,9 @@ namespace rtGraphics
 
 		//The camera settings
 		bool enabled;
-		float fov;
-		float nearClip;
-		float farClip;
+		float fov = 90.0f;
+		float nearClip = 0.1f;
+		float farClip = 1000.0f;
 		//Vectors defining the viewing coordinates
 		rtVec3f position;
 		rtVec3f pref;	//Look-at point
