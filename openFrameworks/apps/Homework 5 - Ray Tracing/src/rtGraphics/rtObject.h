@@ -115,6 +115,7 @@ namespace rtGraphics
 		///Constructors
 		rtMeshObject() : mesh(rtMesh()) {}
 		rtMeshObject(rtMesh& mesh) : mesh(mesh) {}
+		rtMeshObject(rtMesh& mesh, rtMat& material) : rtObject(material), mesh(mesh) {}
 
 		///Getter & Setter
 		rtMesh& getMesh();
