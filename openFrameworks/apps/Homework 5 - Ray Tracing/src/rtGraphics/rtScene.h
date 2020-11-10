@@ -1,7 +1,7 @@
 #pragma once
 
-#include <unordered_set>
 #include <memory>
+#include <map>
 #include "rtCam.h"
 #include "rtLight.h"
 #include "rtObject.h"
@@ -11,8 +11,8 @@ using namespace std;
 
 namespace rtGraphics
 {
-	typedef unordered_set<rtLight*> lightSet;
-	typedef unordered_set<rtObject*> objectSet;
+	typedef shared_ptr<map<string, rtLight*>> lightSet;
+	typedef shared_ptr<map<string, rtObject*>> objectSet;
 
 	//Forward declare rtCam to prevent a cyclic reference
 	class rtCam;
@@ -28,32 +28,58 @@ namespace rtGraphics
 		objectSet objects;
 
 	public:
+		///Constructor
+		rtScene();
 		///Camera Methods
 		void setCamera(shared_ptr<rtCam> camera);
 		shared_ptr<rtCam> getCamera() const;
 		///Light Methods
-		shared_ptr<lightSet> getLights() const;
-		void addLight(rtLight* lightToAdd);
-		void removeLight(rtLight* lightToRemove);
+		lightSet getLights() const;
+		void addLight(string lightName, rtLight* lightToAdd);
+		rtLight* getLight(string lightName);
+		void removeLight(string lightName);
 		void clearLights();
 		///Object Methods
-		shared_ptr<objectSet> getObjects() const;
-		void addObject(rtObject* objectToAdd);
-		void removeObject(rtObject* objectToRemove);
+		objectSet getObjects() const;
+		void addObject(string objectName, rtObject* objectToAdd);
+		rtObject* getObject(string objectName);
+		void removeObject(string objectName);
 		void clearObjects();
 	};
 
+	///Constructor
+	inline rtScene::rtScene()
+	{
+		camera = make_shared<rtCam>();
+		lights = make_shared<map<string, rtLight*>>();
+		objects = make_shared<map<string, rtObject*>>();
+	}
+
 	///In-line method definitions
 	//Camera Methods
-	inline shared_ptr<rtCam> rtScene::getCamera() const			{ return camera; }
+	inline shared_ptr<rtCam> rtScene::getCamera() const { return camera; }
+
 	//Light Methods
-	inline shared_ptr<lightSet> rtScene::getLights() const		{ return make_shared<lightSet>(lights); }
-	inline void rtScene::addLight(rtLight* lightToAdd)			{ lights.insert(lightToAdd); }
-	inline void rtScene::removeLight(rtLight* lightToRemove)	{ lights.erase(lightToRemove); }
-	inline void rtScene::clearLights()							{ lights.clear(); }
+	inline lightSet rtScene::getLights() const { return lights; }
+
+	inline void rtScene::addLight(string objectName, rtLight* lightToAdd)
+	{
+		lights->insert(pair<string, rtLight*>(objectName, lightToAdd));
+	}
+
+	inline rtLight* rtScene::getLight(string lightName)		{ return lights->operator[](lightName); }
+	inline void rtScene::removeLight(string lightName)		{ lights->erase(lightName); }
+	inline void rtScene::clearLights()						{ lights->clear(); }
+
 	//Object Methods
-	inline shared_ptr<objectSet> rtScene::getObjects() const	{ return make_shared<objectSet>(objects); }
-	inline void rtScene::addObject(rtObject* objectToAdd)		{ objects.insert(objectToAdd); }
-	inline void rtScene::removeObject(rtObject* objectToRemove)	{ objects.erase(objectToRemove); }
-	inline void rtScene::clearObjects()							{ objects.clear(); }
+	inline objectSet rtScene::getObjects() const			{ return objects; }
+
+	inline void rtScene::addObject(string objectName, rtObject* objectToAdd)
+	{
+		objects->insert(pair<string, rtObject*>(objectName, objectToAdd));
+	}
+
+	inline rtObject* rtScene::getObject(string objectName)	{ return objects->operator[](objectName); }
+	inline void rtScene::removeObject(string objectName)	{ objects->erase(objectName); }
+	inline void rtScene::clearObjects()						{ objects->clear(); }
 }
