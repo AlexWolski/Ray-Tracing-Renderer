@@ -3,7 +3,7 @@
 void ofApp::setup()
 {
 	demoScene = make_shared<rtScene>();
-	mainCamera = make_shared<rtCam>(rtVec3f::forward(), rtVec3f::up());
+	mainCamera = make_shared<rtCam>(rtVec3f::forward, rtVec3f::up);
 	demoScene->setCamera(mainCamera);
 }
 

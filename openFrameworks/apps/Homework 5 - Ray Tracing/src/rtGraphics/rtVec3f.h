@@ -10,6 +10,9 @@ namespace rtGraphics
 		float x, y, z;
 
 	public:
+		///Static Members
+		static const rtVec3f one, zero, up, down, forward, back, left, right;
+
 		///Constructors
 		rtVec3f() : x(0.0f), y(0.0f), z(0.0f) { };
 		explicit rtVec3f(float value) : x(value), y(value), z(value) {}
@@ -26,16 +29,6 @@ namespace rtGraphics
 		float getX() const;
 		float getY() const;
 		float getZ() const;
-
-		///Static Methods
-		static rtVec3f one();
-		static rtVec3f zero();
-		static rtVec3f up();
-		static rtVec3f down();
-		static rtVec3f forward();
-		static rtVec3f back();
-		static rtVec3f left();
-		static rtVec3f right();
 
 		///Vector Methods
 		float magnitude() const;
@@ -127,20 +120,10 @@ namespace rtGraphics
 		return z;
 	}
 
-	//Static Methods
-	inline rtVec3f rtVec3f::one()		{ return rtVec3f(1.0f); }
-	inline rtVec3f rtVec3f::zero()		{ return rtVec3f(0.0f); }
-	inline rtVec3f rtVec3f::up()		{ return rtVec3f(0.0f, 1.0f, 0.0f); }
-	inline rtVec3f rtVec3f::down()		{ return rtVec3f(0.0f, -1.0f, 0.0f); }
-	inline rtVec3f rtVec3f::forward()	{ return rtVec3f(0.0f, 0.0f, 1.0f); }
-	inline rtVec3f rtVec3f::back()		{ return rtVec3f(0.0f, 0.0f, -1.0f); }
-	inline rtVec3f rtVec3f::left()		{ return rtVec3f(-1.0f, 0.0f, 0.0f); }
-	inline rtVec3f rtVec3f::right()		{ return rtVec3f(1.0f, 0.0f, 0.0f); }
-
 	//Vector Methods
 	inline float rtVec3f::magnitude() const
 	{
-		return std::sqrt(x*x + y*y + z*z);
+		return sqrt(x*x + y*y + z*z);
 	}
 
 	inline float rtVec3f::magnitudeSquared() const

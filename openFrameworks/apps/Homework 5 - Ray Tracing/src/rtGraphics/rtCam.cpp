@@ -4,7 +4,7 @@ namespace rtGraphics
 {
 	///Constructors
 	//If no look-at point and up-vector are provided, default to the camera facing down the z axis
-	rtCam::rtCam(bool enabled) : rtCam(rtVec3f::forward(), rtVec3f::up(), enabled) {}
+	rtCam::rtCam(bool enabled) : rtCam(rtVec3f::forward, rtVec3f::up, enabled) {}
 
 	rtCam::rtCam(const rtVec3f& lookAtPoint, const rtVec3f& appoxUpVector, bool enabled) : enabled(enabled)
 	{
