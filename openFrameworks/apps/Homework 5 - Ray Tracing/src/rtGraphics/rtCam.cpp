@@ -39,8 +39,6 @@ namespace rtGraphics
 		//Create a frame buffer with the given dimensions
 		frameBuffer = make_shared<ofImage>();
 		frameBuffer->allocate(width, height, OF_IMAGE_COLOR);
-		//Set the default color to black
-		frameBuffer->setColor(ofColor(0.0f, 0.0f, 0.0f));
 		//Store a reference to the pixel data
 		bufferPixels = &frameBuffer->getPixels();
 	}
