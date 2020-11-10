@@ -5,6 +5,8 @@
 #include "rtCam.h"
 #include "ofMain.h"
 
+using namespace std;
+
 namespace rtGraphics
 {
 	typedef unordered_set<ofLight*> lightSet;
@@ -50,6 +52,6 @@ namespace rtGraphics
 	//Object Methods
 	inline shared_ptr<objectSet> rtScene::getObjects() const	{ return make_shared<objectSet>(objects); }
 	inline void rtScene::addObject(of3dPrimitive* objectToAdd)			{ objects.insert(objectToAdd); }
-	inline void rtScene::removeObject(of3dPrimitive* objectToRemove)	{	objects.erase(objectToRemove); }
-	inline void rtScene::clearObjects()									{	objects.clear();	}
+	inline void rtScene::removeObject(of3dPrimitive* objectToRemove)	{ objects.erase(objectToRemove); }
+	inline void rtScene::clearObjects()									{ objects.clear(); }
 }

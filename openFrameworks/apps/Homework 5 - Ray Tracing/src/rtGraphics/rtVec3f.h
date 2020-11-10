@@ -140,7 +140,7 @@ namespace rtGraphics
 	//Vector Methods
 	inline float rtVec3f::magnitude() const
 	{
-		return sqrt(x*x + y*y + z*z);
+		return std::sqrt(x*x + y*y + z*z);
 	}
 
 	inline float rtVec3f::magnitudeSquared() const

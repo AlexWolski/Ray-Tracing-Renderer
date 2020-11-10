@@ -5,6 +5,8 @@
 #include "rtScene.h"
 #include "ofMain.h"
 
+using namespace std;
+
 namespace rtGraphics
 {
 	//Forward declare rtScene to prevent a cyclic reference
