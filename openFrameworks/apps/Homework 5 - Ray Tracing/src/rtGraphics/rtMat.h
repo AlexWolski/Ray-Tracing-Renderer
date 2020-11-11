@@ -11,22 +11,25 @@ namespace rtGraphics
 		rtColorf ambient;
 		rtColorf diffuse;
 		rtColorf specular;
+		float smoothness;
 
 	public:
 		///Constructors
 		rtMat();
-		rtMat(rtColorf& ambient, rtColorf& diffuse, rtColorf& specular);
+		rtMat(rtColorf& ambient, rtColorf& diffuse, rtColorf& specular, float smoothness = 1.0f);
 
 		///Getters
 		rtColorf& getAmbient();
 		rtColorf& getDiffuse();
 		rtColorf& getSpecular();
+		float getSmoothness();
 
 		///Setters
 		void setAmbient(rtColorf& ambient);
 		void setDiffuse(rtColorf& diffuse);
 		void setSpecular(rtColorf& specular);
 		void setColors(rtColorf& ambient, rtColorf& diffuse, rtColorf& specular);
+		void setSmoothness(float smoothness);
 	};
 
 	///Constructors
@@ -41,7 +44,8 @@ namespace rtGraphics
 		specular = rtColorf(255, 255, 255);
 	}
 
-	inline rtMat::rtMat(rtColorf& ambient, rtColorf& diffuse, rtColorf& specular) :
+	inline rtMat::rtMat(rtColorf& ambient, rtColorf& diffuse, rtColorf& specular, float smoothness) :
+		smoothness(smoothness),
 		ambient(ambient),
 		diffuse(diffuse),
 		specular(specular) {
@@ -52,11 +56,13 @@ namespace rtGraphics
 	inline rtColorf& rtMat::getAmbient()	{ return ambient; }
 	inline rtColorf& rtMat::getDiffuse()	{ return diffuse; }
 	inline rtColorf& rtMat::getSpecular()	{ return specular; }
+	inline float rtMat::getSmoothness()		{ return smoothness; }
 
 	//Setters
 	inline void rtMat::setAmbient(rtColorf& ambient)	{ this->ambient = ambient; }
 	inline void rtMat::setDiffuse(rtColorf& diffuse)	{ this->diffuse = diffuse; }
 	inline void rtMat::setSpecular(rtColorf& specular)	{ this->specular = specular; }
+	inline void rtMat::setSmoothness(float smoothness)	{ this->smoothness = smoothness; }
 
 	inline void rtMat::setColors(rtColorf& ambient, rtColorf& diffuse, rtColorf& specular)
 	{

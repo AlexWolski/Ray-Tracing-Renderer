@@ -107,7 +107,7 @@ namespace rtGraphics
 				//The final color to the drawn to the pixel
 				rtColorf finalColor = rtColorf();
 				//The material properties of the object
-				rtMat objectMaterial = hitObject->getMat();
+				rtMat objectMat = hitObject->getMat();
 
 				//Iterate over the all the lights
 				for (auto lightPtr = lights->begin(); lightPtr != lights->end(); lightPtr++)
@@ -119,9 +119,9 @@ namespace rtGraphics
 					lightVector.normalize();
 
 					//Add the three types of lighting from this light to the final color
-					finalColor += ambientColor(objectMaterial.getAmbient(), (*currLight).getAmbient());
-					finalColor += diffuseColor(lightVector, *hitNormal, objectMaterial.getDiffuse(), (*currLight).getDiffuse());
-					finalColor += specularColor(lightVector, n, *hitNormal, objectMaterial.getSpecular(), (*currLight).getSpecular());
+					finalColor += ambientColor((*currLight).getAmbient(), objectMat.getAmbient());
+					finalColor += diffuseColor(lightVector, *hitNormal, (*currLight).getDiffuse(), objectMat.getDiffuse());
+					finalColor += specularColor(lightVector, n, *hitNormal, (*currLight).getSpecular(), objectMat.getSpecular(), objectMat.getSmoothness());
 					//Clamp the values of the color
 					finalColor.clampColors();
 
@@ -142,12 +142,14 @@ namespace rtGraphics
 			return (diffuseLight * diffuseMaterial) * dotProd;
 		}
 
-		static rtColorf specularColor(rtVec3f& lightVector, rtVec3f& lookVector, rtVec3f& normal, rtColorf& specularLight, rtColorf& specularMaterial)
+		static rtColorf specularColor(rtVec3f& lightVector, rtVec3f& lookVector, rtVec3f& normal, rtColorf& specularLight, rtColorf& specularMaterial, float smoothness)
 		{
+			//Calculate the half-way vector
 			rtVec3f halfWay = lightVector + lookVector;
 			halfWay.normalize();
-
-			float dotProd = normal.dot(halfWay);
+			//Calculate (N*H)^n, where n is the smoothness parameter
+			float dotProd = pow(normal.dot(halfWay), smoothness);
+			
 			return (specularLight * specularMaterial) * dotProd;
 		}
 	};
