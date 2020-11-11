@@ -77,9 +77,12 @@ namespace rtGraphics
 			float minT = INFINITY;
 			//The closest object that the ray intersects
 			rtObject* hitObject;
-			//The point of intersection and the normal at that point
-			shared_ptr<rtVec3f> hitPos = make_shared<rtVec3f>();
-			shared_ptr<rtVec3f> hitNormal = make_shared<rtVec3f>();
+			//The closest intersection point and its normal
+			rtVec3f hitPos;
+			rtVec3f hitNormal;
+			//The position and normal of the current intersection point
+			shared_ptr<rtVec3f> currHitPos = make_shared<rtVec3f>();
+			shared_ptr<rtVec3f> currHitNormal = make_shared<rtVec3f>();
 
 			//Iterate over the all the objects
 			for (auto objectPtr = objects->begin(); objectPtr != objects->end(); objectPtr++)
@@ -87,12 +90,14 @@ namespace rtGraphics
 				//Get a pointer to the current object
 				rtObject* currObject = objectPtr->second;
 				//Determine if the ray intersects the object
-				float t = currObject->rayIntersect(P, D, hitPos, hitNormal);
+				float t = currObject->rayIntersect(P, D, currHitPos, currHitNormal);
 
 				//If the ray hit and the object is not obscured, save the ray parameter and object address
 				if (t < minT && t > 0.0f)
 				{
 					hitObject = currObject;
+					hitPos = *currHitPos;
+					hitNormal = *currHitNormal;
 					minT = t;
 				}
 			}
@@ -115,13 +120,13 @@ namespace rtGraphics
 					//Get a pointer to the current light
 					rtLight* currLight = lightPtr->second;
 					//Calculate the light vector, used in both diffuse and specular lighting
-					rtVec3f lightVector = (currLight->getPosition() - *hitPos);
+					rtVec3f lightVector = (currLight->getPosition() - hitPos);
 					lightVector.normalize();
 
 					//Add the three types of lighting from this light to the final color
 					finalColor += ambientColor((*currLight).getAmbient(), objectMat.getAmbient());
-					finalColor += diffuseColor(lightVector, *hitNormal, (*currLight).getDiffuse(), objectMat.getDiffuse());
-					finalColor += specularColor(lightVector, n, *hitNormal, (*currLight).getSpecular(), objectMat.getSpecular(), objectMat.getSmoothness());
+					finalColor += diffuseColor(lightVector, hitNormal, (*currLight).getDiffuse(), objectMat.getDiffuse());
+					finalColor += specularColor(lightVector, n, hitNormal, (*currLight).getSpecular(), objectMat.getSpecular(), objectMat.getSmoothness());
 					//Clamp the values of the color
 					finalColor.clampColors();
 
