@@ -183,6 +183,7 @@ namespace rtGraphics
 	///Inherited methods
 	inline float rtMeshObject::rayIntersect(rtVec3f P, rtVec3f D, shared_ptr<rtVec3f> hitPos, shared_ptr<rtVec3f> hitNormal)
 	{
+		float t;
 		float tmin = INFINITY;
 		int faceIndex;
 
@@ -190,6 +191,7 @@ namespace rtGraphics
 		intList& faces = mesh.getFaces();
 		vecList& normals = mesh.getNormals();
 
+		//Iterate over all the triangles in the mesh
 		for (int faceIndex = 0; faceIndex < faces->size(); faceIndex++)
 		{
 			//Get the array of vertex indices for the given face
@@ -200,7 +202,7 @@ namespace rtGraphics
 			rtVec3f normal = normals->at(faceIndex);
 
 			float k = p0.dot(normal);
-			float t = (k - P.dot(normal)) / (D.dot(normal));
+			t = (k - P.dot(normal)) / (D.dot(normal));
 
 			//If the ray is not obscured, determine if the ray hit the triangle
 			if (t < tmin)
@@ -213,13 +215,13 @@ namespace rtGraphics
 				rtVec3f p2 = vertices->at(face.at(2));
 
 				//Find the edge vertices
-				rtVec3f e0 = p0 - p1;
+				rtVec3f e0 = p1 - p0;
 				rtVec3f e1 = p2 - p1;
 				rtVec3f e2 = p0 - p2;
 
 				float result1 = (e0.getCrossed(r - p0)).dot(normal);
-				float result2 = (e1.getCrossed(r - p0)).dot(normal);
-				float result3 = (e2.getCrossed(r - p0)).dot(normal);
+				float result2 = (e1.getCrossed(r - p1)).dot(normal);
+				float result3 = (e2.getCrossed(r - p2)).dot(normal);
 
 				if (result1 > 0 && result2 > 0 && result3 > 0)
 				{
@@ -230,6 +232,6 @@ namespace rtGraphics
 			}
 		}
 
-		return 0.0f;
+		return tmin;
 	}
 }
