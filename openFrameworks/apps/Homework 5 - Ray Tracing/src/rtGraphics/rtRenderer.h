@@ -13,7 +13,7 @@ namespace rtGraphics
 	{
 	public:
 		//Ray trace an entire scene
-		static void rayTraceScene(shared_ptr<rtScene> scene, rtVec3f camPos, rtVec3f u, rtVec3f v, rtVec3f n,
+		static void rayTraceScene(shared_ptr<rtScene> scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
 			float hFov, float nearClip, float farClip, ofPixels* bufferPixels)
 		{
 			//Cache the objects and lights in the scene
@@ -71,7 +71,7 @@ namespace rtGraphics
 		}
 
 		//Ray trace a single ray
-		static rtColorf rayTrace(objectSet objects, lightSet lights, rtVec3f P, rtVec3f D, rtVec3f v, rtVec3f n, float nearClip, float farClip)
+		static rtColorf rayTrace(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, rtVec3f& v, rtVec3f& n, float nearClip, float farClip)
 		{
 			//The distance from the camera to the intersection point
 			float minT = INFINITY;
@@ -130,19 +130,19 @@ namespace rtGraphics
 			}
 		}
 
-		static rtColorf ambientColor(rtColorf ambientLight, rtColorf ambientMaterial)
+		static rtColorf ambientColor(rtColorf& ambientLight, rtColorf& ambientMaterial)
 		{
 			//The ambient color is calculated using a component-wise multiplication
 			return ambientLight * ambientMaterial;
 		}
 
-		static rtColorf diffuseColor(rtVec3f lightVector, rtVec3f normal, rtColorf diffuseLight, rtColorf diffuseMaterial)
+		static rtColorf diffuseColor(rtVec3f& lightVector, rtVec3f& normal, rtColorf& diffuseLight, rtColorf& diffuseMaterial)
 		{
 			float dotProd = normal.dot(lightVector);
 			return (diffuseLight * diffuseMaterial) * dotProd;
 		}
 
-		static rtColorf specularColor(rtVec3f lightVector, rtVec3f lookVector, rtVec3f normal, rtColorf specularLight, rtColorf specularMaterial)
+		static rtColorf specularColor(rtVec3f& lightVector, rtVec3f& lookVector, rtVec3f& normal, rtColorf& specularLight, rtColorf& specularMaterial)
 		{
 			rtVec3f halfWay = lightVector + lookVector;
 			halfWay.normalize();
