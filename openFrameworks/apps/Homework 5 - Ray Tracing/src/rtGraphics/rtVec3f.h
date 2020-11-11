@@ -37,6 +37,8 @@ namespace rtGraphics
 		rtVec3f  getNormalized() const;
 		rtVec3f& cross(const rtVec3f& rhs);
 		rtVec3f  getCrossed(const rtVec3f& rhs) const;
+		rtVec3f& reflect(const rtVec3f& rhs);
+		rtVec3f& getReflected(const rtVec3f& rhs) const;
 		float dot(const rtVec3f& rhs) const;
 
 		///Operators
@@ -170,6 +172,27 @@ namespace rtGraphics
 		float crossZ = (x * rhs.y) - (y * rhs.x);
 
 		return rtVec3f(crossX, crossY, crossZ);
+	}
+
+
+	inline rtVec3f& rtVec3f::reflect(const rtVec3f& normal)
+	{
+		//Calculate the reflected vector and copy the values
+		this->operator=(getReflected(normal));
+		return *this;
+	}
+
+	inline rtVec3f& rtVec3f::getReflected(const rtVec3f& normal) const
+	{
+		/*
+		 * R = 2(N*L)N - L
+		 * R is the reflected vector
+		 * L is the vector being reflected
+		 * N is the normal being reflected around
+		 * N*L is the dot product of N and L
+		 */
+		float scalar = 2 * dot(normal);
+		return (normal * scalar) - *this;
 	}
 
 	inline float rtVec3f::dot(const rtVec3f& rhs) const
