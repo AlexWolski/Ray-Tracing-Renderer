@@ -60,7 +60,7 @@ namespace rtGraphics
 					R += hStep;
 				}
 
-				//After a row is completed, update the edge point and reset the current point
+				//After a row is completed, move to the next row
 				rowPos += vStep;
 				R = rowPos;
 			}
@@ -78,8 +78,8 @@ namespace rtGraphics
 			//The distance from the camera to the intersection point
 			float minT = INFINITY;
 			//The point of intersection and the normal at that point
-			rtVec3f* hitPos = nullptr;
-			rtVec3f* hitNormal = nullptr;
+			rtVec3f* hitPos = new rtVec3f();
+			rtVec3f* hitNormal = new rtVec3f();
 
 			//Iterate over the all the objects
 			for (auto objectPtr = objects->begin(); objectPtr != objects->end(); objectPtr++)
