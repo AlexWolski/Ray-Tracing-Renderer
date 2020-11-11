@@ -72,14 +72,14 @@ namespace rtGraphics
 			//Cache the objects and lights in the scene
 			objectSet objects = scene->getObjects();
 			lightSet lights = scene->getLights();
-
-			//The closest object that the ray intersects
-			rtObject* hitObject;
+			
 			//The distance from the camera to the intersection point
 			float minT = INFINITY;
+			//The closest object that the ray intersects
+			rtObject* hitObject;
 			//The point of intersection and the normal at that point
-			rtVec3f* hitPos = new rtVec3f();
-			rtVec3f* hitNormal = new rtVec3f();
+			shared_ptr<rtVec3f> hitPos = make_shared<rtVec3f>();
+			shared_ptr<rtVec3f> hitNormal = make_shared<rtVec3f>();
 
 			//Iterate over the all the objects
 			for (auto objectPtr = objects->begin(); objectPtr != objects->end(); objectPtr++)

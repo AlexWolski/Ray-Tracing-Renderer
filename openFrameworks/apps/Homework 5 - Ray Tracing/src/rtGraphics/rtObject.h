@@ -28,7 +28,7 @@ namespace rtGraphics
 		rtMat& getMat();
 		void setMat(const rtMat& material);
 
-		virtual float rayIntersect(rtVec3f P, rtVec3f D, rtVec3f* hitPos, rtVec3f* hitNormal) = 0;
+		virtual float rayIntersect(rtVec3f P, rtVec3f D, shared_ptr<rtVec3f> hitPos, shared_ptr<rtVec3f> hitNormal) = 0;
 	};
 
 	///In-line method definitions
@@ -68,8 +68,13 @@ namespace rtGraphics
 		void setCenter(const rtVec3f& center);
 		void setRadius(float radius);
 
-		///Inherited Methods
-		float rayIntersect(rtVec3f P, rtVec3f D, rtVec3f* hitPos, rtVec3f* hitNormal);
+		///Inherited Method
+		/*
+		 * Returns the distance between the camera and the intersection point
+		 * Additionally, sets the hitPos and hitNormal vectors pointers
+		 * If the result is less than 0, then the ray did not intersect the object
+		 */
+		float rayIntersect(rtVec3f P, rtVec3f D, shared_ptr<rtVec3f> hitPos, shared_ptr<rtVec3f> hitNormal);
 	};
 
 	///Constructors
@@ -107,7 +112,7 @@ namespace rtGraphics
 	inline void rtSphere::setRadius(float radius)			{ this->radius = radius; }
 
 	///Inherited methods
-	inline float rtSphere::rayIntersect(rtVec3f P, rtVec3f D, rtVec3f* hitPos, rtVec3f* hitNormal)
+	inline float rtSphere::rayIntersect(rtVec3f P, rtVec3f D, shared_ptr<rtVec3f> hitPos, shared_ptr<rtVec3f> hitNormal)
 	{
 		//Define an intermediate variable M as the vector from the sphere center to the ray origin
 		rtVec3f M = P - center;
@@ -126,11 +131,7 @@ namespace rtGraphics
 
 		//If the discriminant is less than 0, then the ray doesn't intersect the sphere
 		if (discriminant < 0.0f)
-		{
-			hitPos = nullptr;
-			hitNormal = nullptr;
-			return INFINITY;
-		}
+			return -1.0f;
 
 		//Compute the rest of the quadratic formula to find the intersection distance
 		float sqrtDisc = sqrt(discriminant);
@@ -170,7 +171,7 @@ namespace rtGraphics
 		void setMesh(rtMesh& mesh);
 
 		///Inherited Methods
-		float rayIntersect(rtVec3f P, rtVec3f D, rtVec3f* hitPos, rtVec3f* hitNormal);
+		float rayIntersect(rtVec3f P, rtVec3f D, shared_ptr<rtVec3f> hitPos, shared_ptr<rtVec3f> hitNormal);
 	};
 
 	///In-line method definitions
@@ -179,7 +180,7 @@ namespace rtGraphics
 	inline void rtMeshObject::setMesh(rtMesh& mesh)	{ this->mesh = mesh; }
 
 	///Inherited methods
-	inline float rtMeshObject::rayIntersect(rtVec3f P, rtVec3f D, rtVec3f* hitPos, rtVec3f* hitNormal)
+	inline float rtMeshObject::rayIntersect(rtVec3f P, rtVec3f D, shared_ptr<rtVec3f> hitPos, shared_ptr<rtVec3f> hitNormal)
 	{
 		float tmin = INFINITY;
 		int faceIndex;
@@ -222,8 +223,8 @@ namespace rtGraphics
 				if (result1 > 0 && result2 > 0 && result3 > 0)
 				{
 					tmin = t;
-					hitPos = &r;
-					hitNormal = &normal;
+					*hitPos = r;
+					*hitNormal = normal;
 				}
 			}
 		}
