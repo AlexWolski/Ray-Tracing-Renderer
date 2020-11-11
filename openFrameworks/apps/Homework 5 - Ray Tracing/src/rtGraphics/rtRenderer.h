@@ -115,12 +115,13 @@ namespace rtGraphics
 					//Get a pointer to the current light
 					rtLight* currLight = lightPtr->second;
 					//Calculate the light vector, used in both diffuse and specular lighting
-					rtVec3f lightVector = (currLight->getPosition() - *hitPos).getNormalized();
+					rtVec3f lightVector = (currLight->getPosition() - *hitPos);
+					lightVector.normalize();
 
 					//Add the three types of lighting from this light to the final color
 					finalColor += ambientColor(objectMaterial.getAmbient(), (*currLight).getAmbient());
 					finalColor += diffuseColor(lightVector, *hitNormal, objectMaterial.getDiffuse(), (*currLight).getDiffuse());
-					finalColor += specularColor(lightVector, n, v, objectMaterial.getSpecular(), (*currLight).getSpecular());
+					finalColor += specularColor(lightVector, n, *hitNormal, objectMaterial.getSpecular(), (*currLight).getSpecular());
 					//Clamp the values of the color
 					finalColor.clampColors();
 
@@ -141,10 +142,12 @@ namespace rtGraphics
 			return (diffuseLight * diffuseMaterial) * dotProd;
 		}
 
-		static rtColorf specularColor(rtVec3f lightVector, rtVec3f lookVector, rtVec3f upVector, rtColorf specularLight, rtColorf specularMaterial)
+		static rtColorf specularColor(rtVec3f lightVector, rtVec3f lookVector, rtVec3f normal, rtColorf specularLight, rtColorf specularMaterial)
 		{
-			rtVec3f halfWay = (lightVector + lookVector).getNormalized();
-			float dotProd = upVector.dot(lightVector);
+			rtVec3f halfWay = lightVector + lookVector;
+			halfWay.normalize();
+
+			float dotProd = normal.dot(halfWay);
 			return (specularLight * specularMaterial) * dotProd;
 		}
 	};

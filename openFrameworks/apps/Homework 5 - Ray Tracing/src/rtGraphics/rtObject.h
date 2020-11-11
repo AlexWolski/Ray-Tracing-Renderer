@@ -143,7 +143,8 @@ namespace rtGraphics
 
 		//Calculate and set the point of intersection and its normal
 		*hitPos = P + (D * t);
-		*hitNormal = (*hitPos - center).getNormalized();
+		*hitNormal = *hitPos - center;
+		hitNormal->normalize();
 
 		//Return the intersection distance
 		return t;

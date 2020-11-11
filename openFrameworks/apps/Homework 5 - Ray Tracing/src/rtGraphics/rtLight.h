@@ -27,6 +27,7 @@ namespace rtGraphics
 		rtLight(float intensity = 1.0f, bool attenuate = true);
 		rtLight(rtVec3f& position, float intensity = 1.0f, bool attenuate = true);
 		rtLight(rtColorf& ambient, rtColorf& diffuse, rtColorf& specular, float intensity = 1.0f, bool attenuate = true);
+		rtLight(rtVec3f& position, rtColorf& ambient, rtColorf& diffuse, rtColorf& specular, float intensity = 1.0f, bool attenuate = true);
 
 		///Getters
 		rtVec3f getPosition() const;
@@ -69,6 +70,15 @@ namespace rtGraphics
 	}
 
 	inline rtLight::rtLight(rtColorf& ambient, rtColorf& diffuse, rtColorf& specular, float intensity, bool attenuate) :
+		ambient(ambient),
+		diffuse(diffuse),
+		specular(specular),
+		intensity(intensity),
+		attenuate(attenuate) {
+	}
+
+	inline rtLight::rtLight(rtVec3f& position, rtColorf& ambient, rtColorf& diffuse, rtColorf& specular, float intensity, bool attenuate) :
+		position(position),
 		ambient(ambient),
 		diffuse(diffuse),
 		specular(specular),
