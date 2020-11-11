@@ -1,6 +1,6 @@
 #pragma once
 
-#include "rtColor.h"
+#include "rtColorf.h"
 
 namespace rtGraphics
 {
@@ -8,25 +8,25 @@ namespace rtGraphics
 	class rtMat
 	{
 	private:
-		rtColor ambient;
-		rtColor diffuse;
-		rtColor specular;
+		rtColorf ambient;
+		rtColorf diffuse;
+		rtColorf specular;
 
 	public:
 		///Constructors
 		rtMat();
-		rtMat(rtColor& ambient, rtColor& diffuse, rtColor& specular);
+		rtMat(rtColorf& ambient, rtColorf& diffuse, rtColorf& specular);
 
 		///Getters
-		rtColor& getAmbient();
-		rtColor& getDiffuse();
-		rtColor& getSpecular();
+		rtColorf& getAmbient();
+		rtColorf& getDiffuse();
+		rtColorf& getSpecular();
 
 		///Setters
-		void setAmbient(rtColor& ambient);
-		void setDiffuse(rtColor& diffuse);
-		void setSpecular(rtColor& specular);
-		void setColors(rtColor& ambient, rtColor& diffuse, rtColor& specular);
+		void setAmbient(rtColorf& ambient);
+		void setDiffuse(rtColorf& diffuse);
+		void setSpecular(rtColorf& specular);
+		void setColors(rtColorf& ambient, rtColorf& diffuse, rtColorf& specular);
 	};
 
 	///Constructors
@@ -36,12 +36,12 @@ namespace rtGraphics
 	 */
 	inline rtMat::rtMat()
 	{
-		ambient = rtColor(50, 50, 50);
-		diffuse = rtColor(255, 255, 255);
-		specular = rtColor(255, 255, 255);
+		ambient = rtColorf(50, 50, 50);
+		diffuse = rtColorf(255, 255, 255);
+		specular = rtColorf(255, 255, 255);
 	}
 
-	inline rtMat::rtMat(rtColor& ambient, rtColor& diffuse, rtColor& specular) :
+	inline rtMat::rtMat(rtColorf& ambient, rtColorf& diffuse, rtColorf& specular) :
 		ambient(ambient),
 		diffuse(diffuse),
 		specular(specular) {
@@ -49,16 +49,16 @@ namespace rtGraphics
 
 	///In-line method definitions
 	//Getters
-	inline rtColor& rtMat::getAmbient()	{ return ambient; }
-	inline rtColor& rtMat::getDiffuse()	{ return diffuse; }
-	inline rtColor& rtMat::getSpecular()	{ return specular; }
+	inline rtColorf& rtMat::getAmbient()	{ return ambient; }
+	inline rtColorf& rtMat::getDiffuse()	{ return diffuse; }
+	inline rtColorf& rtMat::getSpecular()	{ return specular; }
 
 	//Setters
-	inline void rtMat::setAmbient(rtColor& ambient)	{ this->ambient = ambient; }
-	inline void rtMat::setDiffuse(rtColor& diffuse)	{ this->diffuse = diffuse; }
-	inline void rtMat::setSpecular(rtColor& specular)	{ this->specular = specular; }
+	inline void rtMat::setAmbient(rtColorf& ambient)	{ this->ambient = ambient; }
+	inline void rtMat::setDiffuse(rtColorf& diffuse)	{ this->diffuse = diffuse; }
+	inline void rtMat::setSpecular(rtColorf& specular)	{ this->specular = specular; }
 
-	inline void rtMat::setColors(rtColor& ambient, rtColor& diffuse, rtColor& specular)
+	inline void rtMat::setColors(rtColorf& ambient, rtColorf& diffuse, rtColorf& specular)
 	{
 		this->ambient = ambient;
 		this->diffuse = diffuse;

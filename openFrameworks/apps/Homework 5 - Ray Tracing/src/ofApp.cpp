@@ -8,12 +8,12 @@ void ofApp::setup()
 	mainCamera->setScene(demoScene);
 
 	//Create a sphere and add it to the scene
-	rtMat red(rtColor(50, 50, 50), rtColor(255, 0, 0), rtColor(255, 255, 255));
+	rtMat red(rtColorf(0.2f, 0.2f, 0.2f), rtColorf(1.0f, 0.0f, 0.0f), rtColorf(0.5f, 0.5f, 0.5f));
 	rtObject* sphere = new rtSphere(rtVec3f(0.0f, 0.0f, 100.0f), 20.0f, red);
 	demoScene->addObject("sphere", sphere);
 	
 	//Create a mesh and add it to the scene
-	rtMat green(rtColor(50, 50, 50), rtColor(0, 255, 0), rtColor(255, 255, 255));
+	rtMat green(rtColorf(0.2f, 0.2f, 0.2f), rtColorf(0.0f, 1.0f, 0.0f), rtColorf(0.8f, 0.8f, 0.8f));
 
 	rtMesh triangleMesh;
 	triangleMesh.addVert(rtVec3f(50.0f, 0.0f, 100.0f));
@@ -25,7 +25,7 @@ void ofApp::setup()
 	demoScene->addObject("triangle", triangle);
 
 	//Create a light and add it to the scene
-	rtLight* pointLight = new rtLight(rtColor(50, 50, 50), rtColor(200, 200, 200), rtColor(255, 255, 255));
+	rtLight* pointLight = new rtLight(rtVec3f(40.0f, 40.0f, 50.0f), rtColorf(0.2f, 0.2f, 0.2f), rtColorf(0.8f, 0.8f, 0.8f), rtColorf(0.5f, 0.5f, 0.5f));
 	demoScene->addLight("main light", pointLight);
 }
 

@@ -2,7 +2,7 @@
 
 #include "rtNode.h"
 #include "rtVec3f.h"
-#include "rtColor.h"
+#include "rtColorf.h"
 
 namespace rtGraphics
 {
@@ -14,9 +14,9 @@ namespace rtGraphics
 	{
 	private:
 		//Light colors
-		rtColor ambient;
-		rtColor diffuse;
-		rtColor specular;
+		rtColorf ambient;
+		rtColorf diffuse;
+		rtColorf specular;
 		//Light properties
 		rtVec3f position;
 		float intensity;
@@ -26,22 +26,22 @@ namespace rtGraphics
 		///Constructors
 		rtLight(float intensity = 1.0f, bool attenuate = true);
 		rtLight(rtVec3f& position, float intensity = 1.0f, bool attenuate = true);
-		rtLight(rtColor& ambient, rtColor& diffuse, rtColor& specular, float intensity = 1.0f, bool attenuate = true);
+		rtLight(rtColorf& ambient, rtColorf& diffuse, rtColorf& specular, float intensity = 1.0f, bool attenuate = true);
 
 		///Getters
 		rtVec3f getPosition() const;
-		rtColor& getAmbient();
-		rtColor& getDiffuse();
-		rtColor& getSpecular();
+		rtColorf& getAmbient();
+		rtColorf& getDiffuse();
+		rtColorf& getSpecular();
 		float getIntensity() const;
 		bool attenuateEnabled() const;
 
 		///Setters
 		void setPosition(rtVec3f& position);
-		void setAmbient(rtColor& ambient);
-		void setDiffuse(rtColor& diffuse);
-		void setSpecular(rtColor& specular);
-		void setColors(rtColor& ambient, rtColor& diffuse, rtColor& specular);
+		void setAmbient(rtColorf& ambient);
+		void setDiffuse(rtColorf& diffuse);
+		void setSpecular(rtColorf& specular);
+		void setColors(rtColorf& ambient, rtColorf& diffuse, rtColorf& specular);
 		void setIntensity(float intensity);
 		void setAttenuate(bool attenuate);
 	};
@@ -55,20 +55,20 @@ namespace rtGraphics
 	inline rtLight::rtLight(float intensity, bool attenuate) : intensity(intensity), attenuate(attenuate)
 	{
 		position = rtVec3f::zero;
-		ambient = rtColor(50, 50, 50);
-		diffuse = rtColor(255, 255, 255);
-		specular = rtColor(255, 255, 255);
+		ambient = rtColorf(50, 50, 50);
+		diffuse = rtColorf(255, 255, 255);
+		specular = rtColorf(255, 255, 255);
 	}
 
 	inline rtLight::rtLight(rtVec3f& position, float intensity, bool attenuate) :
 		position(position), intensity(intensity), attenuate(attenuate)
 	{
-		ambient = rtColor(50, 50, 50);
-		diffuse = rtColor(255, 255, 255);
-		specular = rtColor(255, 255, 255);
+		ambient = rtColorf(50, 50, 50);
+		diffuse = rtColorf(255, 255, 255);
+		specular = rtColorf(255, 255, 255);
 	}
 
-	inline rtLight::rtLight(rtColor& ambient, rtColor& diffuse, rtColor& specular, float intensity, bool attenuate) :
+	inline rtLight::rtLight(rtColorf& ambient, rtColorf& diffuse, rtColorf& specular, float intensity, bool attenuate) :
 		ambient(ambient),
 		diffuse(diffuse),
 		specular(specular),
@@ -79,19 +79,19 @@ namespace rtGraphics
 	///In-line method definitions
 	//Getters
 	inline rtVec3f rtLight::getPosition() const		{ return position; }
-	inline rtColor& rtLight::getAmbient()			{ return ambient; }
-	inline rtColor& rtLight::getDiffuse()			{ return diffuse; }
-	inline rtColor& rtLight::getSpecular()			{ return specular; }
+	inline rtColorf& rtLight::getAmbient()			{ return ambient; }
+	inline rtColorf& rtLight::getDiffuse()			{ return diffuse; }
+	inline rtColorf& rtLight::getSpecular()			{ return specular; }
 	inline float rtLight::getIntensity() const		{ return intensity; }
 	inline bool rtLight::attenuateEnabled() const	{ return attenuate; }
 
 	//Setters
 	inline void rtLight::setPosition(rtVec3f& position)	{ this->position = position; }
-	inline void rtLight::setAmbient(rtColor& ambient)	{ this->ambient = ambient; }
-	inline void rtLight::setDiffuse(rtColor& diffuse)	{ this->diffuse = diffuse; }
-	inline void rtLight::setSpecular(rtColor& specular)	{ this->specular = specular; }
+	inline void rtLight::setAmbient(rtColorf& ambient)	{ this->ambient = ambient; }
+	inline void rtLight::setDiffuse(rtColorf& diffuse)	{ this->diffuse = diffuse; }
+	inline void rtLight::setSpecular(rtColorf& specular)	{ this->specular = specular; }
 
-	inline void rtLight::setColors(rtColor& ambient, rtColor& diffuse, rtColor& specular)
+	inline void rtLight::setColors(rtColorf& ambient, rtColorf& diffuse, rtColorf& specular)
 	{
 		this->ambient = ambient;
 		this->diffuse = diffuse;

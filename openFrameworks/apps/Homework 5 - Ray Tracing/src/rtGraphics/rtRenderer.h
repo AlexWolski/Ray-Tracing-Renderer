@@ -16,6 +16,10 @@ namespace rtGraphics
 		static void rayTraceScene(shared_ptr<rtScene> scene, rtVec3f camPos, rtVec3f u, rtVec3f v, rtVec3f n,
 			float hFov, float nearClip, float farClip, ofPixels* bufferPixels)
 		{
+			//Cache the objects and lights in the scene
+			objectSet objects = scene->getObjects();
+			lightSet lights = scene->getLights();
+
 			//Cache the pixel buffer dimensions as floats
 			float widthf = bufferPixels->getWidth();
 			float heightf = bufferPixels->getHeight();
@@ -50,11 +54,11 @@ namespace rtGraphics
 					//Find new direction vector
 					D = (R - camPos).normalize();
 					//Calculate the color of the pixel
-					rtColor pixelColor = rayTrace(scene, camPos, D, v, n, nearClip, farClip);
+					rtColorf pixelColor = rayTrace(objects, lights, camPos, D, v, n, nearClip, farClip);
 					//Write the color to the pixel buffer
-					(*bufferPixels)[bufferIndex++] = pixelColor.getR();
-					(*bufferPixels)[bufferIndex++] = pixelColor.getG();
-					(*bufferPixels)[bufferIndex++] = pixelColor.getB();
+					(*bufferPixels)[bufferIndex++] = (int)(pixelColor.getR() * 255.0f);
+					(*bufferPixels)[bufferIndex++] = (int)(pixelColor.getG() * 255.0f);
+					(*bufferPixels)[bufferIndex++] = (int)(pixelColor.getB() * 255.0f);
 
 					//Iterate to the next column
 					R += hStep;
@@ -67,12 +71,8 @@ namespace rtGraphics
 		}
 
 		//Ray trace a single ray
-		static rtColor rayTrace(shared_ptr<rtScene> scene, rtVec3f P, rtVec3f D, rtVec3f v, rtVec3f n, float nearClip, float farClip)
+		static rtColorf rayTrace(objectSet objects, lightSet lights, rtVec3f P, rtVec3f D, rtVec3f v, rtVec3f n, float nearClip, float farClip)
 		{
-			//Cache the objects and lights in the scene
-			objectSet objects = scene->getObjects();
-			lightSet lights = scene->getLights();
-			
 			//The distance from the camera to the intersection point
 			float minT = INFINITY;
 			//The closest object that the ray intersects
@@ -100,14 +100,12 @@ namespace rtGraphics
 			//If the ray didn't intersect any objects, return a black pixel
 			//TO-DO: Return the background color of the camera
 			if (minT < 0.0f || minT > farClip)
-				return rtColor(0, 0, 0);
+				return rtColorf(0.0f, 0.0f, 0.0f);
 			//Otherwise calculate the lighting of the pixel
 			else
 			{
-				return rtColor(255, 0, 0);
-
 				//The final color to the drawn to the pixel
-				rtColor finalColor = rtColor();
+				rtColorf finalColor = rtColorf();
 				//The material properties of the object
 				rtMat objectMaterial = hitObject->getMat();
 
@@ -122,24 +120,28 @@ namespace rtGraphics
 					//Add the three types of lighting from this light to the final color
 					finalColor += ambientColor(objectMaterial.getAmbient(), (*currLight).getAmbient());
 					finalColor += diffuseColor(lightVector, *hitNormal, objectMaterial.getDiffuse(), (*currLight).getDiffuse());
-					finalColor += specularColor(lightVector, n, v, objectMaterial.getDiffuse(), (*currLight).getDiffuse());
+					finalColor += specularColor(lightVector, n, v, objectMaterial.getSpecular(), (*currLight).getSpecular());
+					//Clamp the values of the color
+					finalColor.clampColors();
+
+					return finalColor;
 				}
 			}
 		}
 
-		static rtColor ambientColor(rtColor ambientLight, rtColor ambientMaterial)
+		static rtColorf ambientColor(rtColorf ambientLight, rtColorf ambientMaterial)
 		{
 			//The ambient color is calculated using a component-wise multiplication
 			return ambientLight * ambientMaterial;
 		}
 
-		static rtColor diffuseColor(rtVec3f lightVector, rtVec3f normal, rtColor diffuseLight, rtColor diffuseMaterial)
+		static rtColorf diffuseColor(rtVec3f lightVector, rtVec3f normal, rtColorf diffuseLight, rtColorf diffuseMaterial)
 		{
 			float dotProd = normal.dot(lightVector);
 			return (diffuseLight * diffuseMaterial) * dotProd;
 		}
 
-		static rtColor specularColor(rtVec3f lightVector, rtVec3f lookVector, rtVec3f upVector, rtColor specularLight, rtColor specularMaterial)
+		static rtColorf specularColor(rtVec3f lightVector, rtVec3f lookVector, rtVec3f upVector, rtColorf specularLight, rtColorf specularMaterial)
 		{
 			rtVec3f halfWay = (lightVector + lookVector).getNormalized();
 			float dotProd = upVector.dot(lightVector);
