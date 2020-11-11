@@ -144,7 +144,7 @@ namespace rtGraphics
 	//Render the scene using ray tracing
 	inline void rtCam::render()
 	{
-		rtRenderer::rayTrace(scene, position, u, v, n, fov, nearClip, farClip, bufferPixels);
+		rtRenderer::rayTraceScene(scene, position, u, v, n, fov, nearClip, farClip, bufferPixels);
 	}
 
 	//Draw the rendered image

@@ -28,7 +28,7 @@ namespace rtGraphics
 		rtMat& getMat();
 		void setMat(const rtMat& material);
 
-		virtual float rayIntersect(rtVec3f p, rtVec3f d, rtVec3f* hitPos, rtVec3f* hitNormal) = 0;
+		virtual float rayIntersect(rtVec3f P, rtVec3f D, rtVec3f* hitPos, rtVec3f* hitNormal) = 0;
 	};
 
 	///In-line method definitions
@@ -69,7 +69,7 @@ namespace rtGraphics
 		void setRadius(float radius);
 
 		///Inherited Methods
-		float rayIntersect(rtVec3f p, rtVec3f d, rtVec3f* hitPos, rtVec3f* hitNormal);
+		float rayIntersect(rtVec3f P, rtVec3f D, rtVec3f* hitPos, rtVec3f* hitNormal);
 	};
 
 	///Constructors
@@ -107,11 +107,11 @@ namespace rtGraphics
 	inline void rtSphere::setRadius(float radius)			{ this->radius = radius; }
 
 	///Inherited methods
-	inline float rtSphere::rayIntersect(rtVec3f p, rtVec3f d, rtVec3f* hitPos, rtVec3f* hitNormal)
+	inline float rtSphere::rayIntersect(rtVec3f P, rtVec3f D, rtVec3f* hitPos, rtVec3f* hitNormal)
 	{
-		rtVec3f m = p - center;
+		rtVec3f m = P - center;
 
-		float dotProd = d.dot(m);
+		float dotProd = D.dot(m);
 		float magM = m.magnitude();
 
 		float discriminant = (dotProd*dotProd) - (magM*magM - radius * radius);
@@ -121,7 +121,7 @@ namespace rtGraphics
 
 		float t = (tSub < tAdd) ? tSub : tAdd;
 
-		hitPos = &(p + (d * t));
+		hitPos = &(P + (D * t));
 		hitNormal = &(*hitPos - center).getNormalized();
 
 		return t;
@@ -149,7 +149,7 @@ namespace rtGraphics
 		void setMesh(rtMesh& mesh);
 
 		///Inherited Methods
-		float rayIntersect(rtVec3f p, rtVec3f d, rtVec3f* hitPos, rtVec3f* hitNormal);
+		float rayIntersect(rtVec3f P, rtVec3f D, rtVec3f* hitPos, rtVec3f* hitNormal);
 	};
 
 	///In-line method definitions
@@ -158,7 +158,7 @@ namespace rtGraphics
 	inline void rtMeshObject::setMesh(rtMesh& mesh)	{ this->mesh = mesh; }
 
 	///Inherited methods
-	inline float rtMeshObject::rayIntersect(rtVec3f p, rtVec3f d, rtVec3f* hitPos, rtVec3f* hitNormal)
+	inline float rtMeshObject::rayIntersect(rtVec3f P, rtVec3f D, rtVec3f* hitPos, rtVec3f* hitNormal)
 	{
 		float tmin = INFINITY;
 		int faceIndex;
@@ -177,13 +177,13 @@ namespace rtGraphics
 			rtVec3f normal = normals->at(faceIndex);
 
 			float k = p0.dot(normal);
-			float t = (k - p.dot(normal)) / (d.dot(normal));
+			float t = (k - P.dot(normal)) / (D.dot(normal));
 
 			//If the ray is not obscured, determine if the ray hit the triangle
 			if (t < tmin)
 			{
 				//Calculate the intersection point using t
-				rtVec3f r = p + (d*t);
+				rtVec3f r = P + (D*t);
 
 				//Get the remaining two points
 				rtVec3f p1 = vertices->at(face.at(1));
