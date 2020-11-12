@@ -20,29 +20,33 @@ namespace rtGraphics
 		{
 		private:
 			///Shared Data
-			//Data for the scene, camera orientation, and output buffer
-			static shared_ptr<rtScene> scene;
-			static rtVec3f& camPos, u, v, n;
-			static int nearClip, farClip;
+			//Scene data
+			static objectSet objects;
+			static lightSet lights;
+			//Camera data
+			static rtVec3f camPos, u, v, n;
+			static float nearClip, farClip;
+			//Output buffer data
 			static ofPixels* bufferPixels;
 			static float bufferWidth, bufferHeight;
-			//The distance between each grid point of the near clip plane in world space
-			static rtVec3f hStep, vStep;
+			//Grid data
+			static rtVec3f firstRow, hStep, vStep;
 
-			///Instance Data
-			//Variables that define the start and end of the section to render
-			int startRow, startCol, endRow, endCol;
-			rtVec3f currRowStart;
+			//Set the shared data
+			static void setData(shared_ptr<rtScene>scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
+				float nearClip, float farClip, ofPixels* bufferPixels, rtVec3f& firstRow, rtVec3f& hStep, rtVec3f& vStep);
 
-			//Renders a section of the buffer
-			void threadedFunction();
-
-		public:
-			rayTraceThread(int startRow, int startCol, int endRow, int endCol);
+			//Renders a section of the frame buffer
+			void threadedFunction(int startRow, int endRow);
 		};
 
-		//A pool the threads rendering the image
-		vector<rayTraceThread> threadPool;
+		//TO-DO: Set the number of threads based on the CPU cores and hyper threads
+		static int numThreads;
+		//A pool of threads to render the image
+		static rayTraceThread* threadPool;
+
+		//Instantiate the thread pool
+		static rayTraceThread* makeThreads();
 
 	public:
 		//Ray trace an entire scene

@@ -2,6 +2,20 @@
 
 namespace rtGraphics
 {
+	///rtRenderer static members
+	int rtRenderer::numThreads;
+	rtRenderer::rayTraceThread* rtRenderer::threadPool = rtRenderer::makeThreads();
+
+	///rtRenderer Methods
+	//Create an array of threads and return it
+	rtRenderer::rayTraceThread* rtRenderer::makeThreads()
+	{
+		//Set the default number of threads to 8
+		numThreads = 8;
+		//Return an array of threads
+		return new rayTraceThread[numThreads];
+	}
+
 	//Ray trace an entire scene
 	void rtRenderer::rayTraceScene(shared_ptr<rtScene> scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
 		float hFov, float nearClip, float farClip, ofPixels* bufferPixels)
@@ -126,6 +140,87 @@ namespace rtGraphics
 
 				return finalColor;
 			}
+		}
+	}
+
+
+	///rayTraceThread static members
+	objectSet rtRenderer::rayTraceThread::objects;
+	lightSet rtRenderer::rayTraceThread::lights;
+	rtVec3f rtRenderer::rayTraceThread::camPos;
+	rtVec3f rtRenderer::rayTraceThread::u;
+	rtVec3f rtRenderer::rayTraceThread::v;
+	rtVec3f rtRenderer::rayTraceThread::n;
+	float rtRenderer::rayTraceThread::nearClip;
+	float rtRenderer::rayTraceThread::farClip;
+	ofPixels* rtRenderer::rayTraceThread::bufferPixels;
+	float rtRenderer::rayTraceThread::bufferWidth;
+	float rtRenderer::rayTraceThread::bufferHeight;
+	rtVec3f rtRenderer::rayTraceThread::firstRow;
+	rtVec3f rtRenderer::rayTraceThread::hStep;
+	rtVec3f rtRenderer::rayTraceThread::vStep;
+
+	///rayTraceThread methods
+	//Set the shared data used to render the image
+	void rtRenderer::rayTraceThread::setData(shared_ptr<rtScene>scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
+		float nearClip, float farClip, ofPixels* bufferPixels, rtVec3f& firstRow, rtVec3f& hStep, rtVec3f& vStep)
+	{
+		//Scene data
+		objects = scene->getObjects();
+		lights = scene->getLights();
+		//Camera Data
+		rayTraceThread::camPos = camPos;
+		rayTraceThread::u = u;
+		rayTraceThread::v = v;
+		rayTraceThread::n = n;
+		rayTraceThread::nearClip = nearClip;
+		rayTraceThread::farClip = farClip;
+		//Buffer data
+		rayTraceThread::bufferPixels = bufferPixels;
+		bufferWidth = bufferPixels->getWidth();
+		bufferHeight = bufferPixels->getHeight();
+		//Ray iteration data
+		rayTraceThread::firstRow = firstRow;
+		rayTraceThread::hStep = hStep;
+		rayTraceThread::vStep = vStep;
+	}
+
+	//Renders a section of the frame buffer
+	void rtRenderer::rayTraceThread::threadedFunction(int startRow, int endRow)
+	{
+		//The number of rows to render
+		int numRows = endRow - startRow;
+		//The current index in the buffer pixels array
+		int bufferIndex = bufferWidth * startRow;
+
+		//The first grid point of the current row. This vector stays on the left edge of the near clip plane and moves downwards
+		rtVec3f currRow = firstRow + (vStep * startRow);
+		//The current grid point. This vector is in the same row as currRowStart and moves to the right
+		rtVec3f R = currRow;
+		//The direction vector from the camera to the current point
+		rtVec3f D;
+
+		//Iterate over the 
+		for (int row = startRow; row < endRow; row++)
+		{
+			for (int col = 0; col < bufferPixels->getWidth(); col++)
+			{
+				//Find new direction vector
+				D = (R - camPos).normalize();
+				//Calculate the color of the pixel
+				rtColorf pixelColor = rayTrace(objects, lights, camPos, D, v, n, nearClip, farClip);
+				//Write the color to the pixel buffer
+				(*bufferPixels)[bufferIndex++] = (int)(pixelColor.getR() * 255.0f);
+				(*bufferPixels)[bufferIndex++] = (int)(pixelColor.getG() * 255.0f);
+				(*bufferPixels)[bufferIndex++] = (int)(pixelColor.getB() * 255.0f);
+
+				//Iterate to the next column
+				R += hStep;
+			}
+
+			//After a row is completed, move to the next row
+			currRow += vStep;
+			R = currRow;
 		}
 	}
 }
