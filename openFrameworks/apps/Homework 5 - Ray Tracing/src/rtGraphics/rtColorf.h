@@ -55,7 +55,7 @@ namespace rtGraphics
 
 	///Constructors
 	//The default color is an opaque black
-	inline rtColorf::rtColorf() : rtColorf(0, 0, 0) {}
+	inline rtColorf::rtColorf() : rtColorf(0.0f, 0.0f, 0.0f) {}
 	inline rtColorf::rtColorf(float value) : rtColorf(value, value, value) {}
 
 	inline rtColorf::rtColorf(float r, float g, float b, float a)
