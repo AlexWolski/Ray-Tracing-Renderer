@@ -196,6 +196,7 @@
     <ClCompile Include="src\ofApp.cpp" />
     <ClCompile Include="src\rtGraphics\rtColorf.cpp" />
     <ClCompile Include="src\rtGraphics\rtObject.cpp" />
+    <ClCompile Include="src\rtGraphics\rtRenderer.cpp" />
     <ClCompile Include="src\rtGraphics\rtVec3f.cpp" />
   </ItemGroup>
   <ItemGroup>
