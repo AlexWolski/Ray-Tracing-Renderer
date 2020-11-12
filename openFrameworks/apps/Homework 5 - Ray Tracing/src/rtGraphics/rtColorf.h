@@ -37,12 +37,20 @@ namespace rtGraphics
 		///Operators
 		rtColorf  operator+ (const rtColorf& rhs) const;
 		rtColorf& operator+=(const rtColorf& rhs);
+		rtColorf  operator+ (float scalar) const;
+		rtColorf& operator+=(float scalar);
 		rtColorf  operator- (const rtColorf& rhs) const;
 		rtColorf& operator-=(const rtColorf& rhs);
+		rtColorf  operator- (float scalar) const;
+		rtColorf& operator-=(float scalar);
 		rtColorf  operator* (const rtColorf& rhs) const;
 		rtColorf& operator*=(const rtColorf& rhs);
+		rtColorf  operator* (float scalar) const;
+		rtColorf& operator*=(float scalar);
 		rtColorf  operator/ (const rtColorf& rhs) const;
 		rtColorf& operator/=(const rtColorf& rhs);
+		rtColorf  operator/ (float scalar) const;
+		rtColorf& operator/=(float scalar);
 	};
 
 	///Constructors
@@ -100,7 +108,7 @@ namespace rtGraphics
 	}
 
 	///Operators
-	//Addition
+	//Component Addition
 	inline rtColorf rtColorf::operator+(const rtColorf& rhs) const
 	{
 		return rtColorf(r + rhs.r, g + rhs.g, b + rhs.b, a + rhs.a);
@@ -116,7 +124,23 @@ namespace rtGraphics
 		return *this;
 	}
 
-	//Subtraction
+	//Scalar Addition
+	inline rtColorf rtColorf::operator+(float scalar) const
+	{
+		return rtColorf(r + scalar, g + scalar, b + scalar, a + scalar);
+	}
+
+	inline rtColorf& rtColorf::operator+=(float scalar)
+	{
+		r += scalar;
+		g += scalar;
+		b += scalar;
+		a += scalar;
+
+		return *this;
+	}
+
+	//Component Subtraction
 	inline rtColorf rtColorf::operator-(const rtColorf& rhs) const
 	{
 		return rtColorf(r - rhs.r, g - rhs.g, b - rhs.b, a - rhs.a);
@@ -132,7 +156,23 @@ namespace rtGraphics
 		return *this;
 	}
 
-	//Multiplication
+	//Scalar Subtraction
+	inline rtColorf rtColorf::operator-(float scalar) const
+	{
+		return rtColorf(r - scalar, g - scalar, b - scalar, a - scalar);
+	}
+
+	inline rtColorf& rtColorf::operator-=(float scalar)
+	{
+		r -= scalar;
+		g -= scalar;
+		b -= scalar;
+		a -= scalar;
+
+		return *this;
+	}
+
+	//Component Multiplication
 	inline rtColorf rtColorf::operator*(const rtColorf& rhs) const
 	{
 		return rtColorf(r * rhs.r, g * rhs.g, b * rhs.b, a * rhs.a);
@@ -148,7 +188,23 @@ namespace rtGraphics
 		return *this;
 	}
 
-	//Division
+	//Scalar Multiplication
+	inline rtColorf rtColorf::operator*(float scalar) const
+	{
+		return rtColorf(r * scalar, g * scalar, b * scalar, a * scalar);
+	}
+
+	inline rtColorf& rtColorf::operator*=(float scalar)
+	{
+		r *= scalar;
+		g *= scalar;
+		b *= scalar;
+		a *= scalar;
+
+		return *this;
+	}
+
+	//Component Division
 	inline rtColorf rtColorf::operator/(const rtColorf& rhs) const
 	{
 		return rtColorf(r / rhs.r, g / rhs.g, b / rhs.b, a / rhs.a);
@@ -160,6 +216,22 @@ namespace rtGraphics
 		g /= rhs.g;
 		b /= rhs.b;
 		a /= rhs.a;
+
+		return *this;
+	}
+
+	//Scalar Division
+	inline rtColorf rtColorf::operator/(float scalar) const
+	{
+		return rtColorf(r / scalar, g / scalar, b / scalar, a / scalar);
+	}
+
+	inline rtColorf& rtColorf::operator/=(float scalar)
+	{
+		r /= scalar;
+		g /= scalar;
+		b /= scalar;
+		a /= scalar;
 
 		return *this;
 	}
