@@ -219,11 +219,10 @@ namespace rtGraphics
 				rtVec3f e1 = p2 - p1;
 				rtVec3f e2 = p0 - p2;
 
-				float result1 = (e0.getCrossed(r - p0)).dot(normal);
-				float result2 = (e1.getCrossed(r - p1)).dot(normal);
-				float result3 = (e2.getCrossed(r - p2)).dot(normal);
-
-				if (result1 > 0 && result2 > 0 && result3 > 0)
+				//If the hit point is on the inside of each edge vector, it is inside the triangle
+				if ((e0.getCrossed(r - p0)).dot(normal) >= 0 &&
+					(e1.getCrossed(r - p1)).dot(normal) >= 0 &&
+					(e2.getCrossed(r - p2)).dot(normal) >= 0)
 				{
 					tmin = t;
 					*hitPos = r;
