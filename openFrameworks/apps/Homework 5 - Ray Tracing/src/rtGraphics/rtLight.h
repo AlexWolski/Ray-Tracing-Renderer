@@ -26,9 +26,9 @@ namespace rtGraphics
 	public:
 		///Constructors
 		rtLight(float incidentIntensity = 1.0f, float ambientIntensity = 1.0f, bool attenuate = true);
-		rtLight(rtVec3f& position, float incidentIntensity = 1.0f, float ambientIntensity = 1.0f, bool attenuate = true);
-		rtLight(rtColorf& ambient, rtColorf& diffuse, rtColorf& specular, float incidentIntensity = 1.0f, float ambientIntensity = 1.0f, bool attenuate = true);
-		rtLight(rtVec3f& position, rtColorf& ambient, rtColorf& diffuse, rtColorf& specular, float incidentIntensity = 1.0f, float ambientIntensity = 1.0f, bool attenuate = true);
+		rtLight(const rtVec3f& position, float incidentIntensity = 1.0f, float ambientIntensity = 1.0f, bool attenuate = true);
+		rtLight(const rtColorf& ambient, const rtColorf& diffuse, const rtColorf& specular, float incidentIntensity = 1.0f, float ambientIntensity = 1.0f, bool attenuate = true);
+		rtLight(const rtVec3f& position, const rtColorf& ambient, const rtColorf& diffuse, const rtColorf& specular, float incidentIntensity = 1.0f, float ambientIntensity = 1.0f, bool attenuate = true);
 
 		///Getters
 		rtVec3f getPosition() const;
@@ -40,11 +40,11 @@ namespace rtGraphics
 		bool attenuateEnabled() const;
 
 		///Setters
-		void setPosition(rtVec3f& position);
-		void setAmbient(rtColorf& ambient);
-		void setDiffuse(rtColorf& diffuse);
-		void setSpecular(rtColorf& specular);
-		void setColors(rtColorf& ambient, rtColorf& diffuse, rtColorf& specular);
+		void setPosition(const rtVec3f& position);
+		void setAmbient(const rtColorf& ambient);
+		void setDiffuse(const rtColorf& diffuse);
+		void setSpecular(const rtColorf& specular);
+		void setColors(const rtColorf& ambient, const rtColorf& diffuse, const rtColorf& specular);
 		void setIncidentIntensity(float incidentIntensity);
 		void setAmbientIntensity(float ambientIntensity);
 		void setAttenuate(bool attenuate);
@@ -57,32 +57,22 @@ namespace rtGraphics
 	 * And set the diffuse and specular to white
 	 */
 	inline rtLight::rtLight(float incidentIntensity, float ambientIntensity, bool attenuate) :
-		incidentIntensity(incidentIntensity), ambientIntensity(ambientIntensity), attenuate(attenuate)
-	{
-		position = rtVec3f::zero;
-		ambient = rtColorf(50.0f, 50.0f, 50.0f);
-		diffuse = rtColorf(255.0f, 255.0f, 255.0f);
-		specular = rtColorf(255.0f, 255.0f, 255.0f);
+		rtLight(rtVec3f::zero, incidentIntensity, ambientIntensity, attenuate) {
 	}
 
-	inline rtLight::rtLight(rtVec3f& position, float incidentIntensity, float ambientIntensity, bool attenuate) :
+	inline rtLight::rtLight(const rtVec3f& position, float incidentIntensity, float ambientIntensity, bool attenuate) :
 		position(position), incidentIntensity(incidentIntensity), ambientIntensity(ambientIntensity), attenuate(attenuate)
 	{
-		ambient = rtColorf(50.0f, 50.0f, 50.0f);
-		diffuse = rtColorf(255.0f, 255.0f, 255.0f);
-		specular = rtColorf(255.0f, 255.0f, 255.0f);
+		ambient = rtColorf(0.2f, 0.2f, 0.2f);
+		diffuse = rtColorf::white;
+		specular = rtColorf::white;
 	}
 
-	inline rtLight::rtLight(rtColorf& ambient, rtColorf& diffuse, rtColorf& specular, float incidentIntensity, float ambientIntensity, bool attenuate) :
-		ambient(ambient),
-		diffuse(diffuse),
-		specular(specular),
-		incidentIntensity(incidentIntensity),
-		ambientIntensity(ambientIntensity),
-		attenuate(attenuate) {
+	inline rtLight::rtLight(const rtColorf& ambient, const rtColorf& diffuse, const rtColorf& specular, float incidentIntensity, float ambientIntensity, bool attenuate) :
+		rtLight(rtVec3f::zero, ambient, diffuse, specular, incidentIntensity, ambientIntensity, attenuate) {
 	}
 
-	inline rtLight::rtLight(rtVec3f& position, rtColorf& ambient, rtColorf& diffuse, rtColorf& specular, float incidentIntensity, float ambientIntensity, bool attenuate) :
+	inline rtLight::rtLight(const rtVec3f& position, const rtColorf& ambient, const rtColorf& diffuse, const rtColorf& specular, float incidentIntensity, float ambientIntensity, bool attenuate) :
 		position(position),
 		ambient(ambient),
 		diffuse(diffuse),
@@ -98,17 +88,17 @@ namespace rtGraphics
 	inline rtColorf& rtLight::getAmbient()				{ return ambient; }
 	inline rtColorf& rtLight::getDiffuse()				{ return diffuse; }
 	inline rtColorf& rtLight::getSpecular()				{ return specular; }
-	inline float rtLight::getIncidentIntensity() const		{ return incidentIntensity; }
+	inline float rtLight::getIncidentIntensity() const	{ return incidentIntensity; }
 	inline float rtLight::getAmbientIntensity() const	{ return ambientIntensity; }
 	inline bool rtLight::attenuateEnabled() const		{ return attenuate; }
 
 	//Setters
-	inline void rtLight::setPosition(rtVec3f& position)		{ this->position = position; }
-	inline void rtLight::setAmbient(rtColorf& ambient)		{ this->ambient = ambient; }
-	inline void rtLight::setDiffuse(rtColorf& diffuse)		{ this->diffuse = diffuse; }
-	inline void rtLight::setSpecular(rtColorf& specular)	{ this->specular = specular; }
+	inline void rtLight::setPosition(const rtVec3f& position)	{ this->position = position; }
+	inline void rtLight::setAmbient(const rtColorf& ambient)	{ this->ambient = ambient; }
+	inline void rtLight::setDiffuse(const rtColorf& diffuse)	{ this->diffuse = diffuse; }
+	inline void rtLight::setSpecular(const rtColorf& specular)	{ this->specular = specular; }
 
-	inline void rtLight::setColors(rtColorf& ambient, rtColorf& diffuse, rtColorf& specular)
+	inline void rtLight::setColors(const rtColorf& ambient, const rtColorf& diffuse, const rtColorf& specular)
 	{
 		this->ambient = ambient;
 		this->diffuse = diffuse;

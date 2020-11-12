@@ -7,7 +7,7 @@ namespace rtGraphics
 	{
 	private:
 		float r, g, b, a;
-		const static int maxValue = 1.0f;
+		const static float maxValue;
 
 	public:
 		///Constructors
@@ -51,6 +51,9 @@ namespace rtGraphics
 		rtColorf& operator/=(const rtColorf& rhs);
 		rtColorf  operator/ (float scalar) const;
 		rtColorf& operator/=(float scalar);
+
+		///Static colors
+		const static rtColorf white, grey, black, red, green, blue, yellow, cyan, magenta;
 	};
 
 	///Constructors

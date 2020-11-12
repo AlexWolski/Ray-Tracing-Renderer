@@ -21,6 +21,9 @@
     <ClCompile Include="src\rtGraphics\rtVec3f.cpp">
       <Filter>src\rtGraphics</Filter>
     </ClCompile>
+    <ClCompile Include="src\rtGraphics\rtColorf.cpp">
+      <Filter>src\rtGraphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ofApp.h">

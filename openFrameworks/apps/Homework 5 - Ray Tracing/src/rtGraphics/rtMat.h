@@ -16,7 +16,7 @@ namespace rtGraphics
 	public:
 		///Constructors
 		rtMat();
-		rtMat(rtColorf& ambient, rtColorf& diffuse, rtColorf& specular, float smoothness = 1.0f);
+		rtMat(const rtColorf& ambient, const rtColorf& diffuse, const rtColorf& specular, float smoothness = 1.0f);
 
 		///Getters
 		rtColorf& getAmbient();
@@ -25,10 +25,10 @@ namespace rtGraphics
 		float getSmoothness();
 
 		///Setters
-		void setAmbient(rtColorf& ambient);
-		void setDiffuse(rtColorf& diffuse);
-		void setSpecular(rtColorf& specular);
-		void setColors(rtColorf& ambient, rtColorf& diffuse, rtColorf& specular);
+		void setAmbient(const rtColorf& ambient);
+		void setDiffuse(const rtColorf& diffuse);
+		void setSpecular(const rtColorf& specular);
+		void setColors(const rtColorf& ambient, const rtColorf& diffuse, const rtColorf& specular);
 		void setSmoothness(float smoothness);
 	};
 
@@ -39,12 +39,12 @@ namespace rtGraphics
 	 */
 	inline rtMat::rtMat()
 	{
-		ambient = rtColorf(50, 50, 50);
-		diffuse = rtColorf(255, 255, 255);
-		specular = rtColorf(255, 255, 255);
+		ambient = rtColorf(0.2f, 0.2f, 0.2f);
+		diffuse = rtColorf::white;
+		specular = rtColorf::white;
 	}
 
-	inline rtMat::rtMat(rtColorf& ambient, rtColorf& diffuse, rtColorf& specular, float smoothness) :
+	inline rtMat::rtMat(const rtColorf& ambient, const rtColorf& diffuse, const rtColorf& specular, float smoothness) :
 		smoothness(smoothness),
 		ambient(ambient),
 		diffuse(diffuse),
@@ -59,12 +59,12 @@ namespace rtGraphics
 	inline float rtMat::getSmoothness()		{ return smoothness; }
 
 	//Setters
-	inline void rtMat::setAmbient(rtColorf& ambient)	{ this->ambient = ambient; }
-	inline void rtMat::setDiffuse(rtColorf& diffuse)	{ this->diffuse = diffuse; }
-	inline void rtMat::setSpecular(rtColorf& specular)	{ this->specular = specular; }
+	inline void rtMat::setAmbient(const rtColorf& ambient)	{ this->ambient = ambient; }
+	inline void rtMat::setDiffuse(const rtColorf& diffuse)	{ this->diffuse = diffuse; }
+	inline void rtMat::setSpecular(const rtColorf& specular)	{ this->specular = specular; }
 	inline void rtMat::setSmoothness(float smoothness)	{ this->smoothness = smoothness; }
 
-	inline void rtMat::setColors(rtColorf& ambient, rtColorf& diffuse, rtColorf& specular)
+	inline void rtMat::setColors(const rtColorf& ambient, const  rtColorf& diffuse, const rtColorf& specular)
 	{
 		this->ambient = ambient;
 		this->diffuse = diffuse;

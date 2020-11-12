@@ -105,7 +105,7 @@ namespace rtGraphics
 			//If the ray didn't intersect any objects, return a black pixel
 			//TO-DO: Return the background color of the camera
 			if (minT < 0.0f || minT > farClip)
-				return rtColorf(0.0f, 0.0f, 0.0f);
+				return rtColorf::black;
 			//Otherwise calculate the lighting of the pixel
 			else
 			{
