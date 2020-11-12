@@ -49,7 +49,7 @@ namespace rtGraphics
 	public:
 		///Constructors
 		rtCam(bool enabled = true);
-		rtCam(const rtVec3f& lookAtPoint, const rtVec3f& upVector, bool enabled = true);
+		rtCam(const rtVec3f& position, const rtVec3f& lookAtPoint, const rtVec3f& upVector, bool enabled = true);
 		///Event Listeners
 		void draw(ofEventArgs& event);
 		///Camera Methods
@@ -81,9 +81,10 @@ namespace rtGraphics
 
 	///Constructors
 	//If no look-at point and up-vector are provided, default to the camera facing down the z axis
-	inline rtCam::rtCam(bool enabled) : rtCam(rtVec3f::forward, rtVec3f::up, enabled) {}
+	inline rtCam::rtCam(bool enabled) : rtCam(rtVec3f::zero, rtVec3f::forward, rtVec3f::up, enabled) {}
 
-	inline rtCam::rtCam(const rtVec3f& lookAtPoint, const rtVec3f& appoxUpVector, bool enabled) : enabled(enabled)
+	inline rtCam::rtCam(const rtVec3f& position, const rtVec3f& lookAtPoint, const rtVec3f& appoxUpVector, bool enabled) :
+		position(position), enabled(enabled)
 	{
 		setOrientation(lookAtPoint, appoxUpVector);
 		createFrameBuffer();
