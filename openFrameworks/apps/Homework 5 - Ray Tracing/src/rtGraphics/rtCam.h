@@ -1,10 +1,14 @@
 #pragma once
 
 #include <memory>
+#include "ofAppRunner.h"
+#include "ofImage.h"
+#include "ofPixels.h"
+#include "ofEventUtils.h"
 #include "rtVec3f.h"
+#include "rtNode.h"
 #include "rtScene.h"
 #include "rtRenderer.h"
-#include "ofMain.h"
 
 using namespace std;
 
@@ -16,7 +20,7 @@ namespace rtGraphics
 		//The scene to render
 		shared_ptr<rtScene> scene = nullptr;
 		//The position and orientation of the camera
-		ofNode transform;
+		rtNode transform;
 
 		//The camera settings
 		bool enabled;

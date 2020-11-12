@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ofMain.h"
+#include "ofBaseApp.h"
 #include "rtGraphics/rtMain.h"
 
 using namespace rtGraphics;

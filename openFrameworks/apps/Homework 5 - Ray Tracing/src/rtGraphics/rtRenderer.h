@@ -2,6 +2,8 @@
 
 #include <memory>
 #include <math.h>
+#include <memory>
+#include "ofPixels.h"
 #include "rtScene.h"
 
 #define PI 3.14159265

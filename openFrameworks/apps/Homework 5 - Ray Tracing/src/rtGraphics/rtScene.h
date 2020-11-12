@@ -4,7 +4,6 @@
 #include <map>
 #include "rtLight.h"
 #include "rtObject.h"
-#include "ofMain.h"
 
 using namespace std;
 
