@@ -119,14 +119,18 @@ namespace rtGraphics
 				{
 					//Get a pointer to the current light
 					rtLight* currLight = lightPtr->second;
-					//Calculate the light vector, used in both diffuse and specular lighting
+					//Cache the ambient and light intensity
+					float incidentIntensity = currLight->getIncidentIntensity();
+					float ambientIntensity = currLight->getAmbientIntensity();
+
+					//Calculate the light vector, which is used in both diffuse and specular lighting
 					rtVec3f lightVector = (currLight->getPosition() - hitPos);
 					lightVector.normalize();
 
 					//Add the three types of lighting from this light to the final color
-					finalColor += ambientColor((*currLight).getAmbient(), objectMat.getAmbient());
-					finalColor += diffuseColor(lightVector, hitNormal, (*currLight).getDiffuse(), objectMat.getDiffuse());
-					finalColor += specularColor(lightVector, n, hitNormal, (*currLight).getSpecular(), objectMat.getSpecular(), objectMat.getSmoothness());
+					finalColor += ambientColor((*currLight).getAmbient(), objectMat.getAmbient(), ambientIntensity);
+					finalColor += diffuseColor(lightVector, hitNormal, (*currLight).getDiffuse(), objectMat.getDiffuse(), incidentIntensity);
+					finalColor += specularColor(lightVector, n, hitNormal, (*currLight).getSpecular(), objectMat.getSpecular(), objectMat.getSmoothness(), incidentIntensity);
 					//Clamp the values of the color
 					finalColor.clampColors();
 
@@ -135,27 +139,33 @@ namespace rtGraphics
 			}
 		}
 
-		static rtColorf ambientColor(rtColorf& ambientLight, rtColorf& ambientMaterial)
+		static rtColorf ambientColor(rtColorf& ambientLight, rtColorf& ambientMaterial, float ambientIntensity)
 		{
 			//The ambient color is calculated using a component-wise multiplication
-			return ambientLight * ambientMaterial;
+			rtColorf ambientColor = ambientLight * ambientMaterial;
+			
+			return ambientColor * ambientIntensity;
 		}
 
-		static rtColorf diffuseColor(rtVec3f& lightVector, rtVec3f& normal, rtColorf& diffuseLight, rtColorf& diffuseMaterial)
+		static rtColorf diffuseColor(rtVec3f& lightVector, rtVec3f& normal, rtColorf& diffuseLight, rtColorf& diffuseMaterial, float incidentIntensity)
 		{
 			float dotProd = normal.dot(lightVector);
-			return (diffuseLight * diffuseMaterial) * dotProd;
+			rtColorf diffuseColor = (diffuseLight * diffuseMaterial) * dotProd;
+
+			return diffuseColor * incidentIntensity;
 		}
 
-		static rtColorf specularColor(rtVec3f& lightVector, rtVec3f& lookVector, rtVec3f& normal, rtColorf& specularLight, rtColorf& specularMaterial, float smoothness)
+		static rtColorf specularColor(rtVec3f& lightVector, rtVec3f& lookVector, rtVec3f& normal, rtColorf& specularLight, rtColorf& specularMaterial, float smoothness, float incidentIntensity)
 		{
 			//Calculate the half-way vector
 			rtVec3f halfWay = lightVector + lookVector;
 			halfWay.normalize();
 			//Calculate (N*H)^n, where n is the smoothness parameter
 			float dotProd = pow(normal.dot(halfWay), smoothness);
-			
-			return (specularLight * specularMaterial) * dotProd;
+			//Calculate the specular color
+			rtColorf specularColor = (specularLight * specularMaterial) * dotProd;
+
+			return specularColor * incidentIntensity;
 		}
 	};
 }
