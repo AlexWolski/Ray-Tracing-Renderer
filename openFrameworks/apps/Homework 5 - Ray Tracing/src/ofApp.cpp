@@ -36,7 +36,7 @@ void ofApp::setup()
 
 	boxMesh.addFace(0, 1, 3); boxMesh.addFace(3, 2, 0);		//Left Wall
 	boxMesh.addFace(4, 5, 7); boxMesh.addFace(7, 6, 4);		//Right Wall
-	//boxMesh.addFace(0, 4, 6); boxMesh.addFace(6, 2, 0);		//Back Wall
+	boxMesh.addFace(0, 4, 6); boxMesh.addFace(6, 2, 0);		//Back Wall
 	boxMesh.addFace(5, 1, 3); boxMesh.addFace(3, 7, 5);		//Front Wall
 	boxMesh.addFace(2, 6, 7); boxMesh.addFace(7, 3, 2);		//Top Wall
 	boxMesh.addFace(4, 0, 1); boxMesh.addFace(1, 5, 4);		//Bottom Wall

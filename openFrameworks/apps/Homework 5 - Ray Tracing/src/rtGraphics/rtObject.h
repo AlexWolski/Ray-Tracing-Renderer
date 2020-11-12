@@ -201,11 +201,13 @@ namespace rtGraphics
 			//Get the normal using the face index
 			rtVec3f normal = normals->at(faceIndex);
 
+			//Calculate the plane constant
 			float k = p0.dot(normal);
+			//Calculate the plane intersection point
 			t = (k - P.dot(normal)) / (D.dot(normal));
 
 			//If the ray is not obscured, determine if the ray hit the triangle
-			if (t < tmin)
+			if (t > 0.0f && t < tmin)
 			{
 				//Calculate the intersection point using t
 				rtVec3f r = P + (D*t);
