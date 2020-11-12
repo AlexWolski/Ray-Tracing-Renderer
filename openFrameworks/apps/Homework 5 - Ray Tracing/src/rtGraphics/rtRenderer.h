@@ -32,12 +32,19 @@ namespace rtGraphics
 			//Grid data
 			static rtVec3f firstRow, hStep, vStep;
 
-			//Set the shared data
-			static void setData(shared_ptr<rtScene>scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
-				float nearClip, float farClip, ofPixels* bufferPixels, rtVec3f& firstRow, rtVec3f& hStep, rtVec3f& vStep);
+			///Instance data
+			int startRow, endRow;
 
 			//Renders a section of the frame buffer
-			void threadedFunction(int startRow, int endRow);
+			void threadedFunction();
+
+		public:
+			//Set the shared data
+			static void setData(shared_ptr<rtScene> scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
+				float nearClip, float farClip, ofPixels* bufferPixels, rtVec3f& firstRow, rtVec3f& hStep, rtVec3f& vStep);
+
+			//Set the section of the image to render
+			void setSection(int startRow, int endRow);
 		};
 
 		//TO-DO: Set the number of threads based on the CPU cores and hyper threads

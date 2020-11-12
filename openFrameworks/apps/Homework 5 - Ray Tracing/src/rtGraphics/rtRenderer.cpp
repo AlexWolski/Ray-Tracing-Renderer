@@ -20,15 +20,9 @@ namespace rtGraphics
 	void rtRenderer::rayTraceScene(shared_ptr<rtScene> scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
 		float hFov, float nearClip, float farClip, ofPixels* bufferPixels)
 	{
-		//Cache the objects and lights in the scene
-		objectSet objects = scene->getObjects();
-		lightSet lights = scene->getLights();
-
 		//Cache the pixel buffer dimensions as floats
 		float bufferWidth = bufferPixels->getWidth();
 		float bufferHeight = bufferPixels->getHeight();
-		//The current index in the buffer pixels array
-		int bufferIndex = 0;
 
 		//The width and height of the near clip plane based on the FOV and distance to the clip plane
 		float halfClipWidth = cos(degToRad(hFov / 2)) * nearClip;
@@ -43,35 +37,23 @@ namespace rtGraphics
 		rtVec3f hStep = (widthVector * -2) / bufferWidth;
 		rtVec3f vStep = (heightVector * -2) / bufferHeight;
 
-		//The first grid point of the current row. This vector stays on the left edge of the near clip plane and moves downwards
-		rtVec3f currRowStart = clipCenter + widthVector + heightVector;
-		//The current grid point. This vector is in the same row as currRowStart and moves to the right
-		rtVec3f R = currRowStart;
-		//The direction vector from the camera to the current point
-		rtVec3f D;
+		//The first grid point, at the top-left corner
+		rtVec3f firstPoint = clipCenter + widthVector + heightVector;
 
-		//Iterate over all the pixels of the pixel buffer
-		for (int row = 0; row < bufferPixels->getHeight(); row++)
-		{
-			for (int col = 0; col < bufferPixels->getWidth(); col++)
-			{
-				//Find new direction vector
-				D = (R - camPos).normalize();
-				//Calculate the color of the pixel
-				rtColorf pixelColor = rayTrace(objects, lights, camPos, D, v, n, nearClip, farClip);
-				//Write the color to the pixel buffer
-				(*bufferPixels)[bufferIndex++] = (int)(pixelColor.getR() * 255.0f);
-				(*bufferPixels)[bufferIndex++] = (int)(pixelColor.getG() * 255.0f);
-				(*bufferPixels)[bufferIndex++] = (int)(pixelColor.getB() * 255.0f);
+		//Set the shared data of the threads
+		rayTraceThread::setData(scene, camPos, u,v, n, nearClip, farClip, bufferPixels, firstPoint, hStep, vStep);
 
-				//Iterate to the next column
-				R += hStep;
-			}
+		////The minimum number of rows each thread will render
+		//int baseRows = bufferHeight / numThreads;
+		////The number of threads that will render an additional row
+		//int extraRows = bufferHeight - (numThreads * baseRows);
 
-			//After a row is completed, move to the next row
-			currRowStart += vStep;
-			R = currRowStart;
-		}
+		//Spawn a thread to render the image
+		threadPool[0].setSection(0, (int)bufferHeight);
+		threadPool[0].startThread();
+
+		//Join thee thread
+		threadPool[0].waitForThread();
 	}
 
 	//Ray trace a single ray
@@ -185,8 +167,15 @@ namespace rtGraphics
 		rayTraceThread::vStep = vStep;
 	}
 
+	//Set the section of the image to render
+	void rtRenderer::rayTraceThread::setSection(int startRow, int endRow)
+	{
+		this->startRow = startRow;
+		this->endRow = endRow;
+	}
+
 	//Renders a section of the frame buffer
-	void rtRenderer::rayTraceThread::threadedFunction(int startRow, int endRow)
+	void rtRenderer::rayTraceThread::threadedFunction()
 	{
 		//The number of rows to render
 		int numRows = endRow - startRow;
@@ -200,7 +189,7 @@ namespace rtGraphics
 		//The direction vector from the camera to the current point
 		rtVec3f D;
 
-		//Iterate over the 
+		//Iterate over all the grid points
 		for (int row = startRow; row < endRow; row++)
 		{
 			for (int col = 0; col < bufferPixels->getWidth(); col++)
