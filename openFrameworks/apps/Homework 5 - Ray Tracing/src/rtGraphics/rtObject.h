@@ -28,7 +28,7 @@ namespace rtGraphics
 		rtMat& getMat();
 		void setMat(const rtMat& material);
 
-		virtual float rayIntersect(rtVec3f P, rtVec3f D, shared_ptr<rtVec3f> hitPos, shared_ptr<rtVec3f> hitNormal) = 0;
+		virtual float rayIntersect(rtVec3f P, rtVec3f D, shared_ptr<rtVec3f> hitPos, shared_ptr<rtVec3f> hitNormal, float nearClip, float farClip) = 0;
 	};
 
 	///In-line method definitions
@@ -74,7 +74,7 @@ namespace rtGraphics
 		 * Additionally, sets the hitPos and hitNormal vectors pointers
 		 * If the result is less than 0, then the ray did not intersect the object
 		 */
-		float rayIntersect(rtVec3f P, rtVec3f D, shared_ptr<rtVec3f> hitPos, shared_ptr<rtVec3f> hitNormal);
+		float rayIntersect(rtVec3f P, rtVec3f D, shared_ptr<rtVec3f> hitPos, shared_ptr<rtVec3f> hitNormal, float nearClip, float farClip);
 	};
 
 	///Constructors
@@ -132,7 +132,7 @@ namespace rtGraphics
 		void setMesh(rtMesh& mesh);
 
 		///Inherited Methods
-		float rayIntersect(rtVec3f P, rtVec3f D, shared_ptr<rtVec3f> hitPos, shared_ptr<rtVec3f> hitNormal);
+		float rayIntersect(rtVec3f P, rtVec3f D, shared_ptr<rtVec3f> hitPos, shared_ptr<rtVec3f> hitNormal, float nearClip, float farClip);
 	};
 
 	///In-line method definitions

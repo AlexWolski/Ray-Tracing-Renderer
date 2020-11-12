@@ -3,7 +3,7 @@
 namespace rtGraphics
 {
 	//Sphere Intersection
-	float rtSphere::rayIntersect(rtVec3f P, rtVec3f D, shared_ptr<rtVec3f> hitPos, shared_ptr<rtVec3f> hitNormal)
+	float rtSphere::rayIntersect(rtVec3f P, rtVec3f D, shared_ptr<rtVec3f> hitPos, shared_ptr<rtVec3f> hitNormal, float nearClip, float farClip)
 	{
 		//Define an intermediate variable M as the vector from the sphere center to the ray origin
 		rtVec3f M = P - center;
@@ -42,10 +42,10 @@ namespace rtGraphics
 	}
 
 	//Mesh Intersection
-	float rtMeshObject::rayIntersect(rtVec3f P, rtVec3f D, shared_ptr<rtVec3f> hitPos, shared_ptr<rtVec3f> hitNormal)
+	float rtMeshObject::rayIntersect(rtVec3f P, rtVec3f D, shared_ptr<rtVec3f> hitPos, shared_ptr<rtVec3f> hitNormal, float nearClip, float farClip)
 	{
 		float t;
-		float tmin = INFINITY;
+		float tmin = farClip;
 		int faceIndex;
 
 		vecList& vertices = mesh.getVerts();
@@ -67,8 +67,8 @@ namespace rtGraphics
 			//Calculate the plane intersection point
 			t = (k - P.dot(normal)) / (D.dot(normal));
 
-			//If the ray is not obscured, determine if the ray hit the triangle
-			if (t > 0.0f && t < tmin)
+			//If the ray is visible, determine if the ray hit the triangle
+			if (t > nearClip && t < tmin)
 			{
 				//Calculate the intersection point using t
 				rtVec3f r = P + (D*t);

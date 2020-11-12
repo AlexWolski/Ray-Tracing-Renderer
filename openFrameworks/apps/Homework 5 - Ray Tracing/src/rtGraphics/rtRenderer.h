@@ -92,7 +92,7 @@ namespace rtGraphics
 				//Get a pointer to the current object
 				rtObject* currObject = objectPtr->second;
 				//Determine if the ray intersects the object
-				float t = currObject->rayIntersect(P, D, currHitPos, currHitNormal);
+				float t = currObject->rayIntersect(P, D, currHitPos, currHitNormal, nearClip, farClip);
 
 				//If the ray hit and the object is not obscured, save the ray parameter and object address
 				if (t < minT && t > 0.0f)
@@ -106,7 +106,7 @@ namespace rtGraphics
 
 			//If the ray didn't intersect any objects, return a black pixel
 			//TO-DO: Return the background color of the camera
-			if (minT < 0.0f || minT > farClip)
+			if (minT < nearClip || minT > farClip)
 				return rtColorf::black;
 			//Otherwise calculate the lighting of the pixel
 			else
