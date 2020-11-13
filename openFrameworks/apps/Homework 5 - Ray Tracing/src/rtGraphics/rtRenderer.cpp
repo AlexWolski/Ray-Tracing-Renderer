@@ -43,17 +43,34 @@ namespace rtGraphics
 		//Set the shared data of the threads
 		rayTraceThread::setData(scene, camPos, u,v, n, nearClip, farClip, bufferPixels, firstPoint, hStep, vStep);
 
-		////The minimum number of rows each thread will render
-		//int baseRows = bufferHeight / numThreads;
-		////The number of threads that will render an additional row
-		//int extraRows = bufferHeight - (numThreads * baseRows);
+		//The minimum number of rows each thread will render
+		int baseRows = bufferHeight / numThreads;
+		//The number of threads that will render an additional row
+		int extraRows = bufferHeight - (numThreads * baseRows);
+		//The starting row of the next section
+		int sectionStart = 0;
 
-		//Spawn a thread to render the image
-		threadPool[0].setSection(0, (int)bufferHeight);
-		threadPool[0].startThread();
+		//Spawn threads to render all of the image
+		for (int threadIndex = 0; threadIndex < numThreads; threadIndex++)
+		{
+			//Calculate the end of the section
+			int sectionEnd = sectionStart + baseRows;
 
-		//Join thee thread
-		threadPool[0].waitForThread();
+			//Add an extra row until all the extra rows are allocated
+			if (threadIndex < extraRows)
+				sectionEnd++;
+
+			//Set the section to render and start the thread
+			threadPool[threadIndex].setSection(sectionStart, sectionEnd);
+			threadPool[threadIndex].startThread();
+
+			//Move onto the next section
+			sectionStart = sectionEnd;
+		}
+
+		//Join all the threads
+		for (int threadIndex = 0; threadIndex < numThreads; threadIndex++)
+			threadPool[threadIndex].waitForThread();
 	}
 
 	//Ray trace a single ray
@@ -177,10 +194,8 @@ namespace rtGraphics
 	//Renders a section of the frame buffer
 	void rtRenderer::rayTraceThread::threadedFunction()
 	{
-		//The number of rows to render
-		int numRows = endRow - startRow;
 		//The current index in the buffer pixels array
-		int bufferIndex = bufferWidth * startRow;
+		int bufferIndex = bufferWidth * startRow * 3;
 
 		//The first grid point of the current row. This vector stays on the left edge of the near clip plane and moves downwards
 		rtVec3f currRow = firstRow + (vStep * startRow);
