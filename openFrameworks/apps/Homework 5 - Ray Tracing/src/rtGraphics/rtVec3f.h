@@ -73,6 +73,9 @@ namespace rtGraphics
 		rtVec3f& operator/=(const rtVec3f& rhs);
 		//Unary Negation
 		rtVec3f  operator-() const;
+		//Equality
+		bool operator==(const rtVec3f& rhs) const;
+		bool operator!=(const rtVec3f& rhs) const;
 	};
 
 	///In-line method definitions
@@ -361,5 +364,16 @@ namespace rtGraphics
 	inline rtVec3f rtVec3f::operator-() const
 	{
 		return rtVec3f(-x, -y, -z);
+	}
+
+	//Equality
+	inline bool rtVec3f::operator==(const rtVec3f& rhs) const
+	{
+		return (x == rhs.x && y == rhs.y && z == rhs.z);
+	}
+
+	inline bool rtVec3f::operator!=(const rtVec3f& rhs) const
+	{
+		return !(*this == rhs);
 	}
 }

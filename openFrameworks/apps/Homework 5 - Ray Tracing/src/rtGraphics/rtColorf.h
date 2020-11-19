@@ -51,6 +51,8 @@ namespace rtGraphics
 		rtColorf& operator/=(const rtColorf& rhs);
 		rtColorf  operator/ (float scalar) const;
 		rtColorf& operator/=(float scalar);
+		bool operator==(const rtColorf& rhs) const;
+		bool operator!=(const rtColorf& rhs) const;
 
 		///Static colors
 		const static rtColorf white, grey, black, red, green, blue, yellow, cyan, magenta;
@@ -237,5 +239,16 @@ namespace rtGraphics
 		a /= scalar;
 
 		return *this;
+	}
+
+	//Equality
+	inline bool rtColorf::operator==(const rtColorf& rhs) const
+	{
+		return (r == rhs.r && g == rhs.g && b == rhs.b && a == rhs.a);
+	}
+
+	inline bool rtColorf::operator!=(const rtColorf& rhs) const
+	{
+		return !(*this == rhs);
 	}
 }
