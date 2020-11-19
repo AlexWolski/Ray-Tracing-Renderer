@@ -25,7 +25,7 @@ namespace rtGraphics
 		float bufferHeight = bufferPixels->getHeight();
 
 		//The width and height of the near clip plane based on the FOV and distance to the clip plane
-		float halfClipWidth = cos(degToRad(hFov / 2)) * nearClip;
+		float halfClipWidth = sin(degToRad(hFov / 2)) * nearClip;
 		float halfClipHeight = halfClipWidth * (bufferHeight / bufferWidth);
 
 		//Calculate the point in the center of the near clip plane using the camera position and look vector

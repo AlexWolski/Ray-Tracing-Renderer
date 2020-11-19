@@ -5,6 +5,7 @@ void ofApp::setup()
 	///Create the scene and camera
 	demoScene = make_shared<rtScene>();
 	mainCamera = make_shared<rtCam>(rtVec3f(0.0f, 0.0f, -100.0f), rtVec3f::forward, rtVec3f::up);
+	mainCamera->setFov(90.0f);
 	mainCamera->setScene(demoScene);
 
 	///Create a sphere and add it to the scene
