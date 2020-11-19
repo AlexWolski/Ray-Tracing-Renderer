@@ -73,13 +73,51 @@ namespace rtGraphics
 			threadPool[threadIndex].waitForThread();
 	}
 
-	//Ray trace a single ray
+	//Ray trace a single ray and return the color at the intersection
 	rtColorf rtRenderer::rayTrace(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, int currBounce, int maxBounces)
 	{
-		//The distance from the camera to the intersection point
-		float minT = INFINITY;
 		//The intersection data of the closest intersection
-		shared_ptr<rtRayHit> nearestHit;
+		shared_ptr<rtRayHit> hitData = rayTrace(objects, P, D, nearClip, farClip);
+
+		//If the ray didn't intersect any objects, return a black pixel
+		//TO-DO: Return the background color of the camera
+		if (!hitData->hit)
+			return rtColorf::black;
+		//Otherwise calculate the lighting of the pixel
+		else
+		{
+			//Get the reflectivity of the material
+			float reflectivity = hitData->hitObject->getMat().getReflectivity();
+
+			//If the object isn't reflective at all, return only the object color
+			if (reflectivity == 0.0f)
+				return calculateColor(hitData, D, lights);
+			//If the object is perfectly reflective, returned only the reflected color
+			else if (reflectivity == 1.0f)
+				return bounceRay(objects, lights, P, D, nearClip, farClip, currBounce, maxBounces, hitData);
+			//If the object is partially reflective, blend the object and reflected colors
+			else
+			{
+				//Calculate the color of the object
+				rtColorf objectColor = calculateColor(hitData, D, lights);
+				rtColorf reflectedColor = bounceRay(objects, lights, P, D, nearClip, farClip, currBounce, maxBounces, hitData);
+
+				rtColorf finalColor = (objectColor * (1 - reflectivity)) + (reflectedColor * reflectivity);
+				finalColor.clampColors();
+
+				return finalColor;
+			}
+		}
+	}
+
+	//Ray trace a single ray and return the ray hit data
+	shared_ptr<rtRayHit> rtRenderer::rayTrace(objectSet& objects, rtVec3f& P, rtVec3f& D, float nearClip, float farClip)
+	{
+		//The intersection data of the closest intersection
+		shared_ptr<rtRayHit> nearestHit = make_shared<rtRayHit>();
+		//Set the hit data to a miss by default.
+		nearestHit->hit = false;
+		nearestHit->distance = INFINITY;
 
 		//Iterate over the all the objects
 		for (auto objectPtr = objects->begin(); objectPtr != objects->end(); objectPtr++)
@@ -89,45 +127,13 @@ namespace rtGraphics
 			//Determine if the ray intersects the object
 			shared_ptr<rtRayHit> hitData = currObject->rayIntersect(P, D, nearClip, farClip);
 
-			//If the ray hit and the object is not obscured, save the ray parameter and object address
-			if (hitData->hit && hitData->distance < minT)
-			{
-				//Update the distance of the closest intersection
-				minT = hitData->distance;
-				//Update the hit data of the nearest intersection point
+			//If the ray hit and the object is not obscured, save hit data
+			if (hitData->hit && hitData->distance < nearestHit->distance)
 				nearestHit = hitData;
-			}
 		}
 
-		//If the ray didn't intersect any objects, return a black pixel
-		//TO-DO: Return the background color of the camera
-		if (minT < nearClip || minT > farClip)
-			return rtColorf::black;
-		//Otherwise calculate the lighting of the pixel
-		else
-		{
-			//Get the reflectivity of the material
-			float reflectivity = nearestHit->hitObject->getMat().getReflectivity();
-
-			//If the object isn't reflective at all, return only the object color
-			if (reflectivity == 0.0f)
-				return calculateColor(nearestHit, D, lights);
-			//If the object is perfectly reflective, returned only the reflected color
-			else if (reflectivity == 1.0f)
-				return bounceRay(objects, lights, P, D, nearClip, farClip, currBounce, maxBounces, nearestHit);
-			//If the object is partially reflective, blend the object and reflected colors
-			else
-			{
-				//Calculate the color of the object
-				rtColorf objectColor = calculateColor(nearestHit, D, lights);
-				rtColorf reflectedColor = bounceRay(objects, lights, P, D, nearClip, farClip, currBounce, maxBounces, nearestHit);
-
-				rtColorf finalColor = (objectColor * (1 - reflectivity)) + (reflectedColor * reflectivity);
-				finalColor.clampColors();
-
-				return finalColor;
-			}
-		}
+		//Return the hit data
+		return nearestHit;
 	}
 
 	//Bounce a ray off of the object it hits and find the reflected color
@@ -146,7 +152,7 @@ namespace rtGraphics
 		return rayTrace(objects, lights, hitData->hitPoint, reflectedRay, 0.0f, farClip, ++currBounce, maxBounces);
 	}
 
-	//Ray trace a single ray
+	//Calculates the color of an object at the ray intersection point
 	rtColorf rtRenderer::calculateColor(shared_ptr<rtRayHit> hitData, rtVec3f n, lightSet& lights)
 	{
 		//The final color to the drawn to the pixel

@@ -65,8 +65,10 @@ namespace rtGraphics
 		static void rayTraceScene(shared_ptr<rtScene> scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
 			float hFov, float nearClip, float farClip, int maxBounces, ofPixels* bufferPixels);
 
-		//Ray trace a single ray
+		//Ray trace a single ray and return the color at the intersection
 		static rtColorf rayTrace(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, int currBounce, int maxBounces);
+		//Ray trace a single ray and return the ray hit data
+		static shared_ptr<rtRayHit> rtRenderer::rayTrace(objectSet& objects, rtVec3f& P, rtVec3f& D, float nearClip, float farClip);
 
 		//Color calculation methods
 		static rtColorf ambientColor(rtColorf& ambientLight, rtColorf& ambientMaterial, float ambientIntensity);
