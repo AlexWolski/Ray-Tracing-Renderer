@@ -107,19 +107,29 @@ namespace rtGraphics
 				float incidentIntensity = currLight->getIncidentIntensity();
 				float ambientIntensity = currLight->getAmbientIntensity();
 
-				//Calculate the light vector, which is used in both diffuse and specular lighting
+				//Calculate the vector pointing from the hit position towards the light
 				rtVec3f lightVector = (currLight->getPosition() - hitData->hitPoint);
+				//Get the squared distance from the hit position to the light before normalizing it
+				float lightDistSquared = lightVector.magnitudeSquared();
 				lightVector.normalize();
+				
+				//Determine if the current light hits the point or not
+				bool shadow = isShadow(objects, lightVector, hitData->hitPoint, lightDistSquared, nearClip, farClip);
 
-				//If the object is not perfectly reflective, calculate the ambient and diffuse colors
+				//Add the ambient color if the object is not perfectly reflective, regardless of if the point is in shadow or not.
 				if (reflectivity < 1.0f)
-				{
 					objectColor += ambientColor((*currLight).getAmbient(), objectMat.getAmbient(), ambientIntensity);
-					objectColor += diffuseColor(lightVector, hitData->hitNormal, (*currLight).getDiffuse(), objectMat.getDiffuse(), incidentIntensity);
-				}
 
-				//Calculate the specular color regardless of the reflectivity
-				specular += specularColor(lightVector, D, hitData->hitNormal, (*currLight).getSpecular(), objectMat.getSpecular(), objectMat.getSmoothness(), incidentIntensity);
+				//If the point is not in shadow, check for specular and diffuse color as well
+				if (!shadow)
+				{
+					//If the object is not perfectly reflective, calculate the ambient and diffuse colors
+					if (reflectivity < 1.0f)
+						objectColor += diffuseColor(lightVector, hitData->hitNormal, (*currLight).getDiffuse(), objectMat.getDiffuse(), incidentIntensity);
+
+					//Calculate the specular color regardless of the reflectivity
+					specular += specularColor(lightVector, D, hitData->hitNormal, (*currLight).getSpecular(), objectMat.getSpecular(), objectMat.getSmoothness(), incidentIntensity);
+				}
 			}
 
 			//If the object is perfectly non-reflective, only use the object color
@@ -180,6 +190,28 @@ namespace rtGraphics
 		rtVec3f reflectedRay = negatedRay.getReflected(hitData->hitNormal);
 		//Traced the bounced ray to get the reflected color. The near clip is set to 0 since it is not needed
 		return rayTrace(objects, lights, hitData->hitPoint, reflectedRay, 0.0f, farClip, ++currBounce, maxBounces);
+	}
+
+	//Determine if a given light shines on a point or is occluded
+	bool rtRenderer::isShadow(objectSet& objects, rtVec3f& lightVector, rtVec3f& targetPoint, float lightDistSquared, float nearClip, float farClip)
+	{
+		//Cast a ray from the hit point towards the light source to check if the light is occluded
+		shared_ptr<rtRayHit> shadowRay = rayTrace(objects, targetPoint, lightVector, nearClip, farClip);
+
+		//If they ray doesn't hit anything, return false
+		if (!shadowRay->hit)
+			return false;
+
+		//Calculate the squared distance from the hit point to the nearest object
+		float hitDist = shadowRay->distance;
+		float hitDistSquared = hitDist * hitDist;
+
+		//If the ray hits an object before the light, then the point is in shadow
+		if (hitDistSquared < lightDistSquared)
+			return true;
+
+		//Otherwise the point is not in shadow
+		return false;
 	}
 
 

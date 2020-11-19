@@ -7,8 +7,8 @@
 #include "ofThread.h"
 #include "rtScene.h"
 
-#define PI 3.14159265
-#define degToRad(angleDegrees) ((angleDegrees) * PI / 180.0f)
+#define PIf 3.14159265
+#define degToRad(angleDegrees) ((angleDegrees) * PIf / 180.0f)
 
 namespace rtGraphics
 {
@@ -57,6 +57,8 @@ namespace rtGraphics
 		static rayTraceThread* makeThreads();
 		//Bounce the ray off of an object and calculate the color at the next intersection point
 		static rtColorf bounceRay(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D,float nearClip, float farClip, int currBounce, int maxBounces, shared_ptr<rtRayHit> hitData);
+		//Determine if a given light shines on the target point or is occluded
+		static bool isShadow(objectSet& objects, rtVec3f& lightVector, rtVec3f& targetPoint, float lightDistSquared, float nearClip, float farClip);
 
 	public:
 		//Ray trace an entire scene
