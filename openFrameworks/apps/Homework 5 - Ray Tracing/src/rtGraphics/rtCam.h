@@ -27,6 +27,7 @@ namespace rtGraphics
 		float fov = 90.0f;
 		float nearClip = 0.1f;
 		float farClip = 1000.0f;
+		int maxBounces = 3;
 		//Vectors defining the viewing coordinates
 		rtVec3f position;
 		rtVec3f pref;	//Look-at point
@@ -66,6 +67,7 @@ namespace rtGraphics
 		float getFov() const;
 		float getNearClip() const;
 		float getFarClip() const;
+		int getMaxBounces() const;
 		shared_ptr<rtScene> getScene() const;
 		ofPixels* getBufferPixels();
 		rtVec3f getPosition() const;
@@ -76,6 +78,7 @@ namespace rtGraphics
 		void setFov(float fov);
 		void setNearClip(float nearClip);
 		void setFarClip(float farClip);
+		void setMaxBounces(int maxBounces);
 		void setScene(shared_ptr<rtScene> scene);
 		void setPosition(const rtVec3f& position);
 		void setLookAtPoint(const rtVec3f& lookAtPoint);
@@ -110,6 +113,7 @@ namespace rtGraphics
 	inline float rtCam::getFov() const					{ return fov; }
 	inline float rtCam::getNearClip() const				{ return nearClip; }
 	inline float rtCam::getFarClip() const				{ return farClip; }
+	inline int rtCam::getMaxBounces() const				{ return maxBounces; }
 	inline shared_ptr<rtScene> rtCam::getScene() const	{ return scene; }
 	inline ofPixels* rtCam::getBufferPixels()			{ return bufferPixels; }
 	inline rtVec3f rtCam::getPosition() const			{ return position; }
@@ -121,6 +125,7 @@ namespace rtGraphics
 	inline void rtCam::setFov(float fov)							{ this->fov = fov; }
 	inline void rtCam::setNearClip(float nearClip)					{ this->nearClip = nearClip; }
 	inline void rtCam::setFarClip(float farClip)					{ this->farClip = farClip; }
+	inline void rtCam::setMaxBounces(int maxBounces)				{ this->maxBounces = maxBounces; }
 	inline void rtCam::setScene(const shared_ptr<rtScene> scene)	{ this->scene = scene; }
 	inline void rtCam::setPosition(const rtVec3f& position)			{ this->position = position; }
 	inline void rtCam::setLookAtPoint(const rtVec3f& lookAtPoint)	{ pref = lookAtPoint; calcAxes(); }
@@ -149,7 +154,7 @@ namespace rtGraphics
 	//Render the scene using ray tracing
 	inline void rtCam::render()
 	{
-		rtRenderer::rayTraceScene(scene, position, u, v, n, fov, nearClip, farClip, bufferPixels);
+		rtRenderer::rayTraceScene(scene, position, u, v, n, fov, nearClip, farClip, maxBounces, bufferPixels);
 	}
 
 	//Draw the rendered image

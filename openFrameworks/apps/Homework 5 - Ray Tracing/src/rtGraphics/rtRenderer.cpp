@@ -18,7 +18,7 @@ namespace rtGraphics
 
 	//Ray trace an entire scene
 	void rtRenderer::rayTraceScene(shared_ptr<rtScene> scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
-		float hFov, float nearClip, float farClip, ofPixels* bufferPixels)
+		float hFov, float nearClip, float farClip, int maxBounces, ofPixels* bufferPixels)
 	{
 		//Cache the pixel buffer dimensions as floats
 		float bufferWidth = bufferPixels->getWidth();
@@ -41,7 +41,7 @@ namespace rtGraphics
 		rtVec3f firstPoint = clipCenter + widthVector + heightVector;
 
 		//Set the shared data of the threads
-		rayTraceThread::setData(scene, camPos, u,v, n, nearClip, farClip, bufferPixels, firstPoint, hStep, vStep);
+		rayTraceThread::setData(scene, camPos, u,v, n, nearClip, farClip, maxBounces, bufferPixels, firstPoint, hStep, vStep);
 
 		//The minimum number of rows each thread will render
 		int baseRows = bufferHeight / numThreads;
@@ -74,7 +74,7 @@ namespace rtGraphics
 	}
 
 	//Ray trace a single ray
-	rtColorf rtRenderer::rayTrace(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, rtVec3f& v, rtVec3f& n, float nearClip, float farClip)
+	rtColorf rtRenderer::rayTrace(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, rtVec3f& v, rtVec3f& n, float nearClip, float farClip, int maxBounces)
 	{
 		//The distance from the camera to the intersection point
 		float minT = INFINITY;
@@ -152,6 +152,7 @@ namespace rtGraphics
 	rtVec3f rtRenderer::rayTraceThread::n;
 	float rtRenderer::rayTraceThread::nearClip;
 	float rtRenderer::rayTraceThread::farClip;
+	int rtRenderer::rayTraceThread::maxBounces;
 	ofPixels* rtRenderer::rayTraceThread::bufferPixels;
 	float rtRenderer::rayTraceThread::bufferWidth;
 	float rtRenderer::rayTraceThread::bufferHeight;
@@ -162,7 +163,7 @@ namespace rtGraphics
 	///rayTraceThread methods
 	//Set the shared data used to render the image
 	void rtRenderer::rayTraceThread::setData(shared_ptr<rtScene>scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
-		float nearClip, float farClip, ofPixels* bufferPixels, rtVec3f& firstRow, rtVec3f& hStep, rtVec3f& vStep)
+		float nearClip, float farClip, int maxBounces, ofPixels* bufferPixels, rtVec3f& firstRow, rtVec3f& hStep, rtVec3f& vStep)
 	{
 		//Scene data
 		objects = scene->getObjects();
@@ -174,6 +175,7 @@ namespace rtGraphics
 		rayTraceThread::n = n;
 		rayTraceThread::nearClip = nearClip;
 		rayTraceThread::farClip = farClip;
+		rayTraceThread::maxBounces = maxBounces;
 		//Buffer data
 		rayTraceThread::bufferPixels = bufferPixels;
 		bufferWidth = bufferPixels->getWidth();
@@ -212,7 +214,7 @@ namespace rtGraphics
 				//Find new direction vector
 				D = (R - camPos).normalize();
 				//Calculate the color of the pixel
-				rtColorf pixelColor = rayTrace(objects, lights, camPos, D, v, n, nearClip, farClip);
+				rtColorf pixelColor = rayTrace(objects, lights, camPos, D, v, n, nearClip, farClip, maxBounces);
 				//Write the color to the pixel buffer
 				(*bufferPixels)[bufferIndex++] = (int)(pixelColor.getR() * 255.0f);
 				(*bufferPixels)[bufferIndex++] = (int)(pixelColor.getG() * 255.0f);

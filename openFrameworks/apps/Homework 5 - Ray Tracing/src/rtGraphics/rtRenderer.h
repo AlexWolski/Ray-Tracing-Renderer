@@ -26,6 +26,7 @@ namespace rtGraphics
 			//Camera data
 			static rtVec3f camPos, u, v, n;
 			static float nearClip, farClip;
+			static int maxBounces;
 			//Output buffer data
 			static ofPixels* bufferPixels;
 			static float bufferWidth, bufferHeight;
@@ -40,8 +41,8 @@ namespace rtGraphics
 
 		public:
 			//Set the shared data
-			static void setData(shared_ptr<rtScene> scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
-				float nearClip, float farClip, ofPixels* bufferPixels, rtVec3f& firstRow, rtVec3f& hStep, rtVec3f& vStep);
+			static void setData(shared_ptr<rtScene> scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n, float nearClip,
+				float farClip,int maxBounces, ofPixels* bufferPixels, rtVec3f& firstRow, rtVec3f& hStep, rtVec3f& vStep);
 
 			//Set the section of the image to render
 			void setSection(int startRow, int endRow);
@@ -58,10 +59,10 @@ namespace rtGraphics
 	public:
 		//Ray trace an entire scene
 		static void rayTraceScene(shared_ptr<rtScene> scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
-			float hFov, float nearClip, float farClip, ofPixels* bufferPixels);
+			float hFov, float nearClip, float farClip, int maxBounces, ofPixels* bufferPixels);
 
 		//Ray trace a single ray
-		static rtColorf rayTrace(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, rtVec3f& v, rtVec3f& n, float nearClip, float farClip);
+		static rtColorf rayTrace(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, rtVec3f& v, rtVec3f& n, float nearClip, float farClip, int maxBounces);
 
 		//Color calculation methods
 		static rtColorf ambientColor(rtColorf& ambientLight, rtColorf& ambientMaterial, float ambientIntensity);
