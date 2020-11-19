@@ -41,7 +41,7 @@ namespace rtGraphics
 		rtVec3f firstPoint = clipCenter + widthVector + heightVector;
 
 		//Set the shared data of the threads
-		rayTraceThread::setData(scene, camPos, u,v, n, nearClip, farClip, maxBounces, bufferPixels, firstPoint, hStep, vStep);
+		rayTraceThread::setData(scene, camPos, nearClip, farClip, maxBounces, bufferPixels, firstPoint, hStep, vStep);
 
 		//The minimum number of rows each thread will render
 		int baseRows = bufferHeight / numThreads;
@@ -74,7 +74,7 @@ namespace rtGraphics
 	}
 
 	//Ray trace a single ray
-	rtColorf rtRenderer::rayTrace(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, rtVec3f& v, rtVec3f& n, float nearClip, float farClip, int currBounce, int maxBounces)
+	rtColorf rtRenderer::rayTrace(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, int currBounce, int maxBounces)
 	{
 		//The distance from the camera to the intersection point
 		float minT = INFINITY;
@@ -111,16 +111,16 @@ namespace rtGraphics
 
 			//If the object isn't reflective at all, return only the object color
 			if (reflectivity == 0.0f)
-				return calculateColor(nearestHit, n, lights);
+				return calculateColor(nearestHit, D, lights);
 			//If the object is perfectly reflective, returned only the reflected color
 			else if (reflectivity == 1.0f)
-				return bounceRay(objects, lights, P, D, v, n, nearClip, farClip, currBounce, maxBounces, nearestHit);
+				return bounceRay(objects, lights, P, D, nearClip, farClip, currBounce, maxBounces, nearestHit);
 			//If the object is partially reflective, blend the object and reflected colors
 			else
 			{
 				//Calculate the color of the object
-				rtColorf objectColor = calculateColor(nearestHit, n, lights);
-				rtColorf reflectedColor = bounceRay(objects, lights, P, D, v, n, nearClip, farClip, currBounce, maxBounces, nearestHit);
+				rtColorf objectColor = calculateColor(nearestHit, D, lights);
+				rtColorf reflectedColor = bounceRay(objects, lights, P, D, nearClip, farClip, currBounce, maxBounces, nearestHit);
 
 				rtColorf finalColor = (objectColor * (1 - reflectivity)) + (reflectedColor * reflectivity);
 				finalColor.clampColors();
@@ -131,7 +131,7 @@ namespace rtGraphics
 	}
 
 	//Bounce a ray off of the object it hits and find the reflected color
-	rtColorf rtRenderer::bounceRay(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, rtVec3f& v, rtVec3f& n,
+	rtColorf rtRenderer::bounceRay(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D,
 		float nearClip, float farClip, int currBounce, int maxBounces, shared_ptr<rtRayHit> hitData)
 	{
 		//If the ray has already bounced too many times return black
@@ -143,7 +143,7 @@ namespace rtGraphics
 		//Reflect the negated ray to get the direction of the reflected ray
 		rtVec3f reflectedRay = negatedRay.getReflected(hitData->hitNormal);
 		//Traced the bounced ray to get the reflected color. The near clip is set to 0 since it is not needed
-		return rayTrace(objects, lights, hitData->hitPoint, reflectedRay, v, n, 0.0f, farClip, ++currBounce, maxBounces);
+		return rayTrace(objects, lights, hitData->hitPoint, reflectedRay, 0.0f, farClip, ++currBounce, maxBounces);
 	}
 
 	//Ray trace a single ray
@@ -183,9 +183,6 @@ namespace rtGraphics
 	objectSet rtRenderer::rayTraceThread::objects;
 	lightSet rtRenderer::rayTraceThread::lights;
 	rtVec3f rtRenderer::rayTraceThread::camPos;
-	rtVec3f rtRenderer::rayTraceThread::u;
-	rtVec3f rtRenderer::rayTraceThread::v;
-	rtVec3f rtRenderer::rayTraceThread::n;
 	float rtRenderer::rayTraceThread::nearClip;
 	float rtRenderer::rayTraceThread::farClip;
 	int rtRenderer::rayTraceThread::maxBounces;
@@ -198,17 +195,14 @@ namespace rtGraphics
 
 	///rayTraceThread methods
 	//Set the shared data used to render the image
-	void rtRenderer::rayTraceThread::setData(shared_ptr<rtScene>scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
-		float nearClip, float farClip, int maxBounces, ofPixels* bufferPixels, rtVec3f& firstRow, rtVec3f& hStep, rtVec3f& vStep)
+	void rtRenderer::rayTraceThread::setData(shared_ptr<rtScene>scene, rtVec3f& camPos, float nearClip, float farClip,
+		int maxBounces, ofPixels* bufferPixels, rtVec3f& firstRow, rtVec3f& hStep, rtVec3f& vStep)
 	{
 		//Scene data
 		objects = scene->getObjects();
 		lights = scene->getLights();
 		//Camera Data
 		rayTraceThread::camPos = camPos;
-		rayTraceThread::u = u;
-		rayTraceThread::v = v;
-		rayTraceThread::n = n;
 		rayTraceThread::nearClip = nearClip;
 		rayTraceThread::farClip = farClip;
 		rayTraceThread::maxBounces = maxBounces;
@@ -250,7 +244,7 @@ namespace rtGraphics
 				//Find new direction vector
 				D = (R - camPos).normalize();
 				//Calculate the color of the pixel
-				rtColorf pixelColor = rayTrace(objects, lights, camPos, D, v, n, nearClip, farClip, 0, maxBounces);
+				rtColorf pixelColor = rayTrace(objects, lights, camPos, D, nearClip, farClip, 0, maxBounces);
 				//Write the color to the pixel buffer
 				(*bufferPixels)[bufferIndex++] = (int)(pixelColor.getR() * 255.0f);
 				(*bufferPixels)[bufferIndex++] = (int)(pixelColor.getG() * 255.0f);
