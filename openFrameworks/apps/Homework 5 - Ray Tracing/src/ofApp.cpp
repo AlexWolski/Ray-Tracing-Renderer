@@ -14,7 +14,7 @@ void ofApp::setup()
 	demoScene->addObject("red sphere", redSphere);
 
 	///Create a blue, reflective sphere and add it to the scene
-	rtMat reflectiveBlue(rtColorf(0.0f, 0.0f, 0.2f), rtColorf::blue, rtColorf::white, 200.0f, 0.3f);
+	rtMat reflectiveBlue(rtColorf(0.0f, 0.0f, 0.2f), rtColorf::blue, rtColorf::white, 500.0f, 0.3f);
 	rtObject* blueSphere = new rtSphere(rtVec3f(-25.0f, -25.0f, 0.0f), 20.0f, reflectiveBlue);
 	demoScene->addObject("blue sphere", blueSphere);
 	

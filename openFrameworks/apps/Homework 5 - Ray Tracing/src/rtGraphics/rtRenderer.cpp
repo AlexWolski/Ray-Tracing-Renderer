@@ -86,27 +86,57 @@ namespace rtGraphics
 		//Otherwise calculate the lighting of the pixel
 		else
 		{
+			//The final color to the drawn to the pixel
+			rtColorf finalColor = rtColorf();
+			//The material of the object
+			rtMat objectMat = hitData->hitObject->getMat();
 			//Get the reflectivity of the material
 			float reflectivity = hitData->hitObject->getMat().getReflectivity();
 
-			//If the object isn't reflective at all, return only the object color
+			//The ambient and diffuse colors of the object
+			rtColorf objectColor;
+			//Store the specular color separate from the ambient and diffuse
+			rtColorf specular;
+
+			//Iterate over the all the lights
+			for (auto lightPtr = lights->begin(); lightPtr != lights->end(); lightPtr++)
+			{
+				//Get a pointer to the current light
+				rtLight* currLight = lightPtr->second;
+				//Cache the ambient and light intensity
+				float incidentIntensity = currLight->getIncidentIntensity();
+				float ambientIntensity = currLight->getAmbientIntensity();
+
+				//Calculate the light vector, which is used in both diffuse and specular lighting
+				rtVec3f lightVector = (currLight->getPosition() - hitData->hitPoint);
+				lightVector.normalize();
+
+				//If the object is not perfectly reflective, calculate the ambient and diffuse colors
+				if (reflectivity < 1.0f)
+				{
+					objectColor += ambientColor((*currLight).getAmbient(), objectMat.getAmbient(), ambientIntensity);
+					objectColor += diffuseColor(lightVector, hitData->hitNormal, (*currLight).getDiffuse(), objectMat.getDiffuse(), incidentIntensity);
+				}
+
+				//Calculate the specular color regardless of the reflectivity
+				specular += specularColor(lightVector, D, hitData->hitNormal, (*currLight).getSpecular(), objectMat.getSpecular(), objectMat.getSmoothness(), incidentIntensity);
+			}
+
+			//If the object is perfectly non-reflective, only use the object color
 			if (reflectivity == 0.0f)
-				return calculateColor(hitData, D, lights);
-			//If the object is perfectly reflective, returned only the reflected color
-			else if (reflectivity == 1.0f)
-				return bounceRay(objects, lights, P, D, nearClip, farClip, currBounce, maxBounces, hitData);
-			//If the object is partially reflective, blend the object and reflected colors
+				finalColor = objectColor + specular;
+			//If the object has some reflectivity, incorporate the reflected color
 			else
 			{
-				//Calculate the color of the object
-				rtColorf objectColor = calculateColor(hitData, D, lights);
+				//Bounce the ray off of the object and calculate the reflected color
 				rtColorf reflectedColor = bounceRay(objects, lights, P, D, nearClip, farClip, currBounce, maxBounces, hitData);
-
-				rtColorf finalColor = (objectColor * (1 - reflectivity)) + (reflectedColor * reflectivity);
-				finalColor.clampColors();
-
-				return finalColor;
+				//Combine the object color and reflected color
+				finalColor = (objectColor * (1 - reflectivity)) + (reflectedColor * reflectivity) + specular;
 			}
+
+			//Clamp the values of the final color and return it
+			finalColor.clampColors();
+			return finalColor;
 		}
 	}
 
@@ -150,38 +180,6 @@ namespace rtGraphics
 		rtVec3f reflectedRay = negatedRay.getReflected(hitData->hitNormal);
 		//Traced the bounced ray to get the reflected color. The near clip is set to 0 since it is not needed
 		return rayTrace(objects, lights, hitData->hitPoint, reflectedRay, 0.0f, farClip, ++currBounce, maxBounces);
-	}
-
-	//Calculates the color of an object at the ray intersection point
-	rtColorf rtRenderer::calculateColor(shared_ptr<rtRayHit> hitData, rtVec3f n, lightSet& lights)
-	{
-		//The final color to the drawn to the pixel
-		rtColorf finalColor = rtColorf();
-		//The material of the object
-		rtMat objectMat = hitData->hitObject->getMat();
-
-		//Iterate over the all the lights
-		for (auto lightPtr = lights->begin(); lightPtr != lights->end(); lightPtr++)
-		{
-			//Get a pointer to the current light
-			rtLight* currLight = lightPtr->second;
-			//Cache the ambient and light intensity
-			float incidentIntensity = currLight->getIncidentIntensity();
-			float ambientIntensity = currLight->getAmbientIntensity();
-
-			//Calculate the light vector, which is used in both diffuse and specular lighting
-			rtVec3f lightVector = (currLight->getPosition() - hitData->hitPoint);
-			lightVector.normalize();
-
-			//Add the three types of lighting from this light to the final color
-			finalColor += ambientColor((*currLight).getAmbient(), objectMat.getAmbient(), ambientIntensity);
-			finalColor += diffuseColor(lightVector, hitData->hitNormal, (*currLight).getDiffuse(), objectMat.getDiffuse(), incidentIntensity);
-			finalColor += specularColor(lightVector, n, hitData->hitNormal, (*currLight).getSpecular(), objectMat.getSpecular(), objectMat.getSmoothness(), incidentIntensity);
-		}
-
-		//Clamp the values of the final color and return it
-		finalColor.clampColors();
-		return finalColor;
 	}
 
 

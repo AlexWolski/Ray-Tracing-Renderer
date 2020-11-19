@@ -57,8 +57,6 @@ namespace rtGraphics
 		static rayTraceThread* makeThreads();
 		//Bounce the ray off of an object and calculate the color at the next intersection point
 		static rtColorf bounceRay(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D,float nearClip, float farClip, int currBounce, int maxBounces, shared_ptr<rtRayHit> hitData);
-		//Calculates the color of an object at the ray intersection point
-		static rtColorf calculateColor(shared_ptr<rtRayHit> hitData, rtVec3f n, lightSet& lights);
 
 	public:
 		//Ray trace an entire scene
