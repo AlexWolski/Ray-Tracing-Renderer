@@ -8,10 +8,15 @@ void ofApp::setup()
 	mainCamera->setFov(90.0f);
 	mainCamera->setScene(demoScene);
 
-	///Create a sphere and add it to the scene
+	///Create a red, matte sphere and add it to the scene
 	rtMat shinyRed(rtColorf(0.2f, 0.0f, 0.0f), rtColorf::red, rtColorf::white, 200.0f);
-	rtObject* sphere = new rtSphere(rtVec3f(0.0f, -25.0f, 0.0f), 20.0f, shinyRed);
-	demoScene->addObject("sphere", sphere);
+	rtObject* redSphere = new rtSphere(rtVec3f(25.0f, -25.0f, 0.0f), 20.0f, shinyRed);
+	demoScene->addObject("red sphere", redSphere);
+
+	///Create a blue, reflective sphere and add it to the scene
+	rtMat reflectiveBlue(rtColorf(0.0f, 0.0f, 0.2f), rtColorf::blue, rtColorf::white, 200.0f, 0.3f);
+	rtObject* blueSphere = new rtSphere(rtVec3f(-25.0f, -25.0f, 0.0f), 20.0f, reflectiveBlue);
+	demoScene->addObject("blue sphere", blueSphere);
 	
 	///Create a mesh and add it to the scene
 	rtMesh triangleMesh;

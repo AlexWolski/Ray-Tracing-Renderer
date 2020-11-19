@@ -42,7 +42,7 @@ namespace rtGraphics
 		public:
 			//Set the shared data
 			static void setData(shared_ptr<rtScene> scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n, float nearClip,
-				float farClip,int maxBounces, ofPixels* bufferPixels, rtVec3f& firstRow, rtVec3f& hStep, rtVec3f& vStep);
+				float farClip, int maxBounces, ofPixels* bufferPixels, rtVec3f& firstRow, rtVec3f& hStep, rtVec3f& vStep);
 
 			//Set the section of the image to render
 			void setSection(int startRow, int endRow);
@@ -53,8 +53,12 @@ namespace rtGraphics
 		//A pool of threads to render the image
 		static rayTraceThread* threadPool;
 
-		//Instantiate the thread pool
+		//Instantiates the thread pool
 		static rayTraceThread* makeThreads();
+		//Bounce the ray off of an object and calculate the color at the next intersection point
+		static rtColorf bounceRay(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, rtVec3f& v, rtVec3f& n,float nearClip, float farClip, int currBounce, int maxBounces, shared_ptr<rtRayHit> hitData);
+		//Calculates the color of an object at the ray intersection point
+		static rtColorf calculateColor(shared_ptr<rtRayHit> hitData, rtVec3f n, lightSet& lights);
 
 	public:
 		//Ray trace an entire scene
@@ -62,7 +66,7 @@ namespace rtGraphics
 			float hFov, float nearClip, float farClip, int maxBounces, ofPixels* bufferPixels);
 
 		//Ray trace a single ray
-		static rtColorf rayTrace(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, rtVec3f& v, rtVec3f& n, float nearClip, float farClip, int maxBounces);
+		static rtColorf rayTrace(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, rtVec3f& v, rtVec3f& n, float nearClip, float farClip, int currBounce, int maxBounces);
 
 		//Color calculation methods
 		static rtColorf ambientColor(rtColorf& ambientLight, rtColorf& ambientMaterial, float ambientIntensity);

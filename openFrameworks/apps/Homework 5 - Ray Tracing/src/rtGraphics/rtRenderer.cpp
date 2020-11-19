@@ -74,12 +74,12 @@ namespace rtGraphics
 	}
 
 	//Ray trace a single ray
-	rtColorf rtRenderer::rayTrace(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, rtVec3f& v, rtVec3f& n, float nearClip, float farClip, int maxBounces)
+	rtColorf rtRenderer::rayTrace(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, rtVec3f& v, rtVec3f& n, float nearClip, float farClip, int currBounce, int maxBounces)
 	{
 		//The distance from the camera to the intersection point
 		float minT = INFINITY;
 		//The intersection data of the closest intersection
-		rtRayHit* nearestHit;
+		shared_ptr<rtRayHit> nearestHit;
 
 		//Iterate over the all the objects
 		for (auto objectPtr = objects->begin(); objectPtr != objects->end(); objectPtr++)
@@ -87,7 +87,7 @@ namespace rtGraphics
 			//Get a pointer to the current object
 			rtObject* currObject = objectPtr->second;
 			//Determine if the ray intersects the object
-			rtRayHit* hitData = currObject->rayIntersect(P, D, nearClip, farClip);
+			shared_ptr<rtRayHit> hitData = currObject->rayIntersect(P, D, nearClip, farClip);
 
 			//If the ray hit and the object is not obscured, save the ray parameter and object address
 			if (hitData->hit && hitData->distance < minT)
@@ -106,33 +106,75 @@ namespace rtGraphics
 		//Otherwise calculate the lighting of the pixel
 		else
 		{
-			//The final color to the drawn to the pixel
-			rtColorf finalColor = rtColorf();
-			//The material properties of the object
-			rtMat objectMat = nearestHit->hitObject->getMat();
+			//Get the reflectivity of the material
+			float reflectivity = nearestHit->hitObject->getMat().getReflectivity();
 
-			//Iterate over the all the lights
-			for (auto lightPtr = lights->begin(); lightPtr != lights->end(); lightPtr++)
+			//If the object isn't reflective at all, return only the object color
+			if (reflectivity == 0.0f)
+				return calculateColor(nearestHit, n, lights);
+			//If the object is perfectly reflective, returned only the reflected color
+			else if (reflectivity == 1.0f)
+				return bounceRay(objects, lights, P, D, v, n, nearClip, farClip, currBounce, maxBounces, nearestHit);
+			//If the object is partially reflective, blend the object and reflected colors
+			else
 			{
-				//Get a pointer to the current light
-				rtLight* currLight = lightPtr->second;
-				//Cache the ambient and light intensity
-				float incidentIntensity = currLight->getIncidentIntensity();
-				float ambientIntensity = currLight->getAmbientIntensity();
+				//Calculate the color of the object
+				rtColorf objectColor = calculateColor(nearestHit, n, lights);
+				rtColorf reflectedColor = bounceRay(objects, lights, P, D, v, n, nearClip, farClip, currBounce, maxBounces, nearestHit);
 
-				//Calculate the light vector, which is used in both diffuse and specular lighting
-				rtVec3f lightVector = (currLight->getPosition() - nearestHit->hitPoint);
-				lightVector.normalize();
-
-				//Add the three types of lighting from this light to the final color
-				finalColor += ambientColor((*currLight).getAmbient(), objectMat.getAmbient(), ambientIntensity);
-				finalColor += diffuseColor(lightVector, nearestHit->hitNormal, (*currLight).getDiffuse(), objectMat.getDiffuse(), incidentIntensity);
-				finalColor += specularColor(lightVector, n, nearestHit->hitNormal, (*currLight).getSpecular(), objectMat.getSpecular(), objectMat.getSmoothness(), incidentIntensity);
-				//Clamp the values of the color
+				rtColorf finalColor = (objectColor * (1 - reflectivity)) + (reflectedColor * reflectivity);
 				finalColor.clampColors();
 
 				return finalColor;
 			}
+		}
+	}
+
+	//Bounce a ray off of the object it hits and find the reflected color
+	rtColorf rtRenderer::bounceRay(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, rtVec3f& v, rtVec3f& n,
+		float nearClip, float farClip, int currBounce, int maxBounces, shared_ptr<rtRayHit> hitData)
+	{
+		//If the ray has already bounced too many times return black
+		if (currBounce >= maxBounces)
+			return rtColorf::black;
+
+		//Negate the ray direction
+		rtVec3f negatedRay = -D;
+		//Reflect the negated ray to get the direction of the reflected ray
+		rtVec3f reflectedRay = negatedRay.getReflected(hitData->hitNormal);
+		//Traced the bounced ray to get the reflected color. The near clip is set to 0 since it is not needed
+		return rayTrace(objects, lights, hitData->hitPoint, reflectedRay, v, n, 0.0f, farClip, ++currBounce, maxBounces);
+	}
+
+	//Ray trace a single ray
+	rtColorf rtRenderer::calculateColor(shared_ptr<rtRayHit> hitData, rtVec3f n, lightSet& lights)
+	{
+		//The final color to the drawn to the pixel
+		rtColorf finalColor = rtColorf();
+		//The material of the object
+		rtMat objectMat = hitData->hitObject->getMat();
+
+		//Iterate over the all the lights
+		for (auto lightPtr = lights->begin(); lightPtr != lights->end(); lightPtr++)
+		{
+			//Get a pointer to the current light
+			rtLight* currLight = lightPtr->second;
+			//Cache the ambient and light intensity
+			float incidentIntensity = currLight->getIncidentIntensity();
+			float ambientIntensity = currLight->getAmbientIntensity();
+
+			//Calculate the light vector, which is used in both diffuse and specular lighting
+			rtVec3f lightVector = (currLight->getPosition() - hitData->hitPoint);
+			lightVector.normalize();
+
+			//Add the three types of lighting from this light to the final color
+			finalColor += ambientColor((*currLight).getAmbient(), objectMat.getAmbient(), ambientIntensity);
+			finalColor += diffuseColor(lightVector, hitData->hitNormal, (*currLight).getDiffuse(), objectMat.getDiffuse(), incidentIntensity);
+			finalColor += specularColor(lightVector, n, hitData->hitNormal, (*currLight).getSpecular(), objectMat.getSpecular(), objectMat.getSmoothness(), incidentIntensity);
+			//Clamp the values of the color
+			finalColor.clampColors();
+
+			return finalColor;
 		}
 	}
 
@@ -208,7 +250,7 @@ namespace rtGraphics
 				//Find new direction vector
 				D = (R - camPos).normalize();
 				//Calculate the color of the pixel
-				rtColorf pixelColor = rayTrace(objects, lights, camPos, D, v, n, nearClip, farClip, maxBounces);
+				rtColorf pixelColor = rayTrace(objects, lights, camPos, D, v, n, nearClip, farClip, 0, maxBounces);
 				//Write the color to the pixel buffer
 				(*bufferPixels)[bufferIndex++] = (int)(pixelColor.getR() * 255.0f);
 				(*bufferPixels)[bufferIndex++] = (int)(pixelColor.getG() * 255.0f);

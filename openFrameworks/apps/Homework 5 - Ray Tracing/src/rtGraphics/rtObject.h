@@ -30,7 +30,7 @@ namespace rtGraphics
 		void setMat(const rtMat& material);
 
 		//Returns the ray intersection point and surface normal of a ray and this object
-		virtual rtRayHit* rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip) = 0;
+		virtual shared_ptr<rtRayHit> rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip) = 0;
 	};
 
 	///In-line method definitions
@@ -72,7 +72,7 @@ namespace rtGraphics
 
 		///Inherited Method
 		//Determines if a ray intersects the object and returns the intersection data
-		rtRayHit* rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip);
+		shared_ptr<rtRayHit> rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip);
 	};
 
 	///Constructors
@@ -130,7 +130,7 @@ namespace rtGraphics
 		void setMesh(rtMesh& mesh);
 
 		///Inherited Methods
-		rtRayHit* rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip);
+		shared_ptr<rtRayHit> rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip);
 	};
 
 	///In-line method definitions

@@ -3,10 +3,10 @@
 namespace rtGraphics
 {
 	//Sphere Intersection
-	rtRayHit* rtSphere::rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip)
+	shared_ptr<rtRayHit> rtSphere::rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip)
 	{
 		//Create a struct to store the ray cast data.
-		rtRayHit* hitData = new rtRayHit();
+		shared_ptr<rtRayHit> hitData = make_shared<rtRayHit>();
 
 		//Define an intermediate variable M as the vector from the sphere center to the ray origin
 		rtVec3f M = P - center;
@@ -38,6 +38,13 @@ namespace rtGraphics
 		//Get the smaller of the two distances
 		float t = (tSub < tAdd) ? tSub : tAdd;
 
+		//If the ray is on or inside the object, don't count it as an intersection
+		if (t < 0.0f)
+		{
+			hitData->hit = false;
+			return hitData;
+		}
+
 		//Calculate the point of intersection and the normal at that point
 		rtVec3f hitPoint = P + (D * t);
 		rtVec3f hitNormal = hitPoint - center;
@@ -55,10 +62,10 @@ namespace rtGraphics
 	}
 
 	//Mesh Intersection
-	rtRayHit* rtMeshObject::rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip)
+	shared_ptr<rtRayHit> rtMeshObject::rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip)
 	{
 		//Create a struct to store the ray cast data.
-		rtRayHit* hitData = new rtRayHit();
+		shared_ptr<rtRayHit> hitData = make_shared<rtRayHit>();
 
 		//The distance to the closest intersection point
 		float tmin = farClip;

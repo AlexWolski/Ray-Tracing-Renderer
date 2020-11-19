@@ -47,7 +47,7 @@ namespace rtGraphics
 	inline rtMat::rtMat() : rtMat(rtColorf(0.2f), rtColorf::white, rtColorf(0.4f)) {
 	}
 
-	inline rtMat::rtMat(const rtColorf& ambient, const rtColorf& diffuse, const rtColorf& specular, float smoothness, float refelctivity) :
+	inline rtMat::rtMat(const rtColorf& ambient, const rtColorf& diffuse, const rtColorf& specular, float smoothness, float reflectivity) :
 		smoothness(smoothness),
 		ambient(ambient),
 		diffuse(diffuse),
