@@ -68,5 +68,8 @@
     <ClInclude Include="src\rtGraphics\rtColorf.h">
       <Filter>src\rtGraphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\rtGraphics\rtRayHit.h">
+      <Filter>src\rtGraphics</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

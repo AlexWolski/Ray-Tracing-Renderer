@@ -3,8 +3,11 @@
 namespace rtGraphics
 {
 	//Sphere Intersection
-	float rtSphere::rayIntersect(rtVec3f P, rtVec3f D, shared_ptr<rtVec3f> hitPos, shared_ptr<rtVec3f> hitNormal, float nearClip, float farClip)
+	rtRayHit* rtSphere::rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip)
 	{
+		//Create a struct to store the ray cast data.
+		rtRayHit* hitData = new rtRayHit();
+
 		//Define an intermediate variable M as the vector from the sphere center to the ray origin
 		rtVec3f M = P - center;
 
@@ -22,7 +25,10 @@ namespace rtGraphics
 
 		//If the discriminant is less than 0, then the ray doesn't intersect the sphere
 		if (discriminant < 0.0f)
-			return -1.0f;
+		{
+			hitData->hit = false;
+			return hitData;
+		}
 
 		//Compute the rest of the quadratic formula to find the intersection distance
 		float sqrtDisc = sqrt(discriminant);
@@ -32,22 +38,34 @@ namespace rtGraphics
 		//Get the smaller of the two distances
 		float t = (tSub < tAdd) ? tSub : tAdd;
 
-		//Calculate and set the point of intersection and its normal
-		*hitPos = P + (D * t);
-		*hitNormal = *hitPos - center;
-		hitNormal->normalize();
+		//Calculate the point of intersection and the normal at that point
+		rtVec3f hitPoint = P + (D * t);
+		rtVec3f hitNormal = hitPoint - center;
+		hitNormal.normalize();
 
-		//Return the intersection distance
-		return t;
+		//Store the hit data into the struct
+		hitData->hit = true;
+		hitData->hitObject = this;
+		hitData->distance = t;
+		hitData->hitPoint = hitPoint;
+		hitData->hitNormal = hitNormal;
+
+		//Return the intersection data
+		return hitData;
 	}
 
 	//Mesh Intersection
-	float rtMeshObject::rayIntersect(rtVec3f P, rtVec3f D, shared_ptr<rtVec3f> hitPos, shared_ptr<rtVec3f> hitNormal, float nearClip, float farClip)
+	rtRayHit* rtMeshObject::rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip)
 	{
-		float t;
+		//Create a struct to store the ray cast data.
+		rtRayHit* hitData = new rtRayHit();
+
+		//The distance to the closest intersection point
 		float tmin = farClip;
+		//The index of the current triangle
 		int faceIndex;
 
+		//References to the vertex, face, and normal lists.
 		vecList& vertices = mesh.getVerts();
 		intList& faces = mesh.getFaces();
 		vecList& normals = mesh.getNormals();
@@ -64,8 +82,8 @@ namespace rtGraphics
 
 			//Calculate the plane constant
 			float k = p0.dot(normal);
-			//Calculate the plane intersection point
-			t = (k - P.dot(normal)) / (D.dot(normal));
+			//Calculate the distance to the plane intersection point
+			float t = (k - P.dot(normal)) / (D.dot(normal));
 
 			//If the ray is visible, determine if the ray hit the triangle
 			if (t > nearClip && t < tmin)
@@ -87,13 +105,20 @@ namespace rtGraphics
 					(e1.getCrossed(r - p1)).dot(normal) >= 0 &&
 					(e2.getCrossed(r - p2)).dot(normal) >= 0)
 				{
+					//Update the distance of the closest intersection
 					tmin = t;
-					*hitPos = r;
-					*hitNormal = normal;
+
+					//Store the hit data into the struct
+					hitData->hit = true;
+					hitData->hitObject = this;
+					hitData->distance = tmin;
+					hitData->hitPoint = r;
+					hitData->hitNormal = normal;
 				}
 			}
 		}
 
-		return tmin;
+		//Return the intersection data
+		return hitData;
 	}
 }

@@ -7,6 +7,7 @@
 #include "rtVec3f.h"
 #include "rtMat.h"
 #include "rtMesh.h"
+#include "rtRayHit.h"
 
 using namespace std;
 
@@ -28,7 +29,8 @@ namespace rtGraphics
 		rtMat& getMat();
 		void setMat(const rtMat& material);
 
-		virtual float rayIntersect(rtVec3f P, rtVec3f D, shared_ptr<rtVec3f> hitPos, shared_ptr<rtVec3f> hitNormal, float nearClip, float farClip) = 0;
+		//Returns the ray intersection point and surface normal of a ray and this object
+		virtual rtRayHit* rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip) = 0;
 	};
 
 	///In-line method definitions
@@ -69,12 +71,8 @@ namespace rtGraphics
 		void setRadius(float radius);
 
 		///Inherited Method
-		/*
-		 * Returns the distance between the camera and the intersection point
-		 * Additionally, sets the hitPos and hitNormal vectors pointers
-		 * If the result is less than 0, then the ray did not intersect the object
-		 */
-		float rayIntersect(rtVec3f P, rtVec3f D, shared_ptr<rtVec3f> hitPos, shared_ptr<rtVec3f> hitNormal, float nearClip, float farClip);
+		//Determines if a ray intersects the object and returns the intersection data
+		rtRayHit* rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip);
 	};
 
 	///Constructors
@@ -132,7 +130,7 @@ namespace rtGraphics
 		void setMesh(rtMesh& mesh);
 
 		///Inherited Methods
-		float rayIntersect(rtVec3f P, rtVec3f D, shared_ptr<rtVec3f> hitPos, shared_ptr<rtVec3f> hitNormal, float nearClip, float farClip);
+		rtRayHit* rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip);
 	};
 
 	///In-line method definitions

@@ -78,14 +78,8 @@ namespace rtGraphics
 	{
 		//The distance from the camera to the intersection point
 		float minT = INFINITY;
-		//The closest object that the ray intersects
-		rtObject* hitObject;
-		//The closest intersection point and its normal
-		rtVec3f hitPos;
-		rtVec3f hitNormal;
-		//The position and normal of the current intersection point
-		shared_ptr<rtVec3f> currHitPos = make_shared<rtVec3f>();
-		shared_ptr<rtVec3f> currHitNormal = make_shared<rtVec3f>();
+		//The intersection data of the closest intersection
+		rtRayHit* nearestHit;
 
 		//Iterate over the all the objects
 		for (auto objectPtr = objects->begin(); objectPtr != objects->end(); objectPtr++)
@@ -93,15 +87,15 @@ namespace rtGraphics
 			//Get a pointer to the current object
 			rtObject* currObject = objectPtr->second;
 			//Determine if the ray intersects the object
-			float t = currObject->rayIntersect(P, D, currHitPos, currHitNormal, nearClip, farClip);
+			rtRayHit* hitData = currObject->rayIntersect(P, D, nearClip, farClip);
 
 			//If the ray hit and the object is not obscured, save the ray parameter and object address
-			if (t < minT && t > 0.0f)
+			if (hitData->hit && hitData->distance < minT)
 			{
-				hitObject = currObject;
-				hitPos = *currHitPos;
-				hitNormal = *currHitNormal;
-				minT = t;
+				//Update the distance of the closest intersection
+				minT = hitData->distance;
+				//Update the hit data of the nearest intersection point
+				nearestHit = hitData;
 			}
 		}
 
@@ -115,7 +109,7 @@ namespace rtGraphics
 			//The final color to the drawn to the pixel
 			rtColorf finalColor = rtColorf();
 			//The material properties of the object
-			rtMat objectMat = hitObject->getMat();
+			rtMat objectMat = nearestHit->hitObject->getMat();
 
 			//Iterate over the all the lights
 			for (auto lightPtr = lights->begin(); lightPtr != lights->end(); lightPtr++)
@@ -127,13 +121,13 @@ namespace rtGraphics
 				float ambientIntensity = currLight->getAmbientIntensity();
 
 				//Calculate the light vector, which is used in both diffuse and specular lighting
-				rtVec3f lightVector = (currLight->getPosition() - hitPos);
+				rtVec3f lightVector = (currLight->getPosition() - nearestHit->hitPoint);
 				lightVector.normalize();
 
 				//Add the three types of lighting from this light to the final color
 				finalColor += ambientColor((*currLight).getAmbient(), objectMat.getAmbient(), ambientIntensity);
-				finalColor += diffuseColor(lightVector, hitNormal, (*currLight).getDiffuse(), objectMat.getDiffuse(), incidentIntensity);
-				finalColor += specularColor(lightVector, n, hitNormal, (*currLight).getSpecular(), objectMat.getSpecular(), objectMat.getSmoothness(), incidentIntensity);
+				finalColor += diffuseColor(lightVector, nearestHit->hitNormal, (*currLight).getDiffuse(), objectMat.getDiffuse(), incidentIntensity);
+				finalColor += specularColor(lightVector, n, nearestHit->hitNormal, (*currLight).getSpecular(), objectMat.getSpecular(), objectMat.getSmoothness(), incidentIntensity);
 				//Clamp the values of the color
 				finalColor.clampColors();
 
