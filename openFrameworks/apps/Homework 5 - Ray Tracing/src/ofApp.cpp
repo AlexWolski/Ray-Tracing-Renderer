@@ -52,10 +52,16 @@ void ofApp::setup()
 	demoScene->addObject("box", box);
 
 	///Create a light and add it to the scene
-	rtLight* pointLight = new rtLight(rtVec3f(40.0f, 40.0f, -60.0f), rtColorf(0.3f), rtColorf(0.9f), rtColorf(0.5f));
-	pointLight->setAmbientIntensity(2.0f);
-	pointLight->setIncidentIntensity(1.0f);
-	demoScene->addLight("main light", pointLight);
+	rtLight* pointLight = new rtLight(rtVec3f(-50.0f, 40.0f, -60.0f), rtColorf(0.3f), rtColorf(0.9f), rtColorf(0.8f));
+	pointLight->setAmbientIntensity(1.0f);
+	pointLight->setIncidentIntensity(0.5f);
+	demoScene->addLight("left light", pointLight);
+
+	///Create an additional light and add it to the scene
+	pointLight = new rtLight(rtVec3f(50.0f, 40.0f, -60.0f), rtColorf(0.3f), rtColorf(0.9f), rtColorf(0.8f));
+	pointLight->setAmbientIntensity(1.0f);
+	pointLight->setIncidentIntensity(0.5f);
+	demoScene->addLight("right light", pointLight);
 }
 
 void ofApp::update()

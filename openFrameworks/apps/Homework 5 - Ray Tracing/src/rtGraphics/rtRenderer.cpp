@@ -171,11 +171,11 @@ namespace rtGraphics
 			finalColor += ambientColor((*currLight).getAmbient(), objectMat.getAmbient(), ambientIntensity);
 			finalColor += diffuseColor(lightVector, hitData->hitNormal, (*currLight).getDiffuse(), objectMat.getDiffuse(), incidentIntensity);
 			finalColor += specularColor(lightVector, n, hitData->hitNormal, (*currLight).getSpecular(), objectMat.getSpecular(), objectMat.getSmoothness(), incidentIntensity);
-			//Clamp the values of the color
-			finalColor.clampColors();
-
-			return finalColor;
 		}
+
+		//Clamp the values of the final color and return it
+		finalColor.clampColors();
+		return finalColor;
 	}
 
 
