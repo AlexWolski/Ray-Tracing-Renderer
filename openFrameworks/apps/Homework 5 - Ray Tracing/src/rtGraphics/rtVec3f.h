@@ -188,14 +188,14 @@ namespace rtGraphics
 	inline rtVec3f rtVec3f::getReflected(const rtVec3f& normal) const
 	{
 		/*
-		 * R = 2(N*L)N - L
+		 * R = L - 2(N*L)N
 		 * R is the reflected vector
 		 * L is the vector being reflected
 		 * N is the normal being reflected around
 		 * N*L is the dot product of N and L
 		 */
 		float scalar = 2 * dot(normal);
-		return (normal * scalar) - *this;
+		return *this - (normal * scalar);
 	}
 
 	inline float rtVec3f::dot(const rtVec3f& rhs) const

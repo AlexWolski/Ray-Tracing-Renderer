@@ -192,11 +192,9 @@ namespace rtGraphics
 		if (currBounce >= maxBounces)
 			return rtColorf::black;
 
-		//Negate the ray direction
-		rtVec3f negatedRay = -D;
-		//Reflect the negated ray to get the direction of the reflected ray
-		rtVec3f reflectedRay = negatedRay.getReflected(hitData->hitNormal);
-		//Traced the bounced ray to get the reflected color. The near clip is set to 0 since it is not needed
+		//Get the reflected ray
+		rtVec3f reflectedRay = D.getReflected(hitData->hitNormal);
+		//Trace the bounced ray to get the reflected color. The near clip is set to 0 since it is not needed
 		return rayTrace(objects, lights, hitData->hitPoint, reflectedRay, 0.0f, farClip, ++currBounce, maxBounces, hitData->hitObject);
 	}
 
