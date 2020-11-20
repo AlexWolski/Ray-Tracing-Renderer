@@ -38,7 +38,7 @@ namespace rtGraphics
 		rtVec3f& cross(const rtVec3f& rhs);
 		rtVec3f  getCrossed(const rtVec3f& rhs) const;
 		rtVec3f& reflect(const rtVec3f& rhs);
-		rtVec3f& getReflected(const rtVec3f& rhs) const;
+		rtVec3f getReflected(const rtVec3f& rhs) const;
 		float dot(const rtVec3f& rhs) const;
 
 		///Operators
@@ -185,7 +185,7 @@ namespace rtGraphics
 		return *this;
 	}
 
-	inline rtVec3f& rtVec3f::getReflected(const rtVec3f& normal) const
+	inline rtVec3f rtVec3f::getReflected(const rtVec3f& normal) const
 	{
 		/*
 		 * R = 2(N*L)N - L
