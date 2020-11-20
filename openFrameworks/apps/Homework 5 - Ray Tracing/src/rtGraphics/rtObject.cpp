@@ -2,6 +2,9 @@
 
 namespace rtGraphics
 {
+	//The minimum distance the ray origin has to be from the sphere surface for an intersection to count
+	const float rtSphere::intersectTolerance = 0.01f;
+
 	//Sphere Intersection
 	shared_ptr<rtRayHit> rtSphere::rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip)
 	{
@@ -35,15 +38,22 @@ namespace rtGraphics
 		float tSub = -dotProd - sqrtDisc;
 		float tAdd = -dotProd + sqrtDisc;
 
-		//Get the smaller of the two distances
-		float t = (tSub < tAdd) ? tSub : tAdd;
+		//The minimum positive intersection distance
+		float t;
 
-		//If the ray is on or inside the object, don't count it as an intersection
-		if (t < 0.0f)
+		//If the larger  distance is less than the tolerance, then the ray does not intersect
+		if (tAdd < intersectTolerance)
 		{
 			hitData->hit = false;
 			return hitData;
 		}
+
+		//If the smaller distance is less than the tolerance, then use the larger distance
+		if (tSub < intersectTolerance)
+			t = tAdd;
+		//Otherwise use the smaller distance
+		else
+			t = tSub;
 
 		//Calculate the point of intersection and the normal at that point
 		rtVec3f hitPoint = P + (D * t);

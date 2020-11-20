@@ -54,6 +54,8 @@ namespace rtGraphics
 	private:
 		rtVec3f center;
 		float radius;
+		//The minimum distance the ray origin has to be from the sphere surface for an intersection to count
+		static const float intersectTolerance;
 
 	public:
 		///Constructors
