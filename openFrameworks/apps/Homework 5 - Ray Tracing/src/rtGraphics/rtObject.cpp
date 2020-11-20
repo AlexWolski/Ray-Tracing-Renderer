@@ -7,6 +7,8 @@ namespace rtGraphics
 	{
 		//Create a struct to store the ray cast data.
 		shared_ptr<rtRayHit> hitData = make_shared<rtRayHit>();
+		//By default, set the hit flag to false
+		hitData->hit = false;
 
 		//Define an intermediate variable M as the vector from the sphere center to the ray origin
 		rtVec3f M = P - center;
@@ -25,10 +27,7 @@ namespace rtGraphics
 
 		//If the discriminant is less than 0, then the ray doesn't intersect the sphere
 		if (discriminant < 0.0f)
-		{
-			hitData->hit = false;
 			return hitData;
-		}
 
 		//Compute the rest of the quadratic formula to find the intersection distance
 		float sqrtDisc = sqrt(discriminant);
@@ -45,9 +44,10 @@ namespace rtGraphics
 			float tSubAbs = abs(tSub);
 			float tAddAbs = abs(tAdd);
 
-			//Use the intersection that is farther away from the ray origin
+			//If the ray it pointing outwards from the sphere, then it does not intersect
 			if (tSubAbs > tAddAbs)
-				t = tSub;
+				return hitData;
+			//If the ray is pointing in towards the sphere, use the intersection point on the other side
 			else
 				t = tAdd;
 		}
@@ -63,24 +63,7 @@ namespace rtGraphics
 
 		//If the  intersection point is still behind the ray origin, then the ray does not intersect
 		if (t < 0.0f)
-		{
-			hitData->hit = false;
 			return hitData;
-		}
-
-		////If the larger  distance is less than the tolerance, then the ray does not intersect
-		//if (tAdd < 0.01f)
-		//{
-		//	hitData->hit = false;
-		//	return hitData;
-		//}
-
-		////If the smaller distance is less than the tolerance, then use the larger distance
-		//if (tSub < 0.01f)
-		//	t = tAdd;
-		////Otherwise use the smaller distance
-		//else
-		//	t = tSub;
 
 		//Calculate the point of intersection and the normal at that point
 		rtVec3f hitPoint = P + (D * t);
