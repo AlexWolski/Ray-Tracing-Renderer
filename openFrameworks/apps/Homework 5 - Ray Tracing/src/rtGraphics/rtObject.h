@@ -29,8 +29,11 @@ namespace rtGraphics
 		rtMat& getMat();
 		void setMat(const rtMat& material);
 
-		//Returns the ray intersection point and surface normal of a ray and this object
-		virtual shared_ptr<rtRayHit> rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip) = 0;
+		/*
+		 * Determines if a ray his this object and returns the intersection data
+		 * An optional flag can be set to toggle intersections when the ray origin is on the surface.
+		 */
+		virtual shared_ptr<rtRayHit> rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, bool onSurface = true) = 0;
 	};
 
 	///In-line method definitions
@@ -54,8 +57,6 @@ namespace rtGraphics
 	private:
 		rtVec3f center;
 		float radius;
-		//The minimum distance the ray origin has to be from the sphere surface for an intersection to count
-		static const float intersectTolerance;
 
 	public:
 		///Constructors
@@ -73,8 +74,7 @@ namespace rtGraphics
 		void setRadius(float radius);
 
 		///Inherited Method
-		//Determines if a ray intersects the object and returns the intersection data
-		shared_ptr<rtRayHit> rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip);
+		shared_ptr<rtRayHit> rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, bool onSurface = true);
 	};
 
 	///Constructors
@@ -132,7 +132,7 @@ namespace rtGraphics
 		void setMesh(rtMesh& mesh);
 
 		///Inherited Methods
-		shared_ptr<rtRayHit> rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip);
+		shared_ptr<rtRayHit> rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, bool onSurface = true);
 	};
 
 	///In-line method definitions

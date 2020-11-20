@@ -2,11 +2,8 @@
 
 namespace rtGraphics
 {
-	//The minimum distance the ray origin has to be from the sphere surface for an intersection to count
-	const float rtSphere::intersectTolerance = 0.01f;
-
 	//Sphere Intersection
-	shared_ptr<rtRayHit> rtSphere::rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip)
+	shared_ptr<rtRayHit> rtSphere::rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, bool onSurface)
 	{
 		//Create a struct to store the ray cast data.
 		shared_ptr<rtRayHit> hitData = make_shared<rtRayHit>();
@@ -40,20 +37,50 @@ namespace rtGraphics
 
 		//The minimum positive intersection distance
 		float t;
+		
+		//If the ray is on the object surface, ignore the intersection at that point
+		if (onSurface)
+		{
+			//Get the absolute value of each intersection distance
+			float tSubAbs = abs(tSub);
+			float tAddAbs = abs(tAdd);
 
-		//If the larger  distance is less than the tolerance, then the ray does not intersect
-		if (tAdd < intersectTolerance)
+			//Use the intersection that is farther away from the ray origin
+			if (tSubAbs > tAddAbs)
+				t = tSub;
+			else
+				t = tAdd;
+		}
+		//If the ray is not on the object surface, use the minimum intersection distance
+		else
+		{
+			//Use the minimum positive intersection distance
+			if (tSub < 0.0f)
+				t = tAdd;
+			else
+				t = tSub;
+		}
+
+		//If the  intersection point is still behind the ray origin, then the ray does not intersect
+		if (t < 0.0f)
 		{
 			hitData->hit = false;
 			return hitData;
 		}
 
-		//If the smaller distance is less than the tolerance, then use the larger distance
-		if (tSub < intersectTolerance)
-			t = tAdd;
-		//Otherwise use the smaller distance
-		else
-			t = tSub;
+		////If the larger  distance is less than the tolerance, then the ray does not intersect
+		//if (tAdd < 0.01f)
+		//{
+		//	hitData->hit = false;
+		//	return hitData;
+		//}
+
+		////If the smaller distance is less than the tolerance, then use the larger distance
+		//if (tSub < 0.01f)
+		//	t = tAdd;
+		////Otherwise use the smaller distance
+		//else
+		//	t = tSub;
 
 		//Calculate the point of intersection and the normal at that point
 		rtVec3f hitPoint = P + (D * t);
@@ -72,7 +99,7 @@ namespace rtGraphics
 	}
 
 	//Mesh Intersection
-	shared_ptr<rtRayHit> rtMeshObject::rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip)
+	shared_ptr<rtRayHit> rtMeshObject::rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, bool onSurface)
 	{
 		//Create a struct to store the ray cast data.
 		shared_ptr<rtRayHit> hitData = make_shared<rtRayHit>();
