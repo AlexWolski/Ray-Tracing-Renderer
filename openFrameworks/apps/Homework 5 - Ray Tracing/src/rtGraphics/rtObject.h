@@ -31,9 +31,9 @@ namespace rtGraphics
 
 		/*
 		 * Determines if a ray his this object and returns the intersection data
-		 * An optional flag can be set to toggle intersections when the ray origin is on the surface.
+		 * An optional rtRayHit struct can be passed for rays originating from an object to prevent intersections at the ray origin
 		 */
-		virtual shared_ptr<rtRayHit> rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, bool onSurface = true) = 0;
+		virtual shared_ptr<rtRayHit> rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint = nullptr) = 0;
 	};
 
 	///In-line method definitions
@@ -74,7 +74,7 @@ namespace rtGraphics
 		void setRadius(float radius);
 
 		///Inherited Method
-		shared_ptr<rtRayHit> rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, bool onSurface = true);
+		shared_ptr<rtRayHit> rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint = nullptr);
 	};
 
 	///Constructors
@@ -132,7 +132,7 @@ namespace rtGraphics
 		void setMesh(rtMesh& mesh);
 
 		///Inherited Methods
-		shared_ptr<rtRayHit> rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, bool onSurface = true);
+		shared_ptr<rtRayHit> rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint = nullptr);
 	};
 
 	///In-line method definitions

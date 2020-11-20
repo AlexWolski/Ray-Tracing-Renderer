@@ -3,7 +3,7 @@
 namespace rtGraphics
 {
 	//Sphere Intersection
-	shared_ptr<rtRayHit> rtSphere::rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, bool onSurface)
+	shared_ptr<rtRayHit> rtSphere::rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint)
 	{
 		//Create a struct to store the ray cast data.
 		shared_ptr<rtRayHit> hitData = make_shared<rtRayHit>();
@@ -38,7 +38,7 @@ namespace rtGraphics
 		float t;
 		
 		//If the ray is on the object surface, ignore the intersection at that point
-		if (onSurface)
+		if (originPoint != nullptr && originPoint->hitObject == this)
 		{
 			//Get the absolute value of each intersection distance
 			float tSubAbs = abs(tSub);
@@ -82,10 +82,24 @@ namespace rtGraphics
 	}
 
 	//Mesh Intersection
-	shared_ptr<rtRayHit> rtMeshObject::rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, bool onSurface)
+	shared_ptr<rtRayHit> rtMeshObject::rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint)
 	{
 		//Create a struct to store the ray cast data.
 		shared_ptr<rtRayHit> hitData = make_shared<rtRayHit>();
+		//By default, set the hit flag to false
+		hitData->hit = false;
+
+		//Determines if the ray origin is on the surface of this mesh
+		bool onSurface = false;
+		//The face that the ray origin is on
+		int sourceFace;
+
+		//If the ray origin is on the surface of this mesh, save the source face index
+		if (originPoint != nullptr && originPoint->hitObject == this)
+		{
+			onSurface = true;
+			sourceFace = originPoint->hitFaceIndex;
+		}
 
 		//The distance to the closest intersection point
 		float tmin = farClip;
@@ -100,6 +114,10 @@ namespace rtGraphics
 		//Iterate over all the triangles in the mesh
 		for (int faceIndex = 0; faceIndex < faces->size(); faceIndex++)
 		{
+			//If the ray origin is on the current face, then it does not intersect
+			if (onSurface && sourceFace == faceIndex)
+				continue;
+
 			//Get the array of vertex indices for the given face
 			array<int, 3>& face = faces->at(faceIndex);
 			//Get the first vertex
@@ -141,6 +159,7 @@ namespace rtGraphics
 					hitData->distance = tmin;
 					hitData->hitPoint = r;
 					hitData->hitNormal = normal;
+					hitData->hitFaceIndex = faceIndex;
 				}
 			}
 		}

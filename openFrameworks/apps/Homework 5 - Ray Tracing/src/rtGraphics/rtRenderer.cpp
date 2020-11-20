@@ -74,10 +74,10 @@ namespace rtGraphics
 	}
 
 	//Ray trace a single ray and return the color at the intersection
-	rtColorf rtRenderer::rayTrace(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, int currBounce, int maxBounces, rtObject* sourceObject)
+	rtColorf rtRenderer::rayTrace(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, int currBounce, int maxBounces, shared_ptr<rtRayHit> originPoint)
 	{
 		//The intersection data of the closest intersection
-		shared_ptr<rtRayHit> hitData = rayTrace(objects, P, D, nearClip, farClip, sourceObject);
+		shared_ptr<rtRayHit> hitData = rayTrace(objects, P, D, nearClip, farClip, originPoint);
 
 		//If the ray didn't intersect any objects, return a black pixel
 		//TO-DO: Return the background color of the camera
@@ -114,7 +114,7 @@ namespace rtGraphics
 				lightVector.normalize();
 				
 				//Determine if the current light hits the point or not
-				bool shadow = isShadow(objects, lightVector, hitData->hitPoint, lightDistSquared, nearClip, farClip, hitData->hitObject);
+				bool shadow = isShadow(objects, lightVector, hitData->hitPoint, lightDistSquared, nearClip, farClip, hitData);
 
 				//Add the ambient color if the object is not perfectly reflective, regardless of if the point is in shadow or not.
 				if (reflectivity < 1.0f)
@@ -151,7 +151,7 @@ namespace rtGraphics
 	}
 
 	//Ray trace a single ray and return the ray hit data
-	shared_ptr<rtRayHit> rtRenderer::rayTrace(objectSet& objects, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, rtObject* sourceObject)
+	shared_ptr<rtRayHit> rtRenderer::rayTrace(objectSet& objects, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint)
 	{
 		//The intersection data of the closest intersection
 		shared_ptr<rtRayHit> nearestHit = make_shared<rtRayHit>();
@@ -165,15 +165,8 @@ namespace rtGraphics
 			//Get a pointer to the current object
 			rtObject* currObject = objectPtr->second;
 
-			//Determines if the ray origin is on the surface of the object
-			bool onSurface = false;
-
-			//If the current object is the source of the ray, then set the onSurface flag
-			if (sourceObject != nullptr && sourceObject == currObject)
-				onSurface = true;
-
 			//Determine if the ray intersects the object
-			shared_ptr<rtRayHit> hitData = currObject->rayIntersect(P, D, nearClip, farClip, onSurface);
+			shared_ptr<rtRayHit> hitData = currObject->rayIntersect(P, D, nearClip, farClip, originPoint);
 
 			//If the ray hit and the object is not obscured, save hit data
 			if (hitData->hit && hitData->distance < nearestHit->distance)
@@ -195,14 +188,14 @@ namespace rtGraphics
 		//Get the reflected ray
 		rtVec3f reflectedRay = D.getReflected(hitData->hitNormal);
 		//Trace the bounced ray to get the reflected color. The near clip is set to 0 since it is not needed
-		return rayTrace(objects, lights, hitData->hitPoint, reflectedRay, 0.0f, farClip, ++currBounce, maxBounces, hitData->hitObject);
+		return rayTrace(objects, lights, hitData->hitPoint, reflectedRay, 0.0f, farClip, ++currBounce, maxBounces, hitData);
 	}
 
 	//Determine if a given light shines on a point or is occluded
-	bool rtRenderer::isShadow(objectSet& objects, rtVec3f& lightVector, rtVec3f& targetPoint, float lightDistSquared, float nearClip, float farClip, rtObject* sourceObject)
+	bool rtRenderer::isShadow(objectSet& objects, rtVec3f& lightVector, rtVec3f& targetPoint, float lightDistSquared, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint)
 	{
 		//Cast a ray from the hit point towards the light source to check if the light is occluded
-		shared_ptr<rtRayHit> shadowRay = rayTrace(objects, targetPoint, lightVector, nearClip, farClip, sourceObject);
+		shared_ptr<rtRayHit> shadowRay = rayTrace(objects, targetPoint, lightVector, nearClip, farClip, originPoint);
 
 		//If they ray doesn't hit anything, return false
 		if (!shadowRay->hit)

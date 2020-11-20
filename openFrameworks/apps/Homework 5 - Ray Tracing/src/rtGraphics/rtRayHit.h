@@ -16,5 +16,7 @@ namespace rtGraphics
 		float distance;
 		rtVec3f hitPoint;
 		rtVec3f hitNormal;
+		//Only relevant for mesh objects
+		int hitFaceIndex;
 	};
 }
