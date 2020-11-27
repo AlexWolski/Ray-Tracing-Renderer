@@ -114,21 +114,21 @@ namespace rtGraphics
 				lightVector.normalize();
 				
 				//Determine if the current light hits the point or not
-				bool shadow = isShadow(objects, lightVector, hitData->hitPoint, lightDistSquared, nearClip, farClip, hitData);
+				float intensity = lightIntensity(objects, currLight, nearClip, farClip, hitData);
 
 				//Add the ambient color if the object is not perfectly reflective, regardless of if the point is in shadow or not.
 				if (reflectivity < 1.0f)
 					objectColor += ambientColor((*currLight).getAmbient(), objectMat.getAmbient(), ambientIntensity);
 
 				//If the point is not in shadow, check for specular and diffuse color as well
-				if (!shadow)
+				if (intensity != 0.0f)
 				{
 					//If the object is not perfectly reflective, calculate the ambient and diffuse colors
 					if (reflectivity < 1.0f)
-						objectColor += diffuseColor(lightVector, hitData->hitNormal, (*currLight).getDiffuse(), objectMat.getDiffuse(), incidentIntensity);
+						objectColor += diffuseColor(lightVector, hitData->hitNormal, (*currLight).getDiffuse(), objectMat.getDiffuse(), incidentIntensity) * intensity;
 
 					//Calculate the specular color regardless of the reflectivity
-					specular += specularColor(lightVector, D, hitData->hitNormal, (*currLight).getSpecular(), objectMat.getSpecular(), objectMat.getSmoothness(), incidentIntensity);
+					specular += specularColor(lightVector, D, hitData->hitNormal, (*currLight).getSpecular(), objectMat.getSpecular(), objectMat.getSmoothness(), incidentIntensity) * intensity;
 				}
 			}
 
@@ -192,25 +192,74 @@ namespace rtGraphics
 	}
 
 	//Determine if a given light shines on a point or is occluded
-	bool rtRenderer::isShadow(objectSet& objects, rtVec3f& lightVector, rtVec3f& targetPoint, float lightDistSquared, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint)
+	float rtRenderer::lightIntensity(objectSet& objects, rtLight* light, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint)
 	{
-		//Cast a ray from the hit point towards the light source to check if the light is occluded
-		shared_ptr<rtRayHit> shadowRay = rayTrace(objects, targetPoint, lightVector, nearClip, farClip, originPoint);
+		//The number of rays to cast towards the sphere light
+		static int lightSamples = 10;
+		//The radius of the light sources
+		static int lightRadius = 5.0f;
 
-		//If they ray doesn't hit anything, return false
-		if (!shadowRay->hit)
-			return false;
+		//The number of rays that reach the light source
+		float numLightRays = 0.0f;
 
-		//Calculate the squared distance from the hit point to the nearest object
-		float hitDist = shadowRay->distance;
-		float hitDistSquared = hitDist * hitDist;
+		//The point that we are calculating the lighting of
+		rtVec3f rayOrigin = originPoint->hitPoint;
 
-		//If the ray hits an object before the light, then the point is in shadow
-		if (hitDistSquared < lightDistSquared)
-			return true;
+		for (int sample = 0; sample < lightSamples; sample++)
+		{
+			//Generate random floats for calculating the spherical coordinates
+			float u = randf(0.0f, 1.0f);
+			float v = randf(0.0f, 1.0f);
 
-		//Otherwise the point is not in shadow
-		return false;
+			//Calculate the spherical coordinates
+			float q = 2 * PIf * u;
+			float f = acos((2 * v) - 1);
+
+			//Calculate the Cartesian coordinates
+			rtVec3f lightPoint = rtVec3f();
+			lightPoint.setX(lightRadius * cos(q) * sin(f));
+			lightPoint.setY(lightRadius * sin(q) * sin(f));
+			lightPoint.setZ(lightRadius * cos(f));
+
+			//The random point in world space
+			rtVec3f targetPoint = light->getPosition() + lightPoint;
+
+			//Calculate the vector pointing from the hit position towards the light
+			rtVec3f lightVector = (targetPoint - rayOrigin);
+			//Get the squared distance from the hit position to the random point before normalizing it
+			float lightDistSquared = lightVector.magnitudeSquared();
+			lightVector.normalize();
+
+			//Cast a ray from the hit point towards the light source to check if the light is occluded
+			shared_ptr<rtRayHit> lightRay = rayTrace(objects, rayOrigin, lightVector, nearClip, farClip, originPoint);
+
+			//If they ray doesn't hit any objects, then it reached the light source
+			if (!lightRay->hit)
+				numLightRays++;
+			//Otherwise, determine if it hit the object or the light source first
+			else
+			{
+				//Calculate the squared distance from the hit point to the nearest object
+				float hitDist = lightRay->distance;
+				float hitDistSquared = hitDist * hitDist;
+
+				//If the ray hits the light before the object, then it reached the light
+				if (lightDistSquared <= hitDistSquared)
+					numLightRays++;
+			}
+		}
+
+		//Return the ratio of light rays that hit to total light rays
+		return (numLightRays / lightSamples);
+	}
+
+	//A thread-safe function for generating random numbers
+	float rtRenderer::randf(float min, float max)
+	{
+		thread_local static std::random_device rd;
+		thread_local static std::mt19937 rng(rd());
+		thread_local std::uniform_real_distribution<float> urd;
+		return urd(rng, decltype(urd)::param_type{ min, max });
 	}
 
 

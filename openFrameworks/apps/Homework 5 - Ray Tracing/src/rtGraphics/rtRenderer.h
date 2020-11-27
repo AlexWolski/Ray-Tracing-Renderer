@@ -3,6 +3,7 @@
 #include <memory>
 #include <math.h>
 #include <vector>
+#include <random>
 #include "ofPixels.h"
 #include "ofThread.h"
 #include "rtScene.h"
@@ -58,7 +59,9 @@ namespace rtGraphics
 		//Bounce the ray off of an object and calculate the color at the next intersection point
 		static rtColorf bounceRay(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D,float nearClip, float farClip, int currBounce, int maxBounces, shared_ptr<rtRayHit> hitData);
 		//Determine if a given light shines on the target point or is occluded. The ray hit point is required to resolve surface intersection issues.
-		static bool isShadow(objectSet& objects, rtVec3f& lightVector, rtVec3f& targetPoint, float lightDistSquared, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint = nullptr);
+		static float lightIntensity(objectSet& objects, rtLight* light, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint = nullptr);
+		//A thread-safe function for generating random numbers
+		static float randf(float min, float max);
 
 	public:
 		//Ray trace an entire scene

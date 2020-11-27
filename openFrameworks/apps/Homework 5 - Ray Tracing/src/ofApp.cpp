@@ -4,7 +4,7 @@ void ofApp::setup()
 {
 	///Create the scene and camera
 	demoScene = make_shared<rtScene>();
-	mainCamera = make_shared<rtCam>(rtVec3f(0.0f, 0.0f, -100.0f), rtVec3f(0.0f, -25.0f, 0.0f), rtVec3f::up);
+	mainCamera = make_shared<rtCam>(rtVec3f(0.0f, 0.0f, -100.0f), rtVec3f(0.0f, -25.0f, 0.0f), rtVec3f::up, false);
 	mainCamera->setFov(150.0f);
 	mainCamera->setScene(demoScene);
 
@@ -66,10 +66,17 @@ void ofApp::setup()
 
 void ofApp::update()
 {
-
 }
 
 void ofApp::draw()
 {
+	static bool render = true;
 
+	if (render)
+	{
+		mainCamera->render();
+		render = false;
+	}
+
+	mainCamera->draw();
 }
