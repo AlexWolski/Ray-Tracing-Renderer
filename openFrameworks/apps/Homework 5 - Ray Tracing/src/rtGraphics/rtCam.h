@@ -179,13 +179,13 @@ namespace rtGraphics
 	}
 
 	///Buffer Methods
-	//Creates a 3D image buffer array based on the window size
+	//Creates a 2D image buffer array based on the window size
 	inline void rtCam::createFrameBuffer()
 	{
 		createFrameBuffer(ofGetWindowWidth(), ofGetWindowHeight());
 	}
 
-	//Creates a 3D image buffer array
+	//Creates a 2D image buffer array
 	inline void rtCam::createFrameBuffer(int width, int height)
 	{
 		//Save the dimensions of the buffer
