@@ -39,6 +39,9 @@
     <ClCompile Include="src\rtGraphics\Objects\rtSphereObject.cpp">
       <Filter>src\rtGraphics\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="src\rtGraphics\rtRenderThreadPool.cpp">
+      <Filter>src\rtGraphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ofApp.h">
@@ -88,6 +91,9 @@
     </ClInclude>
     <ClInclude Include="src\rtGraphics\Objects\rtSphereObject.h">
       <Filter>src\rtGraphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rtGraphics\rtRenderThreadPool.h">
+      <Filter>src\rtGraphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

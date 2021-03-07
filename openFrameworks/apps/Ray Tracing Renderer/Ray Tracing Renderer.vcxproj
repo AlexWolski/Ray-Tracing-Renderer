@@ -199,6 +199,7 @@
     <ClCompile Include="src\rtGraphics\Objects\rtMeshObject.cpp" />
     <ClCompile Include="src\rtGraphics\Objects\rtSphereObject.cpp" />
     <ClCompile Include="src\rtGraphics\rtRenderer.cpp" />
+    <ClCompile Include="src\rtGraphics\rtRenderThreadPool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ofApp.h" />
@@ -217,6 +218,7 @@
     <ClInclude Include="src\rtGraphics\rtRenderer.h" />
     <ClInclude Include="src\rtGraphics\rtMain.h" />
     <ClInclude Include="src\rtGraphics\rtNode.h" />
+    <ClInclude Include="src\rtGraphics\rtRenderThreadPool.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ProjectExtensions>
