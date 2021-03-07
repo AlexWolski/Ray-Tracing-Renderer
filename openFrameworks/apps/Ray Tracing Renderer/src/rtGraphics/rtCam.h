@@ -62,6 +62,7 @@ namespace rtGraphics
 		bool isEnabled() const;
 		void render();
 		void draw();
+		void clearBuffer();
 		///Getters
 		float getFov() const;
 		float getNearClip() const;
@@ -163,6 +164,12 @@ namespace rtGraphics
 		frameBuffer->draw(0, 0);
 	}
 
+	//Reset the image buffer to black
+	inline void rtCam::clearBuffer()
+	{
+		frameBuffer->setColor(ofColor::black);
+	}
+
 	//Calculates the axes of the viewing coordinates
 	inline void rtCam::calcAxes()
 	{
@@ -195,5 +202,7 @@ namespace rtGraphics
 		frameBuffer->allocate(width, height, OF_IMAGE_COLOR);
 		//Store a reference to the pixel data
 		bufferPixels = &frameBuffer->getPixels();
+		//Set a the image to black by default
+		clearBuffer();
 	}
 }

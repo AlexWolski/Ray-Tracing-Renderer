@@ -7,6 +7,8 @@ void ofApp::setup()
 	mainCamera = make_shared<rtCam>(rtVec3f(0.0f, 0.0f, -100.0f), rtVec3f(0.0f, -25.0f, 0.0f), rtVec3f::up);
 	mainCamera->setFov(150.0f);
 	mainCamera->setScene(demoScene);
+	//Prevent the camera from rendering a new image each frame
+	mainCamera->disable();
 
 	///Create a red, matte sphere and add it to the scene
 	rtMat shinyRed(rtColorf(0.2f, 0.0f, 0.0f), rtColorf::red, rtColorf::white, 200.0f);
@@ -71,5 +73,20 @@ void ofApp::update()
 
 void ofApp::draw()
 {
+	mainCamera->draw();
+}
 
+void ofApp::keyPressed(int key)
+{
+	//When the 't' key is pressed, render the scene using ray tracing
+	if (key == 't' || key == 'T')
+	{
+		mainCamera->clearBuffer();
+		mainCamera->render();
+	}
+	//When the 'm' key is pressed, render the scene using ray marching
+	else if (key == 'm' || key == 'M')
+	{
+
+	}
 }
