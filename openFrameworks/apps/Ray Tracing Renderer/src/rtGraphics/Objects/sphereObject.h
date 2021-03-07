@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../rtObject.h"
+#include "rtObject.h"
 
 namespace rtGraphics
 {

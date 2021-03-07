@@ -13,6 +13,9 @@
     <Filter Include="src\rtGraphics\Objects">
       <UniqueIdentifier>{2cb30c58-4576-4d1d-8b72-79fbba8af173}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\rtGraphics\Data Classes">
+      <UniqueIdentifier>{acc51117-caf7-4538-a596-d44648317bff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -20,12 +23,6 @@
     </ClCompile>
     <ClCompile Include="src\ofApp.cpp">
       <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\rtGraphics\rtVec3f.cpp">
-      <Filter>src\rtGraphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\rtGraphics\rtColorf.cpp">
-      <Filter>src\rtGraphics</Filter>
     </ClCompile>
     <ClCompile Include="src\rtGraphics\rtRenderer.cpp">
       <Filter>src\rtGraphics</Filter>
@@ -36,6 +33,12 @@
     <ClCompile Include="src\rtGraphics\Objects\meshObject.cpp">
       <Filter>src\rtGraphics\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="src\rtGraphics\Data Classes\rtColorf.cpp">
+      <Filter>src\rtGraphics\Data Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rtGraphics\Data Classes\rtVec3f.cpp">
+      <Filter>src\rtGraphics\Data Classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ofApp.h">
@@ -44,43 +47,43 @@
     <ClInclude Include="src\rtGraphics\rtCam.h">
       <Filter>src\rtGraphics</Filter>
     </ClInclude>
-    <ClInclude Include="src\rtGraphics\rtScene.h">
-      <Filter>src\rtGraphics</Filter>
-    </ClInclude>
     <ClInclude Include="src\rtGraphics\rtMain.h">
       <Filter>src\rtGraphics</Filter>
     </ClInclude>
-    <ClInclude Include="src\rtGraphics\rtVec3f.h">
-      <Filter>src\rtGraphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rtGraphics\rtMat.h">
-      <Filter>src\rtGraphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rtGraphics\rtNode.h">
-      <Filter>src\rtGraphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rtGraphics\rtObject.h">
-      <Filter>src\rtGraphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rtGraphics\rtMesh.h">
-      <Filter>src\rtGraphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rtGraphics\rtLight.h">
-      <Filter>src\rtGraphics</Filter>
-    </ClInclude>
     <ClInclude Include="src\rtGraphics\rtRenderer.h">
-      <Filter>src\rtGraphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rtGraphics\rtColorf.h">
-      <Filter>src\rtGraphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rtGraphics\rtRayHit.h">
       <Filter>src\rtGraphics</Filter>
     </ClInclude>
     <ClInclude Include="src\rtGraphics\Objects\sphereObject.h">
       <Filter>src\rtGraphics\Objects</Filter>
     </ClInclude>
     <ClInclude Include="src\rtGraphics\Objects\meshObject.h">
+      <Filter>src\rtGraphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rtGraphics\rtNode.h">
+      <Filter>src\rtGraphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rtGraphics\Data Classes\rtColorf.h">
+      <Filter>src\rtGraphics\Data Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rtGraphics\Data Classes\rtLight.h">
+      <Filter>src\rtGraphics\Data Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rtGraphics\Data Classes\rtMat.h">
+      <Filter>src\rtGraphics\Data Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rtGraphics\Data Classes\rtRayHit.h">
+      <Filter>src\rtGraphics\Data Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rtGraphics\Data Classes\rtScene.h">
+      <Filter>src\rtGraphics\Data Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rtGraphics\Data Classes\rtVec3f.h">
+      <Filter>src\rtGraphics\Data Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rtGraphics\Objects\rtObject.h">
+      <Filter>src\rtGraphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rtGraphics\Objects\rtMesh.h">
       <Filter>src\rtGraphics\Objects</Filter>
     </ClInclude>
   </ItemGroup>

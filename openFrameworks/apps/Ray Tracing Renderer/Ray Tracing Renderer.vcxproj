@@ -194,28 +194,28 @@
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
+    <ClCompile Include="src\rtGraphics\Data Classes\rtColorf.cpp" />
+    <ClCompile Include="src\rtGraphics\Data Classes\rtVec3f.cpp" />
     <ClCompile Include="src\rtGraphics\Objects\meshObject.cpp" />
     <ClCompile Include="src\rtGraphics\Objects\sphereObject.cpp" />
-    <ClCompile Include="src\rtGraphics\rtColorf.cpp" />
     <ClCompile Include="src\rtGraphics\rtRenderer.cpp" />
-    <ClCompile Include="src\rtGraphics\rtVec3f.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ofApp.h" />
+    <ClInclude Include="src\rtGraphics\Data Classes\rtColorf.h" />
+    <ClInclude Include="src\rtGraphics\Data Classes\rtLight.h" />
+    <ClInclude Include="src\rtGraphics\Data Classes\rtMat.h" />
+    <ClInclude Include="src\rtGraphics\Data Classes\rtRayHit.h" />
+    <ClInclude Include="src\rtGraphics\Data Classes\rtScene.h" />
+    <ClInclude Include="src\rtGraphics\Data Classes\rtVec3f.h" />
     <ClInclude Include="src\rtGraphics\Objects\meshObject.h" />
+    <ClInclude Include="src\rtGraphics\Objects\rtMesh.h" />
+    <ClInclude Include="src\rtGraphics\Objects\rtObject.h" />
     <ClInclude Include="src\rtGraphics\Objects\sphereObject.h" />
     <ClInclude Include="src\rtGraphics\rtCam.h" />
-    <ClInclude Include="src\rtGraphics\rtColorf.h" />
-    <ClInclude Include="src\rtGraphics\rtRayHit.h" />
     <ClInclude Include="src\rtGraphics\rtRenderer.h" />
-    <ClInclude Include="src\rtGraphics\rtLight.h" />
     <ClInclude Include="src\rtGraphics\rtMain.h" />
-    <ClInclude Include="src\rtGraphics\rtMat.h" />
-    <ClInclude Include="src\rtGraphics\rtMesh.h" />
     <ClInclude Include="src\rtGraphics\rtNode.h" />
-    <ClInclude Include="src\rtGraphics\rtObject.h" />
-    <ClInclude Include="src\rtGraphics\rtScene.h" />
-    <ClInclude Include="src\rtGraphics\rtVec3f.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ProjectExtensions>

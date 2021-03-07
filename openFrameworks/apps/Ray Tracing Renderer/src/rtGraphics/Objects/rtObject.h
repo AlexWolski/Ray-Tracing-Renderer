@@ -3,10 +3,10 @@
 #include <memory>
 #include <vector>
 #include <math.h>
-#include "rtNode.h"
-#include "rtVec3f.h"
-#include "rtMat.h"
-#include "rtRayHit.h"
+#include "../rtNode.h"
+#include "../Data Classes/rtVec3f.h"
+#include "../Data Classes/rtMat.h"
+#include "../Data Classes/rtRayHit.h"
 
 using namespace std;
 

@@ -5,7 +5,7 @@
 #include <vector>
 #include "ofPixels.h"
 #include "ofThread.h"
-#include "rtScene.h"
+#include "Data Classes/rtScene.h"
 
 #define PIf 3.14159265f
 #define degToRad(angleDegrees) ((angleDegrees) * PIf / 180.0f)

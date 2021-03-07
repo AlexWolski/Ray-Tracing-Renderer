@@ -5,9 +5,8 @@
 #include "ofImage.h"
 #include "ofPixels.h"
 #include "ofEventUtils.h"
-#include "rtVec3f.h"
 #include "rtNode.h"
-#include "rtScene.h"
+#include "Data Classes/rtScene.h"
 #include "rtRenderer.h"
 
 using namespace std;
