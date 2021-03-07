@@ -1,3 +1,5 @@
+#pragma once
+
 #include "memory.h"
 #include "rtRenderer.h"
 
@@ -61,12 +63,13 @@ namespace rtGraphics
 		//Shared thread data
 		shared_ptr<RenderThreadData> sharedData;
 		//A pool of threads to render the image
-		shared_ptr<RenderThread[]> threadPool;
+		unique_ptr<RenderThread[]> threadPool;
 
 	public:
 		//Initialize a pool of threads given the render settings and scene
 		rtRenderThreadPool(shared_ptr<rtScene> scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
 						   float hFov, float nearClip, float farClip, int maxBounces, ofPixels* bufferPixels);
+
 		//Thread management methods
 		void startThreads();
 		void stopThreads();

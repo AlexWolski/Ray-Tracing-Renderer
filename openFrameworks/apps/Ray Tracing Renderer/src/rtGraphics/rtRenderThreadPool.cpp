@@ -85,8 +85,10 @@ namespace rtGraphics
 		//The first grid point, at the top-left corner
 		rtVec3f firstPoint = clipCenter + widthVector + heightVector;
 
-		//Scene data
+		//Save the scene data and render settings in a struct
 		sharedData = make_shared<RenderThreadData>(scene, camPos, nearClip, farClip, maxBounces, bufferPixels, firstPoint, hStep, vStep);
+		//Instantiate the thread pool
+		threadPool = make_unique<RenderThread[]>(numThreads);
 
 		//The minimum number of rows each thread will render
 		int baseRows = bufferHeight / numThreads;
@@ -105,14 +107,15 @@ namespace rtGraphics
 			if (threadIndex < extraRows)
 				sectionEnd++;
 
-			//Set the section to render and start the thread
+			//Set the shared data and section to render
+			threadPool[threadIndex].setData(sharedData);
 			threadPool[threadIndex].setSection(sectionStart, sectionEnd);
-			threadPool[threadIndex].startThread();
 
 			//Move onto the next section
 			sectionStart = sectionEnd;
 		}
 
+		startThreads();
 		//Join all the threads
 		joinThreads();
 	}
