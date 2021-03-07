@@ -69,8 +69,7 @@ namespace rtGraphics
 		}
 
 		//Join all the threads
-		for (int threadIndex = 0; threadIndex < numThreads; threadIndex++)
-			threadPool[threadIndex].waitForThread();
+		joinThreads();
 	}
 
 	//Ray trace a single ray and return the color at the intersection
