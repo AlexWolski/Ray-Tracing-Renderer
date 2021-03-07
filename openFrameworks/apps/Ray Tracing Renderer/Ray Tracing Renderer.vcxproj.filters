@@ -27,17 +27,17 @@
     <ClCompile Include="src\rtGraphics\rtRenderer.cpp">
       <Filter>src\rtGraphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\rtGraphics\Objects\sphereObject.cpp">
-      <Filter>src\rtGraphics\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="src\rtGraphics\Objects\meshObject.cpp">
-      <Filter>src\rtGraphics\Objects</Filter>
-    </ClCompile>
     <ClCompile Include="src\rtGraphics\Data Classes\rtColorf.cpp">
       <Filter>src\rtGraphics\Data Classes</Filter>
     </ClCompile>
     <ClCompile Include="src\rtGraphics\Data Classes\rtVec3f.cpp">
       <Filter>src\rtGraphics\Data Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rtGraphics\Objects\rtMeshObject.cpp">
+      <Filter>src\rtGraphics\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rtGraphics\Objects\rtSphereObject.cpp">
+      <Filter>src\rtGraphics\Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -52,12 +52,6 @@
     </ClInclude>
     <ClInclude Include="src\rtGraphics\rtRenderer.h">
       <Filter>src\rtGraphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rtGraphics\Objects\sphereObject.h">
-      <Filter>src\rtGraphics\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rtGraphics\Objects\meshObject.h">
-      <Filter>src\rtGraphics\Objects</Filter>
     </ClInclude>
     <ClInclude Include="src\rtGraphics\rtNode.h">
       <Filter>src\rtGraphics</Filter>
@@ -88,6 +82,12 @@
     </ClInclude>
     <ClInclude Include="src\rtGraphics\PhongShader.h">
       <Filter>src\rtGraphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rtGraphics\Objects\rtMeshObject.h">
+      <Filter>src\rtGraphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rtGraphics\Objects\rtSphereObject.h">
+      <Filter>src\rtGraphics\Objects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

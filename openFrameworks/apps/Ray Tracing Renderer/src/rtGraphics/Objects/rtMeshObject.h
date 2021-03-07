@@ -9,16 +9,16 @@ namespace rtGraphics
 	 * TO-DO: Replace the mesh member with a mesh name that
 	 *        corresponds to a shared mesh in a data structure
 	*/
-	class meshObject : public rtObject
+	class rtMeshObject : public rtObject
 	{
 	private:
 		rtMesh mesh;
 
 	public:
 		///Constructors
-		meshObject() : mesh(rtMesh()) {}
-		meshObject(rtMesh& mesh) : mesh(mesh) {}
-		meshObject(rtMesh& mesh, rtMat& material) : rtObject(material), mesh(mesh) {}
+		rtMeshObject() : mesh(rtMesh()) {}
+		rtMeshObject(rtMesh& mesh) : mesh(mesh) {}
+		rtMeshObject(rtMesh& mesh, rtMat& material) : rtObject(material), mesh(mesh) {}
 
 		///Getter & Setter
 		rtMesh& getMesh();
@@ -31,6 +31,6 @@ namespace rtGraphics
 
 	///In-line method definitions
 	//Getter & Setter
-	inline rtMesh& meshObject::getMesh() { return mesh; }
-	inline void meshObject::setMesh(rtMesh& mesh) { this->mesh = mesh; }
+	inline rtMesh& rtMeshObject::getMesh() { return mesh; }
+	inline void rtMeshObject::setMesh(rtMesh& mesh) { this->mesh = mesh; }
 }

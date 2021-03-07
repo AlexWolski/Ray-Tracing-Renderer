@@ -1,9 +1,9 @@
-#include "meshObject.h"
+#include "rtMeshObject.h"
 
 namespace rtGraphics
 {
 	//Ray-Mesh Intersection
-	shared_ptr<rtRayHit> meshObject::rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint)
+	shared_ptr<rtRayHit> rtMeshObject::rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint)
 	{
 		//Create a struct to store the ray cast data.
 		shared_ptr<rtRayHit> hitData = make_shared<rtRayHit>();
@@ -91,7 +91,7 @@ namespace rtGraphics
 
 
 	//Mesh signed distance function
-	shared_ptr<rtRayHit> meshObject::sdf(rtVec3f P)
+	shared_ptr<rtRayHit> rtMeshObject::sdf(rtVec3f P)
 	{
 		shared_ptr<rtRayHit> hitData = make_shared<rtRayHit>();
 		hitData->hit = false;

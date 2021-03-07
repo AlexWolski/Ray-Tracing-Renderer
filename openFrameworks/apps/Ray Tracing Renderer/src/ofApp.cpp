@@ -12,12 +12,12 @@ void ofApp::setup()
 
 	///Create a red, matte sphere and add it to the scene
 	rtMat shinyRed(rtColorf(0.2f, 0.0f, 0.0f), rtColorf::red, rtColorf::white, 200.0f);
-	rtObject* redSphere = new sphereObject(rtVec3f(25.0f, -25.0f, 0.0f), 20.0f, shinyRed);
+	rtObject* redSphere = new rtSphereObject(rtVec3f(25.0f, -25.0f, 0.0f), 20.0f, shinyRed);
 	demoScene->addObject("red sphere", redSphere);
 
 	///Create a blue, reflective sphere and add it to the scene
 	rtMat reflectiveBlue(rtColorf(0.0f, 0.0f, 0.2f), rtColorf::blue, rtColorf::white, 500.0f, 0.3f);
-	rtObject* blueSphere = new sphereObject(rtVec3f(-25.0f, -25.0f, 0.0f), 20.0f, reflectiveBlue);
+	rtObject* blueSphere = new rtSphereObject(rtVec3f(-25.0f, -25.0f, 0.0f), 20.0f, reflectiveBlue);
 	demoScene->addObject("blue sphere", blueSphere);
 	
 	///Create a mesh and add it to the scene
@@ -28,7 +28,7 @@ void ofApp::setup()
 	triangleMesh.addFace(0, 1, 2);
 
 	rtMat matteGreen(rtColorf(0.0f, 0.2f, 0.0f), rtColorf::green, rtColorf(0.6f), 20.0f);
-	rtObject* triangle = new meshObject(triangleMesh, matteGreen);
+	rtObject* triangle = new rtMeshObject(triangleMesh, matteGreen);
 	demoScene->addObject("triangle", triangle);
 
 	///Create a box surrounding the scene
@@ -50,7 +50,7 @@ void ofApp::setup()
 	boxMesh.addFace(4, 0, 1); boxMesh.addFace(1, 5, 4);		//Bottom Wall
 
 	rtMat matteWhite(rtColorf(0.2f), rtColorf::white, rtColorf(0.4f), 20.0f);
-	rtObject* box = new meshObject(boxMesh, matteWhite);
+	rtObject* box = new rtMeshObject(boxMesh, matteWhite);
 	demoScene->addObject("box", box);
 
 	///Create a light and add it to the scene
