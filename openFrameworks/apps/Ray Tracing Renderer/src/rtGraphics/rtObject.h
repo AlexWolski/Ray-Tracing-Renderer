@@ -6,7 +6,6 @@
 #include "rtNode.h"
 #include "rtVec3f.h"
 #include "rtMat.h"
-#include "rtMesh.h"
 #include "rtRayHit.h"
 
 using namespace std;
@@ -30,7 +29,7 @@ namespace rtGraphics
 		void setMat(const rtMat& material);
 
 		/*
-		 * Determines if a ray his this object and returns the intersection data
+		 * Determines if a ray hits this object and returns the intersection data
 		 * An optional rtRayHit struct can be passed for rays originating from an object to prevent intersections at the ray origin
 		 */
 		virtual shared_ptr<rtRayHit> rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint = nullptr) = 0;
@@ -46,97 +45,4 @@ namespace rtGraphics
 	{
 		this->material = material;
 	}
-
-
-	/*
-	 * A sphere object defined by a position and radius
-	 * TO-DO: Move the position member into rtNode
-	 */
-	class rtSphere : public rtObject
-	{
-	private:
-		rtVec3f center;
-		float radius;
-
-	public:
-		///Constructors
-		rtSphere();
-		rtSphere(rtMat& material);
-		rtSphere(const rtVec3f& position, float radius);
-		rtSphere(const rtVec3f& position, float radius, rtMat& material);
-
-		///Getters
-		rtVec3f getCenter() const;
-		float getRadius() const;
-
-		///Setters
-		void setCenter(const rtVec3f& center);
-		void setRadius(float radius);
-
-		///Inherited Method
-		shared_ptr<rtRayHit> rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint = nullptr);
-	};
-
-	///Constructors
-	inline rtSphere::rtSphere() : rtObject()
-	{
-		center = rtVec3f::zero;
-		radius = 1.0f;
-	}
-
-	inline rtSphere::rtSphere(rtMat& material) : rtObject(material)
-	{
-		center = rtVec3f::zero;
-		radius = 1.0f;
-	}
-
-	inline rtSphere::rtSphere(const rtVec3f& center, float radius) :
-		rtObject(),
-		center(center),
-		radius(radius) {
-	}
-
-	inline rtSphere::rtSphere(const rtVec3f& center, float radius, rtMat& material) :
-		rtObject(material),
-		center(center),
-		radius(radius) {
-	}
-
-	///In-line method definitions
-	//Getters
-	inline rtVec3f rtSphere::getCenter() const	{ return center; }
-	inline float rtSphere::getRadius() const	{ return radius; }
-	
-	//Setters
-	inline void rtSphere::setCenter(const rtVec3f& center)	{ this->center = center;  }
-	inline void rtSphere::setRadius(float radius)			{ this->radius = radius; }
-
-	/*
-	 * A mesh-based object that applies a transform to the mesh
-	 * TO-DO: Replace the mesh member with a mesh name that
-	 *        corresponds to a shared mesh in a data structure
-	*/
-	class rtMeshObject : public rtObject
-	{
-	private:
-		rtMesh mesh;
-
-	public:
-		///Constructors
-		rtMeshObject() : mesh(rtMesh()) {}
-		rtMeshObject(rtMesh& mesh) : mesh(mesh) {}
-		rtMeshObject(rtMesh& mesh, rtMat& material) : rtObject(material), mesh(mesh) {}
-
-		///Getter & Setter
-		rtMesh& getMesh();
-		void setMesh(rtMesh& mesh);
-
-		///Inherited Methods
-		shared_ptr<rtRayHit> rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint = nullptr);
-	};
-
-	///In-line method definitions
-	//Getter & Setter
-	inline rtMesh& rtMeshObject::getMesh()			{ return mesh; }
-	inline void rtMeshObject::setMesh(rtMesh& mesh)	{ this->mesh = mesh; }
 }
