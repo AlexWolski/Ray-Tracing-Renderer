@@ -6,13 +6,14 @@
 #include "ofPixels.h"
 #include "ofThread.h"
 #include "Data Classes/rtScene.h"
+#include "PhongShader.h"
 
 #define PIf 3.14159265f
 #define degToRad(angleDegrees) ((angleDegrees) * PIf / 180.0f)
 
 namespace rtGraphics
 {
-	static class rtRenderer
+	class rtRenderer
 	{
 	private:
 		//A threadable nested class that renders a portion of the final image
@@ -73,11 +74,6 @@ namespace rtGraphics
 		static rtColorf rayTrace(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, int currBounce, int maxBounces, shared_ptr<rtRayHit> originPoint = nullptr);
 		//Ray trace a single ray and return the ray hit data. If the ray is a bounced ray, the ray hit data can be given to resolve surface intersection issues.
 		static shared_ptr<rtRayHit> rtRenderer::rayTrace(objectSet& objects, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, shared_ptr<rtRayHit> sourceObject = nullptr);
-
-		//Color calculation methods
-		static rtColorf ambientColor(rtColorf& ambientLight, rtColorf& ambientMaterial, float ambientIntensity);
-		static rtColorf diffuseColor(rtVec3f& lightVector, rtVec3f& normal, rtColorf& diffuseLight, rtColorf& diffuseMaterial, float incidentIntensity);
-		static rtColorf specularColor(rtVec3f& lightVector, rtVec3f& rayDirection, rtVec3f& normal, rtColorf& specularLight, rtColorf& specularMaterial, float smoothness, float incidentIntensity);
 	};
 
 	///In-line method definitions
@@ -100,34 +96,5 @@ namespace rtGraphics
 		for (int threadIndex = 0; threadIndex < numThreads; threadIndex++)
 			if (threadPool[threadIndex].isThreadRunning())
 				threadPool[threadIndex].waitForThread();
-	}
-
-	inline rtColorf rtRenderer::ambientColor(rtColorf& ambientLight, rtColorf& ambientMaterial, float ambientIntensity)
-	{
-		//The ambient color is calculated using a component-wise multiplication
-		rtColorf ambientColor = ambientLight * ambientMaterial;
-
-		return ambientColor * ambientIntensity;
-	}
-
-	inline rtColorf  rtRenderer::diffuseColor(rtVec3f& lightVector, rtVec3f& normal, rtColorf& diffuseLight, rtColorf& diffuseMaterial, float incidentIntensity)
-	{
-		float dotProd = normal.dot(lightVector);
-		rtColorf diffuseColor = (diffuseLight * diffuseMaterial) * dotProd;
-
-		return diffuseColor * incidentIntensity;
-	}
-
-	inline rtColorf  rtRenderer::specularColor(rtVec3f& lightVector, rtVec3f& rayDirection, rtVec3f& normal, rtColorf& specularLight, rtColorf& specularMaterial, float smoothness, float incidentIntensity)
-	{
-		//Calculate the half-way vector
-		rtVec3f halfWay = lightVector + -rayDirection;
-		halfWay.normalize();
-		//Calculate (N*H)^n, where n is the smoothness parameter
-		float dotProd = pow(normal.dot(halfWay), smoothness);
-		//Calculate the specular color
-		rtColorf specularColor = (specularLight * specularMaterial) * dotProd;
-
-		return specularColor * incidentIntensity;
 	}
 }

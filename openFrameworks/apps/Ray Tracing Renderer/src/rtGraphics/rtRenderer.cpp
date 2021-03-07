@@ -117,17 +117,17 @@ namespace rtGraphics
 
 				//Add the ambient color if the object is not perfectly reflective, regardless of if the point is in shadow or not.
 				if (reflectivity < 1.0f)
-					objectColor += ambientColor((*currLight).getAmbient(), objectMat.getAmbient(), ambientIntensity);
+					objectColor += PhongShader::ambientColor((*currLight).getAmbient(), objectMat.getAmbient(), ambientIntensity);
 
 				//If the point is not in shadow, check for specular and diffuse color as well
 				if (!shadow)
 				{
 					//If the object is not perfectly reflective, calculate the ambient and diffuse colors
 					if (reflectivity < 1.0f)
-						objectColor += diffuseColor(lightVector, hitData->hitNormal, (*currLight).getDiffuse(), objectMat.getDiffuse(), incidentIntensity);
+						objectColor += PhongShader::diffuseColor(lightVector, hitData->hitNormal, (*currLight).getDiffuse(), objectMat.getDiffuse(), incidentIntensity);
 
 					//Calculate the specular color regardless of the reflectivity
-					specular += specularColor(lightVector, D, hitData->hitNormal, (*currLight).getSpecular(), objectMat.getSpecular(), objectMat.getSmoothness(), incidentIntensity);
+					specular += PhongShader::specularColor(lightVector, D, hitData->hitNormal, (*currLight).getSpecular(), objectMat.getSpecular(), objectMat.getSmoothness(), incidentIntensity);
 				}
 			}
 

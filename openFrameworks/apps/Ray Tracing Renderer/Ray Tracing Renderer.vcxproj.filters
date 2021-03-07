@@ -86,5 +86,8 @@
     <ClInclude Include="src\rtGraphics\Objects\rtMesh.h">
       <Filter>src\rtGraphics\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="src\rtGraphics\PhongShader.h">
+      <Filter>src\rtGraphics</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

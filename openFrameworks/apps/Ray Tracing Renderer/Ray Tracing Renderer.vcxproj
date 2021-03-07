@@ -212,6 +212,7 @@
     <ClInclude Include="src\rtGraphics\Objects\rtMesh.h" />
     <ClInclude Include="src\rtGraphics\Objects\rtObject.h" />
     <ClInclude Include="src\rtGraphics\Objects\sphereObject.h" />
+    <ClInclude Include="src\rtGraphics\PhongShader.h" />
     <ClInclude Include="src\rtGraphics\rtCam.h" />
     <ClInclude Include="src\rtGraphics\rtRenderer.h" />
     <ClInclude Include="src\rtGraphics\rtMain.h" />
