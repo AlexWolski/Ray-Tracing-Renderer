@@ -2,6 +2,10 @@
 
 namespace rtGraphics
 {
+	///Static data member initialization
+	//Set the number of threads to the number of cores on the machine
+	int rtRenderThreadPool::numThreads = thread::hardware_concurrency();
+
 	RenderThreadData::RenderThreadData(shared_ptr<rtScene>scene, rtVec3f& camPos, float nearClip, float farClip,
 		int maxBounces, ofPixels* bufferPixels, rtVec3f& firstPoint, rtVec3f& hStep, rtVec3f& vStep)
 	{
@@ -60,7 +64,6 @@ namespace rtGraphics
 		}
 	}
 
-	int rtRenderThreadPool::numThreads = 8;
 
 	rtRenderThreadPool::rtRenderThreadPool()
 	{
