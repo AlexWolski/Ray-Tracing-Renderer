@@ -14,15 +14,25 @@
 
 namespace rtGraphics
 {
+	//Forward declare rtRenderThreadPool to prevent a circular dependency
+	class rtRenderThreadPool;
+
 	class rtRenderer
 	{
 	private:
+		//The pool of render threads
+		unique_ptr<rtRenderThreadPool> threadPool;
+
 		//Bounce the ray off of an object and calculate the color at the next intersection point
 		static rtColorf bounceRay(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D,float nearClip, float farClip, int currBounce, int maxBounces, shared_ptr<rtRayHit> hitData);
 		//Determine if a given light shines on the target point or is occluded. The ray hit point is required to resolve surface intersection issues.
 		static bool isShadow(objectSet& objects, rtVec3f& lightVector, rtVec3f& targetPoint, float lightDistSquared, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint = nullptr);
 
 	public:
+		//Initialize the thread pool
+		rtRenderer(shared_ptr<rtScene> scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
+			float hFov, float nearClip, float farClip, int maxBounces, ofPixels* bufferPixels);
+
 		//Ray trace an entire scene
 		static void rayTraceScene(shared_ptr<rtScene> scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
 			float hFov, float nearClip, float farClip, int maxBounces, ofPixels* bufferPixels);

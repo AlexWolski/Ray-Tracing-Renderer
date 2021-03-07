@@ -2,6 +2,12 @@
 
 namespace rtGraphics
 {
+	rtRenderer::rtRenderer(shared_ptr<rtScene> scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
+		float hFov, float nearClip, float farClip, int maxBounces, ofPixels* bufferPixels)
+	{
+		threadPool = make_unique<rtRenderThreadPool>(scene, camPos, u, v, n, hFov, nearClip, farClip, maxBounces, bufferPixels);
+	}
+
 	//Ray trace an entire scene
 	void rtRenderer::rayTraceScene(shared_ptr<rtScene> scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
 		float hFov, float nearClip, float farClip, int maxBounces, ofPixels* bufferPixels)

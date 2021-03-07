@@ -63,7 +63,7 @@ namespace rtGraphics
 	int rtRenderThreadPool::numThreads = 8;
 
 	rtRenderThreadPool::rtRenderThreadPool(shared_ptr<rtScene> scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
-										   float hFov, float nearClip, float farClip, int maxBounces, ofPixels* bufferPixels)
+		float hFov, float nearClip, float farClip, int maxBounces, ofPixels* bufferPixels)
 	{
 		//Cache the pixel buffer dimensions as floats
 		float bufferWidth = bufferPixels->getWidth();

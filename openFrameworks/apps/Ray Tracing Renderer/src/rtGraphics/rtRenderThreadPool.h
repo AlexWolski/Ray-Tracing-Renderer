@@ -68,7 +68,13 @@ namespace rtGraphics
 	public:
 		//Initialize a pool of threads given the render settings and scene
 		rtRenderThreadPool(shared_ptr<rtScene> scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
-						   float hFov, float nearClip, float farClip, int maxBounces, ofPixels* bufferPixels);
+			float hFov, float nearClip, float farClip, int maxBounces, ofPixels* bufferPixels);
+
+		//Stop any running threads
+		~rtRenderThreadPool()
+		{
+			stopThreads();
+		}
 
 		//Thread management methods
 		void startThreads();
