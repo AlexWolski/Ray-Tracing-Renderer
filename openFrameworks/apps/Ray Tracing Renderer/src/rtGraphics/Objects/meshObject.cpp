@@ -2,7 +2,7 @@
 
 namespace rtGraphics
 {
-	//Mesh Intersection
+	//Ray-Mesh Intersection
 	shared_ptr<rtRayHit> meshObject::rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint)
 	{
 		//Create a struct to store the ray cast data.
@@ -86,6 +86,16 @@ namespace rtGraphics
 		}
 
 		//Return the intersection data
+		return hitData;
+	}
+
+
+	//Mesh signed distance function
+	shared_ptr<rtRayHit> meshObject::sdf(rtVec3f P)
+	{
+		shared_ptr<rtRayHit> hitData = make_shared<rtRayHit>();
+		hitData->hit = false;
+
 		return hitData;
 	}
 }
