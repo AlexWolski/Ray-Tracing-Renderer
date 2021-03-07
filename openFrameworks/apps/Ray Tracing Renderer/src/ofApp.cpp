@@ -81,8 +81,10 @@ void ofApp::keyPressed(int key)
 	//When the 't' key is pressed, render the scene using ray tracing
 	if (key == 't' || key == 'T')
 	{
+		//Set the image to black
 		mainCamera->clearBuffer();
-		mainCamera->render();
+		//Start rendering the scene without waiting for it to complete
+		mainCamera->render(false);
 	}
 	//When the 'm' key is pressed, render the scene using ray marching
 	else if (key == 'm' || key == 'M')

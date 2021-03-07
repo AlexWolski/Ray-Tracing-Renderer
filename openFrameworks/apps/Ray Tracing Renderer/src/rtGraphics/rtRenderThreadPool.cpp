@@ -127,17 +127,19 @@ namespace rtGraphics
 				threadPool[threadIndex].startThread();
 	}
 
-	void rtRenderThreadPool::stopThreads()
-	{
-		for (int threadIndex = 0; threadIndex < numThreads; threadIndex++)
-			if (threadPool[threadIndex].isThreadRunning())
-				threadPool[threadIndex].stopThread();
-	}
-
 	void rtRenderThreadPool::joinThreads()
 	{
 		for (int threadIndex = 0; threadIndex < numThreads; threadIndex++)
 			if (threadPool[threadIndex].isThreadRunning())
 				threadPool[threadIndex].waitForThread();
+	}
+
+	bool rtRenderThreadPool::threadsRunning()
+	{
+		for (int threadIndex = 0; threadIndex < numThreads; threadIndex++)
+			if (~threadPool[threadIndex].isThreadRunning())
+				return false;
+
+		return true;
 	}
 }

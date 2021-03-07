@@ -20,7 +20,9 @@ namespace rtGraphics
 	//Event Lister
 	void rtCam::draw(ofEventArgs& event)
 	{
-		render();
+		//Start the render and wait for it to complete
+		render(true);
+		//Draw the rendered image to the screen
 		draw();
 	}
 
@@ -68,9 +70,12 @@ namespace rtGraphics
 	}
 
 	//Render the scene using ray tracing
-	void rtCam::render()
+	void rtCam::render(bool waitForRender)
 	{
 		renderer.rayTraceScene(scene, position, u, v, n, fov, nearClip, farClip, maxBounces, bufferPixels);
+
+		if (waitForRender)
+			renderer.waitForRender();
 	}
 
 	//Draw the rendered image

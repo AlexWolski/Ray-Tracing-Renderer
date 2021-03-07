@@ -62,7 +62,7 @@ namespace rtGraphics
 		void enable();
 		void disable();
 		bool isEnabled() const;
-		void render();
+		void render(bool waitForRender);
 		void draw();
 		void clearBuffer();
 		///Getters

@@ -69,10 +69,10 @@ namespace rtGraphics
 		//Initialize a pool of render threads
 		rtRenderThreadPool();
 
-		//Stop any running threads when the pool is destroyed
+		//Wait for any running threads to finish when the pool is destroyed
 		~rtRenderThreadPool()
 		{
-			stopThreads();
+			joinThreads();
 		}
 
 		//Set the render settings and scene for each thread
@@ -81,7 +81,8 @@ namespace rtGraphics
 
 		//Thread management methods
 		void startThreads();
-		void stopThreads();
 		void joinThreads();
+		//Returns true if any thread in the pool is still running
+		bool threadsRunning();
 	};
 }
