@@ -70,7 +70,7 @@ namespace rtGraphics
 	//Render the scene using ray tracing
 	void rtCam::render()
 	{
-		rtRenderer::rayTraceScene(scene, position, u, v, n, fov, nearClip, farClip, maxBounces, bufferPixels);
+		renderer.rayTraceScene(scene, position, u, v, n, fov, nearClip, farClip, maxBounces, bufferPixels);
 	}
 
 	//Draw the rendered image

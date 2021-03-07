@@ -42,6 +42,9 @@
     <ClCompile Include="src\rtGraphics\rtRenderThreadPool.cpp">
       <Filter>src\rtGraphics</Filter>
     </ClCompile>
+    <ClCompile Include="src\rtGraphics\rtCam.cpp">
+      <Filter>src\rtGraphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ofApp.h">

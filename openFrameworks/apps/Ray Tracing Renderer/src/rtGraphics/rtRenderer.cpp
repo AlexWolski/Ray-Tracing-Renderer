@@ -2,17 +2,18 @@
 
 namespace rtGraphics
 {
-	rtRenderer::rtRenderer(shared_ptr<rtScene> scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
-		float hFov, float nearClip, float farClip, int maxBounces, ofPixels* bufferPixels)
+	rtRenderer::rtRenderer()
 	{
-		threadPool = make_unique<rtRenderThreadPool>(scene, camPos, u, v, n, hFov, nearClip, farClip, maxBounces, bufferPixels);
+		threadPool = make_unique<rtRenderThreadPool>();
 	}
 
 	//Ray trace an entire scene
 	void rtRenderer::rayTraceScene(shared_ptr<rtScene> scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
 		float hFov, float nearClip, float farClip, int maxBounces, ofPixels* bufferPixels)
 	{
-		rtRenderThreadPool renderer(scene, camPos, u, v, n, hFov, nearClip, farClip, maxBounces, bufferPixels);
+		threadPool->setData(scene, camPos, u, v, n, hFov, nearClip, farClip, maxBounces, bufferPixels);
+		threadPool->startThreads();
+		threadPool->joinThreads();
 	}
 
 	//Ray trace a single ray and return the color at the intersection

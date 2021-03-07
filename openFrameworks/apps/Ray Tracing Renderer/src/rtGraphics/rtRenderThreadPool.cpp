@@ -62,7 +62,13 @@ namespace rtGraphics
 
 	int rtRenderThreadPool::numThreads = 8;
 
-	rtRenderThreadPool::rtRenderThreadPool(shared_ptr<rtScene> scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
+	rtRenderThreadPool::rtRenderThreadPool()
+	{
+		//Instantiate the thread pool
+		threadPool = make_unique<RenderThread[]>(numThreads);
+	}
+
+	void rtRenderThreadPool::setData(shared_ptr<rtScene> scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
 		float hFov, float nearClip, float farClip, int maxBounces, ofPixels* bufferPixels)
 	{
 		//Cache the pixel buffer dimensions as floats
@@ -87,8 +93,6 @@ namespace rtGraphics
 
 		//Save the scene data and render settings in a struct
 		sharedData = make_shared<RenderThreadData>(scene, camPos, nearClip, farClip, maxBounces, bufferPixels, firstPoint, hStep, vStep);
-		//Instantiate the thread pool
-		threadPool = make_unique<RenderThread[]>(numThreads);
 
 		//The minimum number of rows each thread will render
 		int baseRows = bufferHeight / numThreads;
@@ -114,10 +118,6 @@ namespace rtGraphics
 			//Move onto the next section
 			sectionStart = sectionEnd;
 		}
-
-		startThreads();
-		//Join all the threads
-		joinThreads();
 	}
 
 	void rtRenderThreadPool::startThreads()

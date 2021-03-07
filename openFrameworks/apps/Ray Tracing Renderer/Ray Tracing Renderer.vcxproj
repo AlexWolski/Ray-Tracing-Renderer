@@ -198,6 +198,7 @@
     <ClCompile Include="src\rtGraphics\Data Classes\rtVec3f.cpp" />
     <ClCompile Include="src\rtGraphics\Objects\rtMeshObject.cpp" />
     <ClCompile Include="src\rtGraphics\Objects\rtSphereObject.cpp" />
+    <ClCompile Include="src\rtGraphics\rtCam.cpp" />
     <ClCompile Include="src\rtGraphics\rtRenderer.cpp" />
     <ClCompile Include="src\rtGraphics\rtRenderThreadPool.cpp" />
   </ItemGroup>

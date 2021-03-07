@@ -41,6 +41,8 @@ namespace rtGraphics
 		ofPixels* bufferPixels;
 		//The dimensions of the frame buffer
 		int bufferWidth, bufferHeight;
+		//An rtRenderer instance for this camera
+		rtRenderer renderer;
 
 		///Buffer methods
 		//Instantiates the frame buffer. If no dimensions are given, the window size is used

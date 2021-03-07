@@ -30,11 +30,10 @@ namespace rtGraphics
 
 	public:
 		//Initialize the thread pool
-		rtRenderer(shared_ptr<rtScene> scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
-			float hFov, float nearClip, float farClip, int maxBounces, ofPixels* bufferPixels);
+		rtRenderer();
 
 		//Ray trace an entire scene
-		static void rayTraceScene(shared_ptr<rtScene> scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
+		void rayTraceScene(shared_ptr<rtScene> scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
 			float hFov, float nearClip, float farClip, int maxBounces, ofPixels* bufferPixels);
 
 		//Ray trace a single ray and return the color at the intersection. If the ray is a bounced ray, the ray hit data can be given to resolve surface intersection issues.
