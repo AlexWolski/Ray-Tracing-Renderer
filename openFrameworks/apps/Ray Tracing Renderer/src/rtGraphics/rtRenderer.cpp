@@ -166,15 +166,16 @@ namespace rtGraphics
 
 
 	///Ray marching settings
-	int rtRenderer::maxIters = 10;
+	int rtRenderer::maxIters = 100;
 	float rtRenderer::minHitDist = 0.01f;
+	float rtRenderer::normalEps = 0.01f;
 
 	///Ray marching methods
 	//Ray trace a single ray and return the color at the intersection
 	rtColorf rtRenderer::rayMarch(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, int currBounce, int maxBounces, shared_ptr<rtRayHit> originPoint)
 	{
 		//The intersection data of the closest intersection
-		shared_ptr<rtRayDist> hitObject = rayMarch(objects, P, D, nearClip, farClip, originPoint);
+		shared_ptr<rtRayHit> hitObject = rayMarch(objects, P, D, nearClip, farClip, originPoint);
 
 		//If the ray didn't hit any objects, return a black pixel
 		//TO-DO: Return the background color of the camera
@@ -186,10 +187,10 @@ namespace rtGraphics
 	}
 
 	//Ray trace a single ray and return the ray hit data
-	shared_ptr<rtRayDist> rtRenderer::rayMarch(objectSet& objects, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint)
+	shared_ptr<rtRayHit> rtRenderer::rayMarch(objectSet& objects, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint)
 	{
 		//The intersection data of the closest intersection
-		shared_ptr<rtRayDist> rayDist;
+		shared_ptr<rtRayHit> rayDist;
 		//Make a copy of the ray to march forward
 		rtVec3f marchedRay = P;
 

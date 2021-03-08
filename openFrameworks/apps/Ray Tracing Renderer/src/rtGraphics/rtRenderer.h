@@ -29,6 +29,8 @@ namespace rtGraphics
 		static int maxIters;
 		//The minimum distance between a ray and an object that would be considered a hit
 		static float minHitDist;
+		//The epsilon value to use when calculating the normal of an sdf
+		static float normalEps;
 
 		///Ray tracing methods
 		//Bounce the ray off of an object and calculate the color at the next intersection point
@@ -57,6 +59,6 @@ namespace rtGraphics
 		//Ray march a single ray and return the color at the intersection. If the ray is a bounced ray, the ray hit data can be given to resolve surface intersection issues.
 		static rtColorf rayMarch(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, int currBounce, int maxBounces, shared_ptr<rtRayHit> originPoint = nullptr);
 		//Ray march a single ray and return the closest object. If the ray is a bounced ray, the ray distance data can be given to resolve surface intersection issues.
-		static shared_ptr<rtRayDist> rtRenderer::rayMarch(objectSet& objects, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, shared_ptr<rtRayHit> sourceObject = nullptr);
+		static shared_ptr<rtRayHit> rtRenderer::rayMarch(objectSet& objects, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, shared_ptr<rtRayHit> sourceObject = nullptr);
 	};
 }

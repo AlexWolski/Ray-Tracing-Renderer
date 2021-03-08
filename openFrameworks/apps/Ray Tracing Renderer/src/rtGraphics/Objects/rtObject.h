@@ -6,7 +6,7 @@
 #include "../rtNode.h"
 #include "../Data Classes/rtVec3f.h"
 #include "../Data Classes/rtMat.h"
-#include "../Data Classes/Ray Data.h"
+#include "../Data Classes/rtRayHit.h"
 
 using namespace std;
 
@@ -39,7 +39,7 @@ namespace rtGraphics
 		 * Used for ray marching
 		 * Calculates the shortest distance between the given point and the object
 		 */
-		virtual shared_ptr<rtRayDist> sdf(rtVec3f P) = 0;
+		virtual shared_ptr<rtRayHit> sdf(rtVec3f P) = 0;
 	};
 
 	///In-line method definitions

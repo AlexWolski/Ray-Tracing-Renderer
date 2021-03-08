@@ -208,7 +208,7 @@
     <ClInclude Include="src\rtGraphics\Data Classes\rtColorf.h" />
     <ClInclude Include="src\rtGraphics\Data Classes\rtLight.h" />
     <ClInclude Include="src\rtGraphics\Data Classes\rtMat.h" />
-    <ClInclude Include="src\rtGraphics\Data Classes\Ray Data.h" />
+    <ClInclude Include="src\rtGraphics\Data Classes\rtRayHit.h" />
     <ClInclude Include="src\rtGraphics\Data Classes\rtScene.h" />
     <ClInclude Include="src\rtGraphics\Data Classes\rtVec3f.h" />
     <ClInclude Include="src\rtGraphics\Objects\rtMesh.h" />

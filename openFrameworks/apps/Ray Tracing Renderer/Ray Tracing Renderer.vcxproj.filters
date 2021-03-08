@@ -98,7 +98,7 @@
     <ClInclude Include="src\rtGraphics\Data Classes\Data Types.h">
       <Filter>src\rtGraphics\Data Classes</Filter>
     </ClInclude>
-    <ClInclude Include="src\rtGraphics\Data Classes\Ray Data.h">
+    <ClInclude Include="src\rtGraphics\Data Classes\rtRayHit.h">
       <Filter>src\rtGraphics\Data Classes</Filter>
     </ClInclude>
   </ItemGroup>
