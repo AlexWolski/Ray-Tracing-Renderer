@@ -93,6 +93,7 @@ namespace rtGraphics
 	//Mesh signed distance function
 	shared_ptr<rtRayDist> rtMeshObject::sdf(rtVec3f P)
 	{
+		//To-do: Implement a triangle sdf method
 		shared_ptr<rtRayDist> distData = make_shared<rtRayDist>();
 		distData->distance = -1.0f;
 

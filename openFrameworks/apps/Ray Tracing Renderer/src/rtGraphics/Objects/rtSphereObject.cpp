@@ -86,7 +86,7 @@ namespace rtGraphics
 	shared_ptr<rtRayDist> rtSphereObject::sdf(rtVec3f P)
 	{
 		shared_ptr<rtRayDist> distData = make_shared<rtRayDist>();
-		distData->distance = -1.0f;
+		distData->distance = (center - P).magnitude() - radius;;
 
 		return distData;
 	}
