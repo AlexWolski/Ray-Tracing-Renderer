@@ -19,4 +19,11 @@ namespace rtGraphics
 		//Only relevant for mesh objects
 		int hitFaceIndex;
 	};
+
+	//Stores the data associated with a ray march distance calculation
+	struct rtRayDist
+	{
+		rtObject* object;
+		float distance;
+	};
 }

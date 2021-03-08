@@ -71,9 +71,6 @@
     <ClInclude Include="src\rtGraphics\Data Classes\rtMat.h">
       <Filter>src\rtGraphics\Data Classes</Filter>
     </ClInclude>
-    <ClInclude Include="src\rtGraphics\Data Classes\rtRayHit.h">
-      <Filter>src\rtGraphics\Data Classes</Filter>
-    </ClInclude>
     <ClInclude Include="src\rtGraphics\Data Classes\rtScene.h">
       <Filter>src\rtGraphics\Data Classes</Filter>
     </ClInclude>
@@ -99,6 +96,9 @@
       <Filter>src\rtGraphics</Filter>
     </ClInclude>
     <ClInclude Include="src\rtGraphics\Data Classes\Data Types.h">
+      <Filter>src\rtGraphics\Data Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rtGraphics\Data Classes\Ray Data.h">
       <Filter>src\rtGraphics\Data Classes</Filter>
     </ClInclude>
   </ItemGroup>

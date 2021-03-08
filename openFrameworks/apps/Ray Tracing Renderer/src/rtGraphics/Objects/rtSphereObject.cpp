@@ -83,11 +83,11 @@ namespace rtGraphics
 
 
 	//Sphere signed distance function
-	shared_ptr<rtRayHit> rtSphereObject::sdf(rtVec3f P)
+	shared_ptr<rtRayDist> rtSphereObject::sdf(rtVec3f P)
 	{
-		shared_ptr<rtRayHit> hitData = make_shared<rtRayHit>();
-		hitData->hit = false;
+		shared_ptr<rtRayDist> distData = make_shared<rtRayDist>();
+		distData->distance = -1.0f;
 
-		return hitData;
+		return distData;
 	}
 }
