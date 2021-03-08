@@ -24,11 +24,19 @@ namespace rtGraphics
 		//The pool of render threads
 		unique_ptr<rtRenderThreadPool> threadPool;
 
+		///Constants for ray marching
+		//The maximum number of ray march iterations
+		static int maxIters;
+		//The minimum distance between a ray and an object that would be considered a hit
+		static float minHitDist;
+
 		///Ray tracing methods
 		//Bounce the ray off of an object and calculate the color at the next intersection point
 		static rtColorf bounceRay(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D,float nearClip, float farClip, int currBounce, int maxBounces, shared_ptr<rtRayHit> hitData);
-		//Determine if a given light shines on the target point or is occluded. The ray hit point is required to resolve surface intersection issues.
-		static bool isShadow(objectSet& objects, rtVec3f& lightVector, rtVec3f& targetPoint, float lightDistSquared, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint = nullptr);
+		//Determine, using ray tracing, if a given light shines on the target point or is occluded. The ray hit point is required to resolve surface intersection issues.
+		static bool isShadowTraced(objectSet& objects, rtVec3f& lightVector, rtVec3f& targetPoint, float lightDistSquared, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint = nullptr);
+
+		///Ray marching methods
 
 	public:
 		//Initialize the thread pool
@@ -44,5 +52,11 @@ namespace rtGraphics
 		static rtColorf rayTrace(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, int currBounce, int maxBounces, shared_ptr<rtRayHit> originPoint = nullptr);
 		//Ray trace a single ray and return the ray hit data. If the ray is a bounced ray, the ray hit data can be given to resolve surface intersection issues.
 		static shared_ptr<rtRayHit> rtRenderer::rayTrace(objectSet& objects, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, shared_ptr<rtRayHit> sourceObject = nullptr);
+
+		///Ray marching methods
+		//Ray march a single ray and return the color at the intersection. If the ray is a bounced ray, the ray hit data can be given to resolve surface intersection issues.
+		static rtColorf rayMarch(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, int currBounce, int maxBounces, shared_ptr<rtRayHit> originPoint = nullptr);
+		//Ray march a single ray and return the closest object. If the ray is a bounced ray, the ray distance data can be given to resolve surface intersection issues.
+		static shared_ptr<rtRayDist> rtRenderer::rayMarch(objectSet& objects, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, shared_ptr<rtRayHit> sourceObject = nullptr);
 	};
 }

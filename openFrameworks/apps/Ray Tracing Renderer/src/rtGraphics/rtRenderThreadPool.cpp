@@ -60,7 +60,7 @@ namespace rtGraphics
 
 				case renderMode::rayMarch:
 					//To-Do: Implement ray marching
-					pixelColor = rtColorf::black;
+					pixelColor = rtRenderer::rayMarch(sharedData->objects, sharedData->lights, sharedData->camPos, D, sharedData->nearClip, sharedData->farClip, 0, sharedData->maxBounces);
 					break;
 
 				default:

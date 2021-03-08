@@ -87,6 +87,7 @@ namespace rtGraphics
 	{
 		shared_ptr<rtRayDist> distData = make_shared<rtRayDist>();
 		distData->distance = (center - P).magnitude() - radius;;
+		distData->object = this;
 
 		return distData;
 	}

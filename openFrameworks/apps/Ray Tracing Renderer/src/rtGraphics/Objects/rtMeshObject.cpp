@@ -95,7 +95,8 @@ namespace rtGraphics
 	{
 		//To-do: Implement a triangle sdf method
 		shared_ptr<rtRayDist> distData = make_shared<rtRayDist>();
-		distData->distance = -1.0f;
+		distData->hit = false;
+		distData->distance = INFINITY;
 
 		return distData;
 	}

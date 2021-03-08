@@ -22,6 +22,8 @@ namespace rtGraphics
 		threadPool->joinThreads();
 	}
 
+
+	///Ray tracing methods
 	//Ray trace a single ray and return the color at the intersection
 	rtColorf rtRenderer::rayTrace(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, int currBounce, int maxBounces, shared_ptr<rtRayHit> originPoint)
 	{
@@ -63,7 +65,7 @@ namespace rtGraphics
 				lightVector.normalize();
 				
 				//Determine if the current light hits the point or not
-				bool shadow = isShadow(objects, lightVector, hitData->hitPoint, lightDistSquared, nearClip, farClip, hitData);
+				bool shadow = isShadowTraced(objects, lightVector, hitData->hitPoint, lightDistSquared, nearClip, farClip, hitData);
 
 				//Add the ambient color if the object is not perfectly reflective, regardless of if the point is in shadow or not.
 				if (reflectivity < 1.0f)
@@ -141,7 +143,7 @@ namespace rtGraphics
 	}
 
 	//Determine if a given light shines on a point or is occluded
-	bool rtRenderer::isShadow(objectSet& objects, rtVec3f& lightVector, rtVec3f& targetPoint, float lightDistSquared, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint)
+	bool rtRenderer::isShadowTraced(objectSet& objects, rtVec3f& lightVector, rtVec3f& targetPoint, float lightDistSquared, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint)
 	{
 		//Cast a ray from the hit point towards the light source to check if the light is occluded
 		shared_ptr<rtRayHit> shadowRay = rayTrace(objects, targetPoint, lightVector, nearClip, farClip, originPoint);
@@ -160,5 +162,78 @@ namespace rtGraphics
 
 		//Otherwise the point is not in shadow
 		return false;
+	}
+
+
+	///Ray marching settings
+	int rtRenderer::maxIters = 10;
+	float rtRenderer::minHitDist = 0.01f;
+
+	///Ray marching methods
+	//Ray trace a single ray and return the color at the intersection
+	rtColorf rtRenderer::rayMarch(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, int currBounce, int maxBounces, shared_ptr<rtRayHit> originPoint)
+	{
+		//The intersection data of the closest intersection
+		shared_ptr<rtRayDist> hitObject = rayMarch(objects, P, D, nearClip, farClip, originPoint);
+
+		//If the ray didn't hit any objects, return a black pixel
+		//TO-DO: Return the background color of the camera
+		if (hitObject->hit)
+			return rtColorf::green;
+		//Otherwise calculate the lighting of the pixel
+		else
+			return rtColorf::black;
+	}
+
+	//Ray trace a single ray and return the ray hit data
+	shared_ptr<rtRayDist> rtRenderer::rayMarch(objectSet& objects, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint)
+	{
+		//The intersection data of the closest intersection
+		shared_ptr<rtRayDist> rayDist;
+		//Make a copy of the ray to march forward
+		rtVec3f marchedRay = P;
+
+		//March the ray forward until it hits an object or the maximum number of iterations is reached
+		for (int iteration = 0; iteration < maxIters; iteration++)
+		{
+			//The nearest distance between the ray and any of the objects
+			float nearestDist = INFINITY;
+
+			//Iterate over the all the objects
+			for (auto objectPtr = objects->begin(); objectPtr != objects->end(); objectPtr++)
+			{
+				//Get a pointer to the current object
+				rtObject* currObject = objectPtr->second;
+
+				//Determine the distance from the ray to the current object
+				rayDist = currObject->sdf(marchedRay);
+
+				//Check if the object is within the view frustum
+				if (rayDist->distance < farClip)
+				{
+					//If the ray hits the object, return the hit data
+					if (abs(rayDist->distance) <= minHitDist)
+					{
+						//If this is the first iteration and the object is too close, skip the object
+						if (iteration == 0 && rayDist->distance < nearClip)
+							continue;
+
+						rayDist->hit = true;
+						return rayDist;
+					}
+
+					//Otherwise if the object is the nearest so far, save the distance
+					if (rayDist->distance < nearestDist)
+						nearestDist = rayDist->distance;
+				}
+			}
+
+			//If the ray didn't hit any objects, march it forward by the distance to the nearest object
+			marchedRay += (D * nearestDist);
+		}
+
+		//If the ray didn't hit any objects within the maximum iterations, the ray missed
+		rayDist->hit = false;
+		return rayDist;
 	}
 }

@@ -23,6 +23,7 @@ namespace rtGraphics
 	//Stores the data associated with a ray march distance calculation
 	struct rtRayDist
 	{
+		bool hit = false;
 		rtObject* object;
 		float distance;
 	};
