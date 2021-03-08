@@ -25,7 +25,7 @@ namespace rtGraphics
 
 	///Helper methods
 	//Given a hit point, shade the point using the Phong shading method
-	rtColorf rtRenderer::calcPixelColor(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D,
+	rtColorf rtRenderer::calcPixelColor(renderMode RenderMode, objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D,
 		float nearClip, float farClip, int currBounce, int maxBounces, shared_ptr<rtRayHit> hitData)
 	{
 		//If the ray didn't intersect any objects, return a black pixel
@@ -63,7 +63,7 @@ namespace rtGraphics
 				lightVector.normalize();
 
 				//Determine if the current light hits the point or not
-				bool shadow = isShadow(objects, lightVector, hitData->hitPoint, lightDistSquared, nearClip, farClip, hitData);
+				bool shadow = isShadow(RenderMode, objects, lightVector, hitData->hitPoint, lightDistSquared, nearClip, farClip, hitData);
 
 				//Add the ambient color if the object is not perfectly reflective, regardless of if the point is in shadow or not.
 				if (reflectivity < 1.0f)
@@ -88,7 +88,7 @@ namespace rtGraphics
 			else
 			{
 				//Bounce the ray off of the object and calculate the reflected color
-				rtColorf reflectedColor = bounceRay(objects, lights, P, D, nearClip, farClip, currBounce, maxBounces, hitData);
+				rtColorf reflectedColor = bounceRay(RenderMode, objects, lights, P, D, nearClip, farClip, currBounce, maxBounces, hitData);
 				//Combine the object color and reflected color
 				finalColor = (objectColor * (1 - reflectivity)) + (reflectedColor * reflectivity) + specular;
 			}
@@ -100,7 +100,7 @@ namespace rtGraphics
 	}
 
 	//Bounce a ray off of the object it hits and find the reflected color
-	rtColorf rtRenderer::bounceRay(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D,
+	rtColorf rtRenderer::bounceRay(renderMode RenderMode, objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D,
 		float nearClip, float farClip, int currBounce, int maxBounces, shared_ptr<rtRayHit> hitData)
 	{
 		//If the ray has already bounced too many times return black
@@ -109,15 +109,45 @@ namespace rtGraphics
 
 		//Get the reflected ray
 		rtVec3f reflectedRay = D.getReflected(hitData->hitNormal);
-		//Trace the bounced ray to get the reflected color. The near clip is set to 0 since it is not needed
-		return rayTrace(objects, lights, hitData->hitPoint, reflectedRay, 0.0f, farClip, ++currBounce, maxBounces, hitData);
+
+		rtColorf color;
+
+		//Calculate the pixel color based on the rendering mode
+		switch (RenderMode)
+		{
+		case renderMode::rayTrace:
+			color = rayTrace(objects, lights, hitData->hitPoint, reflectedRay, 0.0f, farClip, ++currBounce, maxBounces, hitData);
+			break;
+		case renderMode::rayMarch:
+			color = rayMarch(objects, lights, hitData->hitPoint, reflectedRay, 0.0f, farClip, ++currBounce, maxBounces, hitData);
+			break;
+		default:
+			//If no rendering mode was specified, return black
+			return rtColorf::black;
+		}
+
+		return color;
 	}
 
 	//Determine if a given light shines on a point or is occluded
-	bool rtRenderer::isShadow(objectSet& objects, rtVec3f& lightVector, rtVec3f& targetPoint, float lightDistSquared, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint)
+	bool rtRenderer::isShadow(renderMode RenderMode, objectSet& objects, rtVec3f& lightVector, rtVec3f& targetPoint, float lightDistSquared, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint)
 	{
 		//Cast a ray from the hit point towards the light source to check if the light is occluded
-		shared_ptr<rtRayHit> shadowRay = rayTrace(objects, targetPoint, lightVector, nearClip, farClip, originPoint);
+		shared_ptr<rtRayHit> shadowRay;
+
+		//Compute if the point is in shadow using the current rendering mode
+		switch (RenderMode)
+		{
+		case renderMode::rayTrace:
+			shadowRay = rayTrace(objects, targetPoint, lightVector, nearClip, farClip, originPoint);
+			break;
+		case renderMode::rayMarch:
+			shadowRay = rayMarch(objects, targetPoint, lightVector, nearClip, farClip, originPoint);
+			break;
+		default:
+			//If no rendering mode was specified, exit the method
+			return false;
+		}
 
 		//If they ray doesn't hit anything, return false
 		if (!shadowRay->hit)
@@ -140,10 +170,10 @@ namespace rtGraphics
 	//Ray trace a single ray and return the color at the intersection
 	rtColorf rtRenderer::rayTrace(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, int currBounce, int maxBounces, shared_ptr<rtRayHit> originPoint)
 	{
-		//The intersection data of the closest intersection
+		//Find the closest object the ray hits
 		shared_ptr<rtRayHit> hitData = rayTrace(objects, P, D, nearClip, farClip, originPoint);
-
-		return calcPixelColor(objects, lights, P, D, nearClip, farClip, currBounce, maxBounces, hitData);
+		//Calculate the color of that point
+		return calcPixelColor(renderMode::rayTrace, objects, lights, P, D, nearClip, farClip, currBounce, maxBounces, hitData);
 	}
 
 	//Ray trace a single ray and return the ray hit data
@@ -183,16 +213,10 @@ namespace rtGraphics
 	//Ray trace a single ray and return the color at the intersection
 	rtColorf rtRenderer::rayMarch(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, int currBounce, int maxBounces, shared_ptr<rtRayHit> originPoint)
 	{
-		//The intersection data of the closest intersection
-		shared_ptr<rtRayHit> hitObject = rayMarch(objects, P, D, nearClip, farClip, originPoint);
-
-		//If the ray didn't hit any objects, return a black pixel
-		//TO-DO: Return the background color of the camera
-		if (hitObject->hit)
-			return rtColorf::green;
-		//Otherwise calculate the lighting of the pixel
-		else
-			return rtColorf::black;
+		//Find the closest object the ray hits
+		shared_ptr<rtRayHit> hitData = rayMarch(objects, P, D, nearClip, farClip, originPoint);
+		//Calculate the color of that point
+		return calcPixelColor(renderMode::rayMarch, objects, lights, P, D, nearClip, farClip, currBounce, maxBounces, hitData);
 	}
 
 	//Ray trace a single ray and return the ray hit data
