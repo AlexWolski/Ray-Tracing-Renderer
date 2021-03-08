@@ -30,7 +30,7 @@ void ofApp::setup()
 	demoScene->addObject("triangle", triangle);
 
 	//Create a torus and add it to the scene
-	rtTorusObject* greenTorus = new rtTorusObject(rtVec3f(0.0f, -60.0f, -20.0f), 20.0f, 5.0f, matteGreen);
+	rtTorusObject* greenTorus = new rtTorusObject(rtVec3f(0.0f, -60.0f, -20.0f), rtVec3f(30.0f, 0.0f, 30.0f), 20.0f, 5.0f, matteGreen);
 	demoScene->addObject("green torus", greenTorus);
 
 
@@ -61,7 +61,7 @@ void ofApp::setup()
 	demoScene->addObject("box", box);
 
 	//Create a ground plane under the scene
-	rtPlaneObject* whitePlane = new rtPlaneObject(rtVec3f(0.0f, -70.0f, 0.0f), rtVec3f(0.0f, 1.0f, 0.0f), matteWhite);
+	rtPlaneObject* whitePlane = new rtPlaneObject(rtVec3f(0.0f, -80.0f, 0.0f), rtVec3f(0.0f, 1.0f, 0.0f), matteWhite);
 	demoScene->addObject("white plane", whitePlane);
 
 	///Create a light and add it to the scene
