@@ -32,6 +32,7 @@ namespace rtGraphics
 	float rtCam::getNearClip() const { return nearClip; }
 	float rtCam::getFarClip() const { return farClip; }
 	int rtCam::getMaxBounces() const { return maxBounces; }
+	renderMode rtCam::getRenderMode() const { return RenderMode; }
 	shared_ptr<rtScene> rtCam::getScene() const { return scene; }
 	ofPixels* rtCam::getBufferPixels() { return bufferPixels; }
 	rtVec3f rtCam::getPosition() const { return position; }
@@ -44,6 +45,7 @@ namespace rtGraphics
 	void rtCam::setNearClip(float nearClip) { this->nearClip = nearClip; }
 	void rtCam::setFarClip(float farClip) { this->farClip = farClip; }
 	void rtCam::setMaxBounces(int maxBounces) { this->maxBounces = maxBounces; }
+	void rtCam::setRenderMode(renderMode RenderMode) { this->RenderMode = RenderMode; }
 	void rtCam::setScene(const shared_ptr<rtScene> scene) { this->scene = scene; }
 	void rtCam::setPosition(const rtVec3f& position) { this->position = position; }
 	void rtCam::setLookAtPoint(const rtVec3f& lookAtPoint) { pref = lookAtPoint; calcAxes(); }
@@ -69,10 +71,10 @@ namespace rtGraphics
 		enabled = false;
 	}
 
-	//Render the scene using ray tracing
+	//Render the scene
 	void rtCam::render(bool waitForRender)
 	{
-		renderer.rayTraceScene(scene, position, u, v, n, fov, nearClip, farClip, maxBounces, bufferPixels);
+		renderer.render(RenderMode, scene, position, u, v, n, fov, nearClip, farClip, maxBounces, bufferPixels);
 
 		if (waitForRender)
 			renderer.waitForRender();

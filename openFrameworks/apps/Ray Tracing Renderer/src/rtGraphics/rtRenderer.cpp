@@ -7,20 +7,19 @@ namespace rtGraphics
 		threadPool = make_unique<rtRenderThreadPool>();
 	}
 
-	void rtRenderer::waitForRender()
-	{
-		threadPool->joinThreads();
-	}
-
-	//Ray trace an entire scene
-	void rtRenderer::rayTraceScene(shared_ptr<rtScene> scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
+	void rtRenderer::render(renderMode RenderMode, shared_ptr<rtScene> scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
 		float hFov, float nearClip, float farClip, int maxBounces, ofPixels* bufferPixels)
 	{
 		//Wait for any currently running threads to finish first
 		threadPool->joinThreads();
 		//Set the render settings and start the threads
-		threadPool->setData(scene, camPos, u, v, n, hFov, nearClip, farClip, maxBounces, bufferPixels);
+		threadPool->setData(RenderMode, scene, camPos, u, v, n, hFov, nearClip, farClip, maxBounces, bufferPixels);
 		threadPool->startThreads();
+	}
+
+	void rtRenderer::waitForRender()
+	{
+		threadPool->joinThreads();
 	}
 
 	//Ray trace a single ray and return the color at the intersection

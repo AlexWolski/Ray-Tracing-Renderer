@@ -3,6 +3,7 @@
 #include <thread>
 #include "memory.h"
 #include "rtRenderer.h"
+#include "Data Classes/Data Types.h"
 
 namespace rtGraphics
 {
@@ -10,9 +11,11 @@ namespace rtGraphics
 	struct RenderThreadData
 	{
 	public:
-		RenderThreadData(shared_ptr<rtScene>scene, rtVec3f& camPos, float nearClip, float farClip,
+		RenderThreadData(renderMode RenderMode, shared_ptr<rtScene>scene, rtVec3f& camPos, float nearClip, float farClip,
 			int maxBounces, ofPixels* bufferPixels, rtVec3f& firstPoint, rtVec3f& hStep, rtVec3f& vStep);
 
+		//Render data
+		renderMode RenderMode;
 		//Scene data
 		objectSet objects;
 		lightSet lights;
@@ -77,7 +80,7 @@ namespace rtGraphics
 		}
 
 		//Set the render settings and scene for each thread
-		void setData(shared_ptr<rtScene> scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
+		void setData(renderMode RenderMode, shared_ptr<rtScene> scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
 			float hFov, float nearClip, float farClip, int maxBounces, ofPixels* bufferPixels);
 
 		//Thread management methods

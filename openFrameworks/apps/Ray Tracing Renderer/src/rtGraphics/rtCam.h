@@ -27,6 +27,7 @@ namespace rtGraphics
 		float nearClip = 0.1f;
 		float farClip = 1000.0f;
 		int maxBounces = 3;
+		renderMode RenderMode = renderMode::rayTrace;
 		//Vectors defining the viewing coordinates
 		rtVec3f position;
 		rtVec3f pref;	//Look-at point
@@ -70,6 +71,7 @@ namespace rtGraphics
 		float getNearClip() const;
 		float getFarClip() const;
 		int getMaxBounces() const;
+		renderMode getRenderMode() const;
 		shared_ptr<rtScene> getScene() const;
 		ofPixels* getBufferPixels();
 		rtVec3f getPosition() const;
@@ -81,6 +83,7 @@ namespace rtGraphics
 		void setNearClip(float nearClip);
 		void setFarClip(float farClip);
 		void setMaxBounces(int maxBounces);
+		void setRenderMode(renderMode RenderMode);
 		void setScene(shared_ptr<rtScene> scene);
 		void setPosition(const rtVec3f& position);
 		void setLookAtPoint(const rtVec3f& lookAtPoint);

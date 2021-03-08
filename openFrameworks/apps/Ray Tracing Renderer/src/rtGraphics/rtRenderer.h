@@ -6,6 +6,7 @@
 #include "ofPixels.h"
 #include "ofThread.h"
 #include "Data Classes/rtScene.h"
+#include "Data Classes/Data Types.h"
 #include "PhongShader.h"
 #include "rtRenderThreadPool.h"
 
@@ -32,13 +33,13 @@ namespace rtGraphics
 	public:
 		//Initialize the thread pool
 		rtRenderer();
+		//Render the scene
+		void render(renderMode RenderMode, shared_ptr<rtScene> scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
+			float hFov, float nearClip, float farClip, int maxBounces, ofPixels* bufferPixels);
 		//Wait for the current render to complete
 		void waitForRender();
 
 		///Ray tracing methods
-		//Ray trace an entire scene
-		void rayTraceScene(shared_ptr<rtScene> scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
-			float hFov, float nearClip, float farClip, int maxBounces, ofPixels* bufferPixels);
 		//Ray trace a single ray and return the color at the intersection. If the ray is a bounced ray, the ray hit data can be given to resolve surface intersection issues.
 		static rtColorf rayTrace(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, int currBounce, int maxBounces, shared_ptr<rtRayHit> originPoint = nullptr);
 		//Ray trace a single ray and return the ray hit data. If the ray is a bounced ray, the ray hit data can be given to resolve surface intersection issues.

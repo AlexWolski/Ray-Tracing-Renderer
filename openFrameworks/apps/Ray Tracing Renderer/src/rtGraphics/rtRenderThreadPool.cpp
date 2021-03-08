@@ -6,9 +6,10 @@ namespace rtGraphics
 	//Set the number of threads to the number of cores on the machine
 	int rtRenderThreadPool::numThreads = thread::hardware_concurrency();
 
-	RenderThreadData::RenderThreadData(shared_ptr<rtScene>scene, rtVec3f& camPos, float nearClip, float farClip,
+	RenderThreadData::RenderThreadData(renderMode RenderMode, shared_ptr<rtScene>scene, rtVec3f& camPos, float nearClip, float farClip,
 		int maxBounces, ofPixels* bufferPixels, rtVec3f& firstPoint, rtVec3f& hStep, rtVec3f& vStep)
 	{
+		this->RenderMode = RenderMode;
 		//Scene data
 		this->objects = scene->getObjects();
 		this->lights = scene->getLights();
@@ -47,8 +48,27 @@ namespace rtGraphics
 			{
 				//Find new direction vector
 				D = (R - sharedData->camPos).normalize();
-				//Calculate the color of the pixel
-				rtColorf pixelColor = rtRenderer::rayTrace(sharedData->objects, sharedData->lights, sharedData->camPos, D, sharedData->nearClip, sharedData->farClip, 0, sharedData->maxBounces);
+
+				rtColorf pixelColor;
+
+				//Calculate the pixel color based on the current render mode
+				switch (sharedData->RenderMode)
+				{
+				case renderMode::rayTrace:
+					pixelColor = rtRenderer::rayTrace(sharedData->objects, sharedData->lights, sharedData->camPos, D, sharedData->nearClip, sharedData->farClip, 0, sharedData->maxBounces);
+					break;
+
+				case renderMode::rayMarch:
+					//To-Do: Implement ray marching
+					pixelColor = rtColorf::black;
+					break;
+
+				default:
+					//If no render mode is selected, set it to black
+					pixelColor = rtColorf::black;
+				}
+				
+				
 				//Write the color to the pixel buffer
 				(*sharedData->bufferPixels)[bufferIndex++] = (int)(pixelColor.getR() * 255.0f);
 				(*sharedData->bufferPixels)[bufferIndex++] = (int)(pixelColor.getG() * 255.0f);
@@ -71,7 +91,7 @@ namespace rtGraphics
 		threadPool = make_unique<RenderThread[]>(numThreads);
 	}
 
-	void rtRenderThreadPool::setData(shared_ptr<rtScene> scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
+	void rtRenderThreadPool::setData(renderMode RenderMode, shared_ptr<rtScene> scene, rtVec3f& camPos, rtVec3f& u, rtVec3f& v, rtVec3f& n,
 		float hFov, float nearClip, float farClip, int maxBounces, ofPixels* bufferPixels)
 	{
 		//Cache the pixel buffer dimensions as floats
@@ -95,7 +115,7 @@ namespace rtGraphics
 		rtVec3f firstPoint = clipCenter + widthVector + heightVector;
 
 		//Save the scene data and render settings in a struct
-		sharedData = make_shared<RenderThreadData>(scene, camPos, nearClip, farClip, maxBounces, bufferPixels, firstPoint, hStep, vStep);
+		sharedData = make_shared<RenderThreadData>(RenderMode, scene, camPos, nearClip, farClip, maxBounces, bufferPixels, firstPoint, hStep, vStep);
 
 		//The minimum number of rows each thread will render
 		int baseRows = bufferHeight / numThreads;
