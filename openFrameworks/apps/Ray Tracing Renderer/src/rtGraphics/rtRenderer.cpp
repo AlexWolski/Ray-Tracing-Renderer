@@ -23,15 +23,13 @@ namespace rtGraphics
 	}
 
 
-	///Ray tracing methods
-	//Ray trace a single ray and return the color at the intersection
-	rtColorf rtRenderer::rayTrace(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, int currBounce, int maxBounces, shared_ptr<rtRayHit> originPoint)
+	///Helper methods
+	//Given a hit point, shade the point using the Phong shading method
+	rtColorf rtRenderer::calcPixelColor(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D,
+		float nearClip, float farClip, int currBounce, int maxBounces, shared_ptr<rtRayHit> hitData)
 	{
-		//The intersection data of the closest intersection
-		shared_ptr<rtRayHit> hitData = rayTrace(objects, P, D, nearClip, farClip, originPoint);
-
 		//If the ray didn't intersect any objects, return a black pixel
-		//TO-DO: Return the background color of the camera
+				//TO-DO: Return the background color of the camera
 		if (!hitData->hit)
 			return rtColorf::black;
 		//Otherwise calculate the lighting of the pixel
@@ -63,9 +61,9 @@ namespace rtGraphics
 				//Get the squared distance from the hit position to the light before normalizing it
 				float lightDistSquared = lightVector.magnitudeSquared();
 				lightVector.normalize();
-				
+
 				//Determine if the current light hits the point or not
-				bool shadow = isShadowRT(objects, lightVector, hitData->hitPoint, lightDistSquared, nearClip, farClip, hitData);
+				bool shadow = isShadow(objects, lightVector, hitData->hitPoint, lightDistSquared, nearClip, farClip, hitData);
 
 				//Add the ambient color if the object is not perfectly reflective, regardless of if the point is in shadow or not.
 				if (reflectivity < 1.0f)
@@ -90,7 +88,7 @@ namespace rtGraphics
 			else
 			{
 				//Bounce the ray off of the object and calculate the reflected color
-				rtColorf reflectedColor = bounceRayRT(objects, lights, P, D, nearClip, farClip, currBounce, maxBounces, hitData);
+				rtColorf reflectedColor = bounceRay(objects, lights, P, D, nearClip, farClip, currBounce, maxBounces, hitData);
 				//Combine the object color and reflected color
 				finalColor = (objectColor * (1 - reflectivity)) + (reflectedColor * reflectivity) + specular;
 			}
@@ -99,6 +97,53 @@ namespace rtGraphics
 			finalColor.clampColors();
 			return finalColor;
 		}
+	}
+
+	//Bounce a ray off of the object it hits and find the reflected color
+	rtColorf rtRenderer::bounceRay(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D,
+		float nearClip, float farClip, int currBounce, int maxBounces, shared_ptr<rtRayHit> hitData)
+	{
+		//If the ray has already bounced too many times return black
+		if (currBounce >= maxBounces)
+			return rtColorf::black;
+
+		//Get the reflected ray
+		rtVec3f reflectedRay = D.getReflected(hitData->hitNormal);
+		//Trace the bounced ray to get the reflected color. The near clip is set to 0 since it is not needed
+		return rayTrace(objects, lights, hitData->hitPoint, reflectedRay, 0.0f, farClip, ++currBounce, maxBounces, hitData);
+	}
+
+	//Determine if a given light shines on a point or is occluded
+	bool rtRenderer::isShadow(objectSet& objects, rtVec3f& lightVector, rtVec3f& targetPoint, float lightDistSquared, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint)
+	{
+		//Cast a ray from the hit point towards the light source to check if the light is occluded
+		shared_ptr<rtRayHit> shadowRay = rayTrace(objects, targetPoint, lightVector, nearClip, farClip, originPoint);
+
+		//If they ray doesn't hit anything, return false
+		if (!shadowRay->hit)
+			return false;
+
+		//Calculate the squared distance from the hit point to the nearest object
+		float hitDist = shadowRay->distance;
+		float hitDistSquared = hitDist * hitDist;
+
+		//If the ray hits an object before the light, then the point is in shadow
+		if (hitDistSquared < lightDistSquared)
+			return true;
+
+		//Otherwise the point is not in shadow
+		return false;
+	}
+
+
+	///Ray tracing methods
+	//Ray trace a single ray and return the color at the intersection
+	rtColorf rtRenderer::rayTrace(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, int currBounce, int maxBounces, shared_ptr<rtRayHit> originPoint)
+	{
+		//The intersection data of the closest intersection
+		shared_ptr<rtRayHit> hitData = rayTrace(objects, P, D, nearClip, farClip, originPoint);
+
+		return calcPixelColor(objects, lights, P, D, nearClip, farClip, currBounce, maxBounces, hitData);
 	}
 
 	//Ray trace a single ray and return the ray hit data
@@ -126,42 +171,6 @@ namespace rtGraphics
 
 		//Return the hit data
 		return nearestHit;
-	}
-
-	//Bounce a ray off of the object it hits and find the reflected color
-	rtColorf rtRenderer::bounceRayRT(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D,
-		float nearClip, float farClip, int currBounce, int maxBounces, shared_ptr<rtRayHit> hitData)
-	{
-		//If the ray has already bounced too many times return black
-		if (currBounce >= maxBounces)
-			return rtColorf::black;
-
-		//Get the reflected ray
-		rtVec3f reflectedRay = D.getReflected(hitData->hitNormal);
-		//Trace the bounced ray to get the reflected color. The near clip is set to 0 since it is not needed
-		return rayTrace(objects, lights, hitData->hitPoint, reflectedRay, 0.0f, farClip, ++currBounce, maxBounces, hitData);
-	}
-
-	//Determine if a given light shines on a point or is occluded
-	bool rtRenderer::isShadowRT(objectSet& objects, rtVec3f& lightVector, rtVec3f& targetPoint, float lightDistSquared, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint)
-	{
-		//Cast a ray from the hit point towards the light source to check if the light is occluded
-		shared_ptr<rtRayHit> shadowRay = rayTrace(objects, targetPoint, lightVector, nearClip, farClip, originPoint);
-
-		//If they ray doesn't hit anything, return false
-		if (!shadowRay->hit)
-			return false;
-
-		//Calculate the squared distance from the hit point to the nearest object
-		float hitDist = shadowRay->distance;
-		float hitDistSquared = hitDist * hitDist;
-
-		//If the ray hits an object before the light, then the point is in shadow
-		if (hitDistSquared < lightDistSquared)
-			return true;
-
-		//Otherwise the point is not in shadow
-		return false;
 	}
 
 
