@@ -31,6 +31,10 @@ void ofApp::setup()
 	rtObject* triangle = new rtMeshObject(triangleMesh, matteGreen);
 	demoScene->addObject("triangle", triangle);
 
+	//Create a torus and add it to the scene
+	rtTorusObject* greenTorus = new rtTorusObject(rtVec3f(0.0f, -60.0f, 0.0f), 20.0f, 5.0f, matteGreen);
+	demoScene->addObject("green torus", greenTorus);
+
 	///Create a box surrounding the scene
 	rtMesh boxMesh;
 	boxMesh.addVert(rtVec3f(-200.0f, -200.0f, -200.0f));

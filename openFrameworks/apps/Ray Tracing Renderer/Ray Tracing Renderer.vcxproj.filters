@@ -45,6 +45,9 @@
     <ClCompile Include="src\rtGraphics\rtCam.cpp">
       <Filter>src\rtGraphics</Filter>
     </ClCompile>
+    <ClCompile Include="src\rtGraphics\Objects\rtTorusObject.cpp">
+      <Filter>src\rtGraphics\Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ofApp.h">
@@ -100,6 +103,9 @@
     </ClInclude>
     <ClInclude Include="src\rtGraphics\Data Classes\rtRayHit.h">
       <Filter>src\rtGraphics\Data Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rtGraphics\Objects\rtTorusObject.h">
+      <Filter>src\rtGraphics\Objects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
