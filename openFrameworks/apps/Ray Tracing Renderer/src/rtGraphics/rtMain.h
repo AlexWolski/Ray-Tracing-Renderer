@@ -5,3 +5,4 @@
 #include "Objects/rtSphereObject.h"
 #include "Objects/rtMeshObject.h"
 #include "Objects/rtTorusObject.h"
+#include "Objects/rtPlaneObject.h"

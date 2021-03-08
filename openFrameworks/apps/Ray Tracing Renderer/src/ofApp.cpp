@@ -32,10 +32,10 @@ void ofApp::setup()
 	demoScene->addObject("triangle", triangle);
 
 	//Create a torus and add it to the scene
-	rtTorusObject* greenTorus = new rtTorusObject(rtVec3f(0.0f, -60.0f, 0.0f), 20.0f, 5.0f, matteGreen);
+	rtTorusObject* greenTorus = new rtTorusObject(rtVec3f(0.0f, -60.0f, -20.0f), 20.0f, 5.0f, matteGreen);
 	demoScene->addObject("green torus", greenTorus);
 
-	///Create a box surrounding the scene
+	//Create a box surrounding the scene
 	rtMesh boxMesh;
 	boxMesh.addVert(rtVec3f(-200.0f, -200.0f, -200.0f));
 	boxMesh.addVert(rtVec3f(-200.0f, -200.0f, 200.0f));
@@ -56,6 +56,10 @@ void ofApp::setup()
 	rtMat matteWhite(rtColorf(0.2f), rtColorf::white, rtColorf(0.4f), 20.0f);
 	rtObject* box = new rtMeshObject(boxMesh, matteWhite);
 	demoScene->addObject("box", box);
+
+	//Create a ground plane under the scene
+	rtPlaneObject* whitePlane = new rtPlaneObject(rtVec3f(0.0f, -70.0f, 0.0f), rtVec3f(0.0f, 1.0f, 0.0f), matteWhite);
+	demoScene->addObject("white plane", whitePlane);
 
 	///Create a light and add it to the scene
 	rtLight* pointLight = new rtLight(rtVec3f(-50.0f, 40.0f, -60.0f), rtColorf(0.3f), rtColorf(0.9f), rtColorf(0.8f));

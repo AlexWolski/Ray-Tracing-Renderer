@@ -5,7 +5,7 @@
 namespace rtGraphics
 {
 	/*
-	 * A sphere object defined by a position and radius
+	 * A torus object defined by a position, major radius, and minor radius
 	 * TO-DO: Move the position member into rtNode
 	 */
 	class rtTorusObject : public rtObject

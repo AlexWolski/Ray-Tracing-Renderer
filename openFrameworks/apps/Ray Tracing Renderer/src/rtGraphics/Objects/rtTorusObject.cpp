@@ -2,7 +2,7 @@
 
 namespace rtGraphics
 {
-	//Ray-Sphere Intersection
+	//Ray-Torus Intersection
 	shared_ptr<rtRayHit> rtTorusObject::rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint)
 	{
 		//To-do: Implement torus ray intersection
@@ -12,7 +12,7 @@ namespace rtGraphics
 	}
 
 
-	//Sphere signed distance function
+	//Torus signed distance function
 	shared_ptr<rtRayHit> rtTorusObject::sdf(rtVec3f P)
 	{
 		rtVec3f localPoint = P - center;

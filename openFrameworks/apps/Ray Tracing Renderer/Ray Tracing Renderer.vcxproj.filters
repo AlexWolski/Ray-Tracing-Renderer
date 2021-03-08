@@ -48,6 +48,9 @@
     <ClCompile Include="src\rtGraphics\Objects\rtTorusObject.cpp">
       <Filter>src\rtGraphics\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="src\rtGraphics\Objects\rtPlaneObject.cpp">
+      <Filter>src\rtGraphics\Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ofApp.h">
@@ -105,6 +108,9 @@
       <Filter>src\rtGraphics\Data Classes</Filter>
     </ClInclude>
     <ClInclude Include="src\rtGraphics\Objects\rtTorusObject.h">
+      <Filter>src\rtGraphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rtGraphics\Objects\rtPlaneObject.h">
       <Filter>src\rtGraphics\Objects</Filter>
     </ClInclude>
   </ItemGroup>
