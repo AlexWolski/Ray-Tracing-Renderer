@@ -65,7 +65,7 @@ namespace rtGraphics
 				lightVector.normalize();
 				
 				//Determine if the current light hits the point or not
-				bool shadow = isShadowTraced(objects, lightVector, hitData->hitPoint, lightDistSquared, nearClip, farClip, hitData);
+				bool shadow = isShadowRT(objects, lightVector, hitData->hitPoint, lightDistSquared, nearClip, farClip, hitData);
 
 				//Add the ambient color if the object is not perfectly reflective, regardless of if the point is in shadow or not.
 				if (reflectivity < 1.0f)
@@ -90,7 +90,7 @@ namespace rtGraphics
 			else
 			{
 				//Bounce the ray off of the object and calculate the reflected color
-				rtColorf reflectedColor = bounceRay(objects, lights, P, D, nearClip, farClip, currBounce, maxBounces, hitData);
+				rtColorf reflectedColor = bounceRayRT(objects, lights, P, D, nearClip, farClip, currBounce, maxBounces, hitData);
 				//Combine the object color and reflected color
 				finalColor = (objectColor * (1 - reflectivity)) + (reflectedColor * reflectivity) + specular;
 			}
@@ -129,7 +129,7 @@ namespace rtGraphics
 	}
 
 	//Bounce a ray off of the object it hits and find the reflected color
-	rtColorf rtRenderer::bounceRay(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D,
+	rtColorf rtRenderer::bounceRayRT(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D,
 		float nearClip, float farClip, int currBounce, int maxBounces, shared_ptr<rtRayHit> hitData)
 	{
 		//If the ray has already bounced too many times return black
@@ -143,7 +143,7 @@ namespace rtGraphics
 	}
 
 	//Determine if a given light shines on a point or is occluded
-	bool rtRenderer::isShadowTraced(objectSet& objects, rtVec3f& lightVector, rtVec3f& targetPoint, float lightDistSquared, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint)
+	bool rtRenderer::isShadowRT(objectSet& objects, rtVec3f& lightVector, rtVec3f& targetPoint, float lightDistSquared, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint)
 	{
 		//Cast a ray from the hit point towards the light source to check if the light is occluded
 		shared_ptr<rtRayHit> shadowRay = rayTrace(objects, targetPoint, lightVector, nearClip, farClip, originPoint);
@@ -190,7 +190,7 @@ namespace rtGraphics
 	shared_ptr<rtRayHit> rtRenderer::rayMarch(objectSet& objects, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint)
 	{
 		//The intersection data of the closest intersection
-		shared_ptr<rtRayHit> rayDist;
+		shared_ptr<rtRayHit> hitData;
 		//Make a copy of the ray to march forward
 		rtVec3f marchedRay = P;
 
@@ -207,25 +207,30 @@ namespace rtGraphics
 				rtObject* currObject = objectPtr->second;
 
 				//Determine the distance from the ray to the current object
-				rayDist = currObject->sdf(marchedRay);
+				hitData = currObject->sdf(marchedRay);
 
 				//Check if the object is within the view frustum
-				if (rayDist->distance < farClip)
+				if (hitData->distance < farClip)
 				{
 					//If the ray hits the object, return the hit data
-					if (abs(rayDist->distance) <= minHitDist)
+					if (abs(hitData->distance) <= minHitDist)
 					{
 						//If this is the first iteration and the object is too close, skip the object
-						if (iteration == 0 && rayDist->distance < nearClip)
+						if (iteration == 0 && hitData->distance < nearClip)
 							continue;
 
-						rayDist->hit = true;
-						return rayDist;
+						//Store the hit data
+						hitData->hit = true;
+						hitData->hitPoint = marchedRay;
+						//Calculate the normal
+						updateNormalRM(hitData);
+						
+						return hitData;
 					}
 
 					//Otherwise if the object is the nearest so far, save the distance
-					if (rayDist->distance < nearestDist)
-						nearestDist = rayDist->distance;
+					if (hitData->distance < nearestDist)
+						nearestDist = hitData->distance;
 				}
 			}
 
@@ -234,7 +239,28 @@ namespace rtGraphics
 		}
 
 		//If the ray didn't hit any objects within the maximum iterations, the ray missed
-		rayDist->hit = false;
-		return rayDist;
+		hitData->hit = false;
+		return hitData;
+	}
+
+	//Update the normal of an rtRayHit struct
+	void rtRenderer::updateNormalRM(shared_ptr<rtRayHit> hitData)
+	{
+		float dp = hitData->distance;
+
+		//Compute three points to sample the distance to the object
+		rtVec3f hitPoint = hitData->hitPoint;
+		rtVec3f samplePoint1(hitPoint.getX() - normalEps, hitPoint.getY(), hitPoint.getZ());
+		rtVec3f samplePoint2(hitPoint.getX(), hitPoint.getY() - normalEps, hitPoint.getZ());
+		rtVec3f samplePoint3(hitPoint.getX(), hitPoint.getY(), hitPoint.getZ() - normalEps);
+
+		//Compute the components of the estimated normal
+		float normX = dp - (hitData->hitObject->sdf(samplePoint1))->distance;
+		float normY = dp - (hitData->hitObject->sdf(samplePoint2))->distance;
+		float normZ = dp - (hitData->hitObject->sdf(samplePoint3))->distance;
+
+		//Normalize the vector and store it in the rtRayHit struct
+		hitData->hitNormal = rtVec3f(normX, normY, normZ);
+		hitData->hitNormal.normalize();
 	}
 }
