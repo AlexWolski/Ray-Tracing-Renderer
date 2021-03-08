@@ -35,6 +35,11 @@ void ofApp::setup()
 	rtTorusObject* greenTorus = new rtTorusObject(rtVec3f(0.0f, -60.0f, -20.0f), 20.0f, 5.0f, matteGreen);
 	demoScene->addObject("green torus", greenTorus);
 
+
+	//Create a blue cylinder and add it to the scene
+	rtCylinderObject* blueCylinder = new rtCylinderObject(rtVec3f(50.0f, 80.0f, 0.0f), 10.0f, reflectiveBlue);
+	demoScene->addObject("blue cylinder", blueCylinder);
+
 	//Create a box surrounding the scene
 	rtMesh boxMesh;
 	boxMesh.addVert(rtVec3f(-200.0f, -200.0f, -200.0f));

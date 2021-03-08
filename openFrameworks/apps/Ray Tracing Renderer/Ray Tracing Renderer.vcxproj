@@ -196,6 +196,7 @@
     <ClCompile Include="src\ofApp.cpp" />
     <ClCompile Include="src\rtGraphics\Data Classes\rtColorf.cpp" />
     <ClCompile Include="src\rtGraphics\Data Classes\rtVec3f.cpp" />
+    <ClCompile Include="src\rtGraphics\Objects\rtCylinderObject.cpp" />
     <ClCompile Include="src\rtGraphics\Objects\rtMeshObject.cpp" />
     <ClCompile Include="src\rtGraphics\Objects\rtPlaneObject.cpp" />
     <ClCompile Include="src\rtGraphics\Objects\rtSphereObject.cpp" />
@@ -213,6 +214,7 @@
     <ClInclude Include="src\rtGraphics\Data Classes\rtRayHit.h" />
     <ClInclude Include="src\rtGraphics\Data Classes\rtScene.h" />
     <ClInclude Include="src\rtGraphics\Data Classes\rtVec3f.h" />
+    <ClInclude Include="src\rtGraphics\Objects\rtCylinderObject.h" />
     <ClInclude Include="src\rtGraphics\Objects\rtMesh.h" />
     <ClInclude Include="src\rtGraphics\Objects\rtMeshObject.h" />
     <ClInclude Include="src\rtGraphics\Objects\rtObject.h" />
