@@ -194,25 +194,39 @@
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
-    <ClCompile Include="src\rtGraphics\rtColorf.cpp" />
-    <ClCompile Include="src\rtGraphics\rtObject.cpp" />
+    <ClCompile Include="src\rtGraphics\Data Classes\rtColorf.cpp" />
+    <ClCompile Include="src\rtGraphics\Data Classes\rtVec3f.cpp" />
+    <ClCompile Include="src\rtGraphics\Objects\rtCylinderObject.cpp" />
+    <ClCompile Include="src\rtGraphics\Objects\rtMeshObject.cpp" />
+    <ClCompile Include="src\rtGraphics\Objects\rtPlaneObject.cpp" />
+    <ClCompile Include="src\rtGraphics\Objects\rtSphereObject.cpp" />
+    <ClCompile Include="src\rtGraphics\Objects\rtTorusObject.cpp" />
+    <ClCompile Include="src\rtGraphics\rtCam.cpp" />
     <ClCompile Include="src\rtGraphics\rtRenderer.cpp" />
-    <ClCompile Include="src\rtGraphics\rtVec3f.cpp" />
+    <ClCompile Include="src\rtGraphics\rtRenderThreadPool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ofApp.h" />
+    <ClInclude Include="src\rtGraphics\Data Classes\Data Types.h" />
+    <ClInclude Include="src\rtGraphics\Data Classes\rtColorf.h" />
+    <ClInclude Include="src\rtGraphics\Data Classes\rtLight.h" />
+    <ClInclude Include="src\rtGraphics\Data Classes\rtMat.h" />
+    <ClInclude Include="src\rtGraphics\Data Classes\rtRayHit.h" />
+    <ClInclude Include="src\rtGraphics\Data Classes\rtScene.h" />
+    <ClInclude Include="src\rtGraphics\Data Classes\rtVec3f.h" />
+    <ClInclude Include="src\rtGraphics\Objects\rtCylinderObject.h" />
+    <ClInclude Include="src\rtGraphics\Objects\rtMesh.h" />
+    <ClInclude Include="src\rtGraphics\Objects\rtMeshObject.h" />
+    <ClInclude Include="src\rtGraphics\Objects\rtObject.h" />
+    <ClInclude Include="src\rtGraphics\Objects\rtPlaneObject.h" />
+    <ClInclude Include="src\rtGraphics\Objects\rtSphereObject.h" />
+    <ClInclude Include="src\rtGraphics\Objects\rtTorusObject.h" />
+    <ClInclude Include="src\rtGraphics\PhongShader.h" />
     <ClInclude Include="src\rtGraphics\rtCam.h" />
-    <ClInclude Include="src\rtGraphics\rtColorf.h" />
-    <ClInclude Include="src\rtGraphics\rtRayHit.h" />
     <ClInclude Include="src\rtGraphics\rtRenderer.h" />
-    <ClInclude Include="src\rtGraphics\rtLight.h" />
     <ClInclude Include="src\rtGraphics\rtMain.h" />
-    <ClInclude Include="src\rtGraphics\rtMat.h" />
-    <ClInclude Include="src\rtGraphics\rtMesh.h" />
     <ClInclude Include="src\rtGraphics\rtNode.h" />
-    <ClInclude Include="src\rtGraphics\rtObject.h" />
-    <ClInclude Include="src\rtGraphics\rtScene.h" />
-    <ClInclude Include="src\rtGraphics\rtVec3f.h" />
+    <ClInclude Include="src\rtGraphics\rtRenderThreadPool.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ProjectExtensions>

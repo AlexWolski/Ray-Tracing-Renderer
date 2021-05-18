@@ -1,7 +1,7 @@
 #pragma once
 
 #include "rtVec3f.h"
-#include "rtObject.h"
+#include "../Objects/rtObject.h"
 
 namespace rtGraphics
 {

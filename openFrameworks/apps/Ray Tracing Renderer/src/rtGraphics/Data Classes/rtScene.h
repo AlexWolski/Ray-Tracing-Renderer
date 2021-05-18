@@ -3,7 +3,7 @@
 #include <memory>
 #include <map>
 #include "rtLight.h"
-#include "rtObject.h"
+#include "../Objects/rtObject.h"
 
 using namespace std;
 

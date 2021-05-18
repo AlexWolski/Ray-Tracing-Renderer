@@ -1,6 +1,6 @@
 #pragma once
 
-#include "rtNode.h"
+#include "../rtNode.h"
 #include "rtVec3f.h"
 #include "rtColorf.h"
 

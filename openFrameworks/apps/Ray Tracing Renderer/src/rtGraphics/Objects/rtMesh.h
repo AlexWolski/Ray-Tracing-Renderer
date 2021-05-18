@@ -3,7 +3,7 @@
 #include <memory>
 #include <vector>
 #include <array>
-#include "rtVec3f.h"
+#include "../Data Classes/rtVec3f.h"
 
 using namespace std;
 
