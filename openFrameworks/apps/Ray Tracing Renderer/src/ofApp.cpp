@@ -113,6 +113,8 @@ void ofApp::keyPressed(int key)
 		mainCamera->enable();
 		//Set the rendering mode to ray tracing
 		mainCamera->setRenderMode(renderMode::rayTrace);
+		//Show the fps counter
+		showFps = true;
 	}
 	//When the 'm' key is pressed, render the scene using ray marching
 	else if (key == 'm' || key == 'M')
@@ -125,5 +127,7 @@ void ofApp::keyPressed(int key)
 		mainCamera->clearBuffer();
 		//Start rendering the scene without waiting for it to complete
 		mainCamera->render(false);
+		//Hide the fps counter
+		showFps = false;
 	}
 }
