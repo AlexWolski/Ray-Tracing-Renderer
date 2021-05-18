@@ -1,5 +1,4 @@
 #include "ofApp.h"
-#include <graphics/ofGraphics.cpp>
 
 void ofApp::setup()
 {
