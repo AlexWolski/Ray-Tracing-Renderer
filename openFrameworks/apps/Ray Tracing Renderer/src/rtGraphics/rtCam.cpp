@@ -32,6 +32,7 @@ namespace rtGraphics
 	float rtCam::getNearClip() const { return nearClip; }
 	float rtCam::getFarClip() const { return farClip; }
 	int rtCam::getMaxBounces() const { return maxBounces; }
+	int rtCam::getFps() const { return fps; }
 	renderMode rtCam::getRenderMode() const { return RenderMode; }
 	shared_ptr<rtScene> rtCam::getScene() const { return scene; }
 	ofPixels* rtCam::getBufferPixels() { return bufferPixels; }
@@ -62,6 +63,7 @@ namespace rtGraphics
 	void rtCam::enable()
 	{
 		ofAddListener(ofEvents().draw, this, &rtCam::draw);
+		startFpsTimer();
 		enabled = true;
 	}
 
@@ -85,6 +87,7 @@ namespace rtGraphics
 	{
 		frameBuffer->update();
 		frameBuffer->draw(0, 0);
+		updateFps();
 	}
 
 	//Reset the image buffer to black
@@ -105,6 +108,31 @@ namespace rtGraphics
 		//Cross the perpendicular vector with the look-vector to get a precise look-vector
 		v = n.getCrossed(u);
 		v.normalize();
+	}
+
+	//Start counting the number of rendered frames
+	void rtCam::startFpsTimer()
+	{
+		fpsTimer = chrono::steady_clock::now();
+		frameCounter = 0;
+	}
+
+	//Increments the number of frames rendered this interval and updates the fps
+	void rtCam::updateFps()
+	{
+		frameCounter++;
+
+		//Get the elapsed time since the frame counting began
+		chrono::steady_clock::time_point currentTime = chrono::steady_clock::now();
+		chrono::duration<double> ellapsedTime = chrono::duration_cast<chrono::duration<double>>(currentTime - fpsTimer);
+
+		//If a second has passed, update the fps and reset the timer
+		if (ellapsedTime.count() > 1.0f)
+		{
+			fpsTimer = currentTime;
+			fps = frameCounter;
+			frameCounter = 0;
+		}
 	}
 
 	///Buffer Methods
