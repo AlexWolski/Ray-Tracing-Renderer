@@ -33,13 +33,13 @@ namespace rtGraphics
 		 * Determines if a ray hits this object and returns the intersection data
 		 * An optional rtRayHit struct can be passed for rays originating from an object to prevent intersections at the ray origin
 		 */
-		virtual shared_ptr<rtRayHit> rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint = nullptr) = 0;
+		virtual rtRayHit rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, rtRayHit originPoint) = 0;
 
 		/*
 		 * Used for ray marching
 		 * Calculates the shortest distance between the given point and the object
 		 */
-		virtual shared_ptr<rtRayHit> sdf(rtVec3f P) = 0;
+		virtual rtRayHit sdf(rtVec3f P) = 0;
 	};
 
 	///In-line method definitions

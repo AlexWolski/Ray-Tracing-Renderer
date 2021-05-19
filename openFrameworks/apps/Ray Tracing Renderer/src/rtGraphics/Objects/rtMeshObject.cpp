@@ -3,12 +3,12 @@
 namespace rtGraphics
 {
 	//Ray-Mesh Intersection
-	shared_ptr<rtRayHit> rtMeshObject::rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint)
+	rtRayHit rtMeshObject::rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, rtRayHit originPoint)
 	{
 		//Create a struct to store the ray cast data.
-		shared_ptr<rtRayHit> hitData = make_shared<rtRayHit>();
+		rtRayHit hitData;
 		//By default, set the hit flag to false
-		hitData->hit = false;
+		hitData.hit = false;
 
 		//Determines if the ray origin is on the surface of this mesh
 		bool onSurface = false;
@@ -16,21 +16,16 @@ namespace rtGraphics
 		int sourceFace;
 
 		//If the ray origin is on the surface of this mesh, save the source face index
-		if (originPoint != nullptr && originPoint->hitObject == this)
+		if (originPoint.hitObject == this)
 		{
 			onSurface = true;
-			sourceFace = originPoint->hitFaceIndex;
+			sourceFace = originPoint.hitFaceIndex;
 		}
 
 		//The distance to the closest intersection point
 		float tmin = farClip;
 		//The index of the current triangle
 		int faceIndex;
-
-		//References to the vertex, face, and normal lists.
-		vecList& vertices = mesh.getVerts();
-		intList& faces = mesh.getFaces();
-		vecList& normals = mesh.getNormals();
 
 		//Iterate over all the triangles in the mesh
 		for (int faceIndex = 0; faceIndex < faces->size(); faceIndex++)
@@ -75,12 +70,12 @@ namespace rtGraphics
 					tmin = t;
 
 					//Store the hit data into the struct
-					hitData->hit = true;
-					hitData->hitObject = this;
-					hitData->distance = tmin;
-					hitData->hitPoint = r;
-					hitData->hitNormal = normal;
-					hitData->hitFaceIndex = faceIndex;
+					hitData.hit = true;
+					hitData.hitObject = this;
+					hitData.distance = tmin;
+					hitData.hitPoint = r;
+					hitData.hitNormal = normal;
+					hitData.hitFaceIndex = faceIndex;
 				}
 			}
 		}
@@ -91,12 +86,12 @@ namespace rtGraphics
 
 
 	//Mesh signed distance function
-	shared_ptr<rtRayHit> rtMeshObject::sdf(rtVec3f P)
+	rtRayHit rtMeshObject::sdf(rtVec3f P)
 	{
 		//To-do: Implement a triangle sdf method
-		shared_ptr<rtRayHit> distData = make_shared<rtRayHit>();
-		distData->hit = false;
-		distData->distance = INFINITY;
+		rtRayHit distData;
+		distData.hit = false;
+		distData.distance = INFINITY;
 
 		return distData;
 	}

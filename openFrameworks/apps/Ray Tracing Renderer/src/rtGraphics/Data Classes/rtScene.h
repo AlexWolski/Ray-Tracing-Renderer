@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <map>
+#include <vector>
 #include "rtLight.h"
 #include "../Objects/rtObject.h"
 
@@ -9,8 +9,8 @@ using namespace std;
 
 namespace rtGraphics
 {
-	typedef shared_ptr<map<string, rtLight*>> lightSet;
-	typedef shared_ptr<map<string, rtObject*>> objectSet;
+	typedef shared_ptr<vector<rtLight*>> lightSet;
+	typedef shared_ptr<vector<rtObject*>> objectSet;
 
 	//A data-structure to contain the lights and objects in a scene
 	class rtScene
@@ -25,47 +25,47 @@ namespace rtGraphics
 		rtScene();
 		///Light Methods
 		lightSet getLights() const;
-		void addLight(string lightName, rtLight* lightToAdd);
-		rtLight* getLight(string lightName);
-		void removeLight(string lightName);
+		void addLight(rtLight* lightToAdd);
+		rtLight* getLight(int lightIndex);
+		void removeLight(int lightIndex);
 		void clearLights();
 		///Object Methods
 		objectSet getObjects() const;
-		void addObject(string objectName, rtObject* objectToAdd);
-		rtObject* getObject(string objectName);
-		void removeObject(string objectName);
+		void addObject(rtObject* objectToAdd);
+		rtObject* getObject(int objectIndex);
+		void removeObject(int objectIndex);
 		void clearObjects();
 	};
 
 	///Constructor
 	inline rtScene::rtScene()
 	{
-		lights = make_shared<map<string, rtLight*>>();
-		objects = make_shared<map<string, rtObject*>>();
+		lights = make_shared<vector<rtLight*>>();
+		objects = make_shared<vector<rtObject*>>();
 	}
 
 	///In-line method definitions
 	//Light Methods
 	inline lightSet rtScene::getLights() const { return lights; }
 
-	inline void rtScene::addLight(string objectName, rtLight* lightToAdd)
+	inline void rtScene::addLight(rtLight* lightToAdd)
 	{
-		lights->insert(pair<string, rtLight*>(objectName, lightToAdd));
+		lights->push_back(lightToAdd);
 	}
 
-	inline rtLight* rtScene::getLight(string lightName)		{ return lights->operator[](lightName); }
-	inline void rtScene::removeLight(string lightName)		{ lights->erase(lightName); }
+	inline rtLight* rtScene::getLight(int lightIndex)		{ return lights->operator[](lightIndex); }
+	inline void rtScene::removeLight(int lightIndex)		{ lights->erase(lights->begin() + lightIndex); }
 	inline void rtScene::clearLights()						{ lights->clear(); }
 
 	//Object Methods
 	inline objectSet rtScene::getObjects() const			{ return objects; }
 
-	inline void rtScene::addObject(string objectName, rtObject* objectToAdd)
+	inline void rtScene::addObject(rtObject* objectToAdd)
 	{
-		objects->insert(pair<string, rtObject*>(objectName, objectToAdd));
+		objects->push_back(objectToAdd);
 	}
 
-	inline rtObject* rtScene::getObject(string objectName)	{ return objects->operator[](objectName); }
-	inline void rtScene::removeObject(string objectName)	{ objects->erase(objectName); }
+	inline rtObject* rtScene::getObject(int objectIndex)	{ return objects->operator[](objectIndex); }
+	inline void rtScene::removeObject(int objectIndex)		{ objects->erase(objects->begin() + objectIndex); }
 	inline void rtScene::clearObjects()						{ objects->clear(); }
 }

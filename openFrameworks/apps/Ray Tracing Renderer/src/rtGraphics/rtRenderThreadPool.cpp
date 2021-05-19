@@ -51,16 +51,20 @@ namespace rtGraphics
 
 				rtColorf pixelColor;
 
+				//There is no origin point for a camera ray
+				rtRayHit originPoint;
+				originPoint.hit = false;
+
 				//Calculate the pixel color based on the current render mode
 				switch (sharedData->RenderMode)
 				{
 				case renderMode::rayTrace:
-					pixelColor = rtRenderer::rayTrace(sharedData->objects, sharedData->lights, sharedData->camPos, D, sharedData->nearClip, sharedData->farClip, 0, sharedData->maxBounces);
+					pixelColor = rtRenderer::rayTrace(sharedData->objects, sharedData->lights, sharedData->camPos, D, sharedData->nearClip, sharedData->farClip, 0, sharedData->maxBounces, originPoint);
 					break;
 
 				case renderMode::rayMarch:
 					//To-Do: Implement ray marching
-					pixelColor = rtRenderer::rayMarch(sharedData->objects, sharedData->lights, sharedData->camPos, D, sharedData->nearClip, sharedData->farClip, 0, sharedData->maxBounces);
+					pixelColor = rtRenderer::rayMarch(sharedData->objects, sharedData->lights, sharedData->camPos, D, sharedData->nearClip, sharedData->farClip, 0, sharedData->maxBounces, originPoint);
 					break;
 
 				default:

@@ -13,24 +13,48 @@ namespace rtGraphics
 	{
 	private:
 		rtMesh mesh;
+		vecList vertices;
+		intList faces;
+		vecList normals;
 
 	public:
 		///Constructors
-		rtMeshObject() : mesh(rtMesh()) {}
-		rtMeshObject(rtMesh& mesh) : mesh(mesh) {}
-		rtMeshObject(rtMesh& mesh, rtMat& material) : rtObject(material), mesh(mesh) {}
+		rtMeshObject()
+		{
+			setMesh(rtMesh());
+		}
+
+		rtMeshObject(rtMesh& mesh)
+		{
+			setMesh(mesh);
+		}
+
+		rtMeshObject(rtMesh& mesh, rtMat& material) : rtObject(material)
+		{
+			setMesh(mesh);
+		}
 
 		///Getter & Setter
 		rtMesh& getMesh();
 		void setMesh(rtMesh& mesh);
 
 		///Inherited Methods
-		shared_ptr<rtRayHit> rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint = nullptr);
-		shared_ptr<rtRayHit> sdf(rtVec3f P);
+		rtRayHit rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, rtRayHit originPoint);
+		rtRayHit sdf(rtVec3f P);
 	};
 
 	///In-line method definitions
 	//Getter & Setter
-	inline rtMesh& rtMeshObject::getMesh() { return mesh; }
-	inline void rtMeshObject::setMesh(rtMesh& mesh) { this->mesh = mesh; }
+	inline rtMesh& rtMeshObject::getMesh()
+	{
+		return mesh;
+	}
+
+	inline void rtMeshObject::setMesh(rtMesh& mesh)
+	{
+		this->mesh = mesh;
+		vertices = mesh.getVerts();
+		faces = mesh.getFaces();
+		normals = mesh.getNormals();
+	}
 }

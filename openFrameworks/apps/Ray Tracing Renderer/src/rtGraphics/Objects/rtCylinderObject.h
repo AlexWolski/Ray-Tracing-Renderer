@@ -31,8 +31,8 @@ namespace rtGraphics
 		void setRadius(float radius);
 
 		///Inherited Methods
-		shared_ptr<rtRayHit> rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint = nullptr);
-		shared_ptr<rtRayHit> sdf(rtVec3f P);
+		rtRayHit rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, rtRayHit originPoint);
+		rtRayHit sdf(rtVec3f P);
 	};
 
 	///Constructors
