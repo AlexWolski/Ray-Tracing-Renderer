@@ -80,6 +80,10 @@ void ofApp::setup()
 	pointLight->setAmbientIntensity(1.0f);
 	pointLight->setIncidentIntensity(0.5f);
 	demoScene->addLight(pointLight);
+
+	rtMesh foxMesh = ObjImoprter::loadOBJ("Models\\fox.obj");
+	rtObject* fox = new rtMeshObject(foxMesh, matteWhite);
+	demoScene->addObject(fox);
 }
 
 void ofApp::update()
