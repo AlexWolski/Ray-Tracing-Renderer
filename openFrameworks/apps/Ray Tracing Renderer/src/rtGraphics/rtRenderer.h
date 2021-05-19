@@ -34,11 +34,11 @@ namespace rtGraphics
 
 		///Helper methods
 		//Given a hit point, shade the point using the Phong shading method
-		static rtColorf calcPixelColor(renderMode RenderMode, objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, int currBounce, int maxBounces, rtRayHit hitData);
+		static rtColorf calcPixelColor(renderMode RenderMode, rtScene::objectSet& objects, rtScene::lightSet& lights, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, int currBounce, int maxBounces, rtRayHit hitData);
 		//Bounce the ray off of an object and calculate the color at the next intersection point
-		static rtColorf bounceRay(renderMode RenderMode, objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D,float nearClip, float farClip, int currBounce, int maxBounces, rtRayHit hitData);
+		static rtColorf bounceRay(renderMode RenderMode, rtScene::objectSet& objects, rtScene::lightSet& lights, rtVec3f& P, rtVec3f& D,float nearClip, float farClip, int currBounce, int maxBounces, rtRayHit hitData);
 		//Determine, using ray tracing, if a given light shines on the target point or is occluded. The ray hit point is required to resolve surface intersection issues.
-		static bool isShadow(renderMode RenderMode, objectSet& objects, rtVec3f& lightVector, rtVec3f& targetPoint, float lightDistSquared, float nearClip, float farClip, rtRayHit originPoint);
+		static bool isShadow(renderMode RenderMode, rtScene::objectSet& objects, rtVec3f& lightVector, rtVec3f& targetPoint, float lightDistSquared, float nearClip, float farClip, rtRayHit originPoint);
 
 		///Ray marching methods
 		//Update the normal of an rtRayHit struct
@@ -54,14 +54,14 @@ namespace rtGraphics
 
 		///Ray tracing methods
 		//Ray trace a single ray and return the color at the intersection. If the ray is a bounced ray, the ray hit data can be given to resolve surface intersection issues.
-		static rtColorf rayTrace(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, int currBounce, int maxBounces, rtRayHit originPoint);
+		static rtColorf rayTrace(rtScene::objectSet& objects, rtScene::lightSet& lights, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, int currBounce, int maxBounces, rtRayHit originPoint);
 		//Ray trace a single ray and return the ray hit data. If the ray is a bounced ray, the ray hit data can be given to resolve surface intersection issues.
-		static rtRayHit rayTrace(objectSet& objects, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, rtRayHit sourceObject);
+		static rtRayHit rayTrace(rtScene::objectSet& objects, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, rtRayHit sourceObject);
 
 		///Ray marching methods
 		//Ray march a single ray and return the color at the intersection. If the ray is a bounced ray, the ray hit data can be given to resolve surface intersection issues.
-		static rtColorf rayMarch(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, int currBounce, int maxBounces, rtRayHit originPoint);
+		static rtColorf rayMarch(rtScene::objectSet& objects, rtScene::lightSet& lights, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, int currBounce, int maxBounces, rtRayHit originPoint);
 		//Ray march a single ray and return the closest object. If the ray is a bounced ray, the ray distance data can be given to resolve surface intersection issues.
-		static rtRayHit rayMarch(objectSet& objects, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, rtRayHit sourceObject);
+		static rtRayHit rayMarch(rtScene::objectSet& objects, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, rtRayHit sourceObject);
 	};
 }

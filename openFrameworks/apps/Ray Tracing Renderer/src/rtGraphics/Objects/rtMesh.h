@@ -9,12 +9,13 @@ using namespace std;
 
 namespace rtGraphics
 {
-	typedef shared_ptr<vector<rtVec3f>> vecList;
-	typedef shared_ptr<vector<array<int, 3>>> intList;
-
 	//A mesh object containing vertices and faces
 	class rtMesh
 	{
+	public:
+		typedef shared_ptr<vector<rtVec3f>> vecList;
+		typedef shared_ptr<vector<array<int, 3>>> intList;
+
 	private:
 		vecList vertices;
 		//The faces and normals vectors should always be the same size
@@ -121,7 +122,7 @@ namespace rtGraphics
 		}
 	}
 
-	inline vecList rtMesh::getNormals()
+	inline rtMesh::vecList rtMesh::getNormals()
 	{
 		return normals;
 	}
@@ -132,7 +133,7 @@ namespace rtGraphics
 		vertices->push_back(vertex);
 	}
 
-	inline vecList rtMesh::getVerts()
+	inline rtMesh::vecList rtMesh::getVerts()
 	{
 		return vertices;
 	}
@@ -160,7 +161,7 @@ namespace rtGraphics
 		normals->push_back(calculateNormal(faceIndex));
 	}
 
-	inline intList rtMesh::getFaces()
+	inline rtMesh::intList rtMesh::getFaces()
 	{
 		return faces;
 	}

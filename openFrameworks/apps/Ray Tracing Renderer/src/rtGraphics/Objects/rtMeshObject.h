@@ -13,9 +13,9 @@ namespace rtGraphics
 	{
 	private:
 		rtMesh mesh;
-		vecList vertices;
-		intList faces;
-		vecList normals;
+		rtMesh::vecList vertices;
+		rtMesh::intList faces;
+		rtMesh::vecList normals;
 
 	public:
 		///Constructors

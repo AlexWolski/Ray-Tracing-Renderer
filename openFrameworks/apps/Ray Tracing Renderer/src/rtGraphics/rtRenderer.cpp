@@ -25,7 +25,7 @@ namespace rtGraphics
 
 	///Helper methods
 	//Given a hit point, shade the point using the Phong shading method
-	rtColorf rtRenderer::calcPixelColor(renderMode RenderMode, objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D,
+	rtColorf rtRenderer::calcPixelColor(renderMode RenderMode, rtScene::objectSet& objects, rtScene::lightSet& lights, rtVec3f& P, rtVec3f& D,
 		float nearClip, float farClip, int currBounce, int maxBounces, rtRayHit hitData)
 	{
 		//If the ray didn't intersect any objects, return a black pixel
@@ -100,7 +100,7 @@ namespace rtGraphics
 	}
 
 	//Bounce a ray off of the object it hits and find the reflected color
-	rtColorf rtRenderer::bounceRay(renderMode RenderMode, objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D,
+	rtColorf rtRenderer::bounceRay(renderMode RenderMode, rtScene::objectSet& objects, rtScene::lightSet& lights, rtVec3f& P, rtVec3f& D,
 		float nearClip, float farClip, int currBounce, int maxBounces, rtRayHit hitData)
 	{
 		//If the ray has already bounced too many times return black
@@ -130,7 +130,7 @@ namespace rtGraphics
 	}
 
 	//Determine if a given light shines on a point or is occluded
-	bool rtRenderer::isShadow(renderMode RenderMode, objectSet& objects, rtVec3f& lightVector, rtVec3f& targetPoint, float lightDistSquared, float nearClip, float farClip, rtRayHit originPoint)
+	bool rtRenderer::isShadow(renderMode RenderMode, rtScene::objectSet& objects, rtVec3f& lightVector, rtVec3f& targetPoint, float lightDistSquared, float nearClip, float farClip, rtRayHit originPoint)
 	{
 		//Cast a ray from the hit point towards the light source to check if the light is occluded
 		rtRayHit shadowRay;
@@ -168,7 +168,7 @@ namespace rtGraphics
 
 	///Ray tracing methods
 	//Ray trace a single ray and return the color at the intersection
-	rtColorf rtRenderer::rayTrace(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, int currBounce, int maxBounces, rtRayHit originPoint)
+	rtColorf rtRenderer::rayTrace(rtScene::objectSet& objects, rtScene::lightSet& lights, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, int currBounce, int maxBounces, rtRayHit originPoint)
 	{
 		//Find the closest object the ray hits
 		rtRayHit hitData = rayTrace(objects, P, D, nearClip, farClip, originPoint);
@@ -177,7 +177,7 @@ namespace rtGraphics
 	}
 
 	//Ray trace a single ray and return the ray hit data
-	rtRayHit rtRenderer::rayTrace(objectSet& objects, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, rtRayHit originPoint)
+	rtRayHit rtRenderer::rayTrace(rtScene::objectSet& objects, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, rtRayHit originPoint)
 	{
 		//The intersection data of the closest intersection
 		rtRayHit nearestHit;
@@ -211,7 +211,7 @@ namespace rtGraphics
 
 	///Ray marching methods
 	//Ray trace a single ray and return the color at the intersection
-	rtColorf rtRenderer::rayMarch(objectSet& objects, lightSet& lights, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, int currBounce, int maxBounces, rtRayHit originPoint)
+	rtColorf rtRenderer::rayMarch(rtScene::objectSet& objects, rtScene::lightSet& lights, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, int currBounce, int maxBounces, rtRayHit originPoint)
 	{
 		//Find the closest object the ray hits
 		rtRayHit hitData = rayMarch(objects, P, D, nearClip, farClip, originPoint);
@@ -220,7 +220,7 @@ namespace rtGraphics
 	}
 
 	//Ray trace a single ray and return the ray hit data
-	rtRayHit rtRenderer::rayMarch(objectSet& objects, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, rtRayHit originPoint)
+	rtRayHit rtRenderer::rayMarch(rtScene::objectSet& objects, rtVec3f& P, rtVec3f& D, float nearClip, float farClip, rtRayHit originPoint)
 	{
 		//The intersection data of the closest intersection
 		rtRayHit hitData;

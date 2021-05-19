@@ -9,12 +9,13 @@ using namespace std;
 
 namespace rtGraphics
 {
-	typedef shared_ptr<vector<rtLight*>> lightSet;
-	typedef shared_ptr<vector<rtObject*>> objectSet;
-
 	//A data-structure to contain the lights and objects in a scene
 	class rtScene
 	{
+	public:
+		typedef shared_ptr<vector<rtLight*>> lightSet;
+		typedef shared_ptr<vector<rtObject*>> objectSet;
+
 	private:
 		//The addresses of the lights and objects are stored in an unordered hash-set
 		lightSet lights;
@@ -46,7 +47,7 @@ namespace rtGraphics
 
 	///In-line method definitions
 	//Light Methods
-	inline lightSet rtScene::getLights() const { return lights; }
+	inline rtScene::lightSet rtScene::getLights() const { return lights; }
 
 	inline void rtScene::addLight(rtLight* lightToAdd)
 	{
@@ -58,7 +59,7 @@ namespace rtGraphics
 	inline void rtScene::clearLights()						{ lights->clear(); }
 
 	//Object Methods
-	inline objectSet rtScene::getObjects() const			{ return objects; }
+	inline rtScene::objectSet rtScene::getObjects() const			{ return objects; }
 
 	inline void rtScene::addObject(rtObject* objectToAdd)
 	{

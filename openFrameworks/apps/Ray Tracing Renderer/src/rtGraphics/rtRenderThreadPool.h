@@ -17,8 +17,8 @@ namespace rtGraphics
 		//Render data
 		renderMode RenderMode;
 		//Scene data
-		objectSet objects;
-		lightSet lights;
+		rtScene::objectSet objects;
+		rtScene::lightSet lights;
 		//Camera data
 		rtVec3f camPos;
 		float nearClip, farClip;
