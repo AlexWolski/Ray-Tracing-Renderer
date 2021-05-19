@@ -1,6 +1,7 @@
 #pragma once
 
 #include <math.h>
+#include <stdexcept>
 
 namespace rtGraphics
 {
@@ -76,6 +77,8 @@ namespace rtGraphics
 		//Equality
 		bool operator==(const rtVec3f& rhs) const;
 		bool operator!=(const rtVec3f& rhs) const;
+		//Array Index
+		float operator[](int index) const;
 	};
 
 	///In-line method definitions
@@ -375,5 +378,25 @@ namespace rtGraphics
 	inline bool rtVec3f::operator!=(const rtVec3f& rhs) const
 	{
 		return !(*this == rhs);
+	}
+
+	//Array Index
+	inline float rtVec3f::operator[](int index) const
+	{
+		switch (index)
+		{
+		case 0:
+			return x;
+			break;
+		case 1:
+			return y;
+			break;
+		case 2:
+			return z;
+			break;
+		default:
+			throw std::out_of_range("Cannot access index " + index);
+			break;
+		}
 	}
 }
