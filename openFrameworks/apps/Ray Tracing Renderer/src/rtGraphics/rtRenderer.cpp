@@ -48,10 +48,10 @@ namespace rtGraphics
 			rtColorf specular;
 
 			//Iterate over the all the lights
-			for (auto lightPtr = lights->begin(); lightPtr != lights->end(); lightPtr++)
+			for (int lightIndex = 0; lightIndex < lights->size(); lightIndex++)
 			{
 				//Get a pointer to the current light
-				rtLight* currLight = lightPtr->second;
+				rtLight* currLight = lights->at(lightIndex);
 				//Cache the ambient and light intensity
 				float incidentIntensity = currLight->getIncidentIntensity();
 				float ambientIntensity = currLight->getAmbientIntensity();
@@ -186,10 +186,10 @@ namespace rtGraphics
 		nearestHit->distance = INFINITY;
 
 		//Iterate over the all the objects
-		for (auto objectPtr = objects->begin(); objectPtr != objects->end(); objectPtr++)
+		for (int objectIndex = 0; objectIndex < objects->size(); objectIndex++)
 		{
 			//Get a pointer to the current object
-			rtObject* currObject = objectPtr->second;
+			rtObject* currObject = objects->at(objectIndex);
 
 			//Determine if the ray intersects the object
 			shared_ptr<rtRayHit> hitData = currObject->rayIntersect(P, D, nearClip, farClip, originPoint);
@@ -234,10 +234,10 @@ namespace rtGraphics
 			float nearestDist = INFINITY;
 
 			//Iterate over the all the objects
-			for (auto objectPtr = objects->begin(); objectPtr != objects->end(); objectPtr++)
+			for (int objectIndex = 0; objectIndex < objects->size(); objectIndex++)
 			{
 				//Get a pointer to the current object
-				rtObject* currObject = objectPtr->second;
+				rtObject* currObject = objects->at(objectIndex);
 
 				//Determine the distance from the ray to the current object
 				hitData = currObject->sdf(marchedRay);

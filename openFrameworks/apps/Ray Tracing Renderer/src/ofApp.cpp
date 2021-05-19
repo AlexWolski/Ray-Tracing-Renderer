@@ -16,12 +16,12 @@ void ofApp::setup()
 	///Create a red, matte sphere and add it to the scene
 	rtMat shinyRed(rtColorf(0.2f, 0.0f, 0.0f), rtColorf::red, rtColorf::white, 200.0f);
 	rtObject* redSphere = new rtSphereObject(rtVec3f(25.0f, -25.0f, 0.0f), 20.0f, shinyRed);
-	demoScene->addObject("red sphere", redSphere);
+	demoScene->addObject(redSphere);
 
 	///Create a blue, reflective sphere and add it to the scene
 	rtMat reflectiveBlue(rtColorf(0.0f, 0.0f, 0.2f), rtColorf::blue, rtColorf::white, 500.0f, 0.3f);
 	rtObject* blueSphere = new rtSphereObject(rtVec3f(-25.0f, -25.0f, 0.0f), 20.0f, reflectiveBlue);
-	demoScene->addObject("blue sphere", blueSphere);
+	demoScene->addObject(blueSphere);
 	
 	///Create a mesh and add it to the scene
 	rtMesh triangleMesh;
@@ -32,16 +32,16 @@ void ofApp::setup()
 
 	rtMat matteGreen(rtColorf(0.0f, 0.2f, 0.0f), rtColorf::green, rtColorf(0.6f), 20.0f);
 	rtObject* triangle = new rtMeshObject(triangleMesh, matteGreen);
-	demoScene->addObject("triangle", triangle);
+	demoScene->addObject(triangle);
 
 	//Create a torus and add it to the scene
 	rtTorusObject* greenTorus = new rtTorusObject(rtVec3f(0.0f, -60.0f, -20.0f), 20.0f, 5.0f, matteGreen);
-	demoScene->addObject("green torus", greenTorus);
+	demoScene->addObject(greenTorus);
 
 
 	//Create a blue cylinder and add it to the scene
 	rtCylinderObject* blueCylinder = new rtCylinderObject(rtVec3f(50.0f, 80.0f, 0.0f), 10.0f, reflectiveBlue);
-	demoScene->addObject("blue cylinder", blueCylinder);
+	demoScene->addObject(blueCylinder);
 
 	//Create a box surrounding the scene
 	rtMesh boxMesh;
@@ -63,23 +63,23 @@ void ofApp::setup()
 
 	rtMat matteWhite(rtColorf(0.2f), rtColorf::white, rtColorf(0.4f), 20.0f);
 	rtObject* box = new rtMeshObject(boxMesh, matteWhite);
-	demoScene->addObject("box", box);
+	demoScene->addObject(box);
 
 	//Create a ground plane under the scene
 	rtPlaneObject* whitePlane = new rtPlaneObject(rtVec3f(0.0f, -70.0f, 0.0f), rtVec3f(0.0f, 1.0f, 0.0f), matteWhite);
-	demoScene->addObject("white plane", whitePlane);
+	demoScene->addObject(whitePlane);
 
 	///Create a light and add it to the scene
 	rtLight* pointLight = new rtLight(rtVec3f(-50.0f, 40.0f, -60.0f), rtColorf(0.3f), rtColorf(0.9f), rtColorf(0.8f));
 	pointLight->setAmbientIntensity(1.0f);
 	pointLight->setIncidentIntensity(0.5f);
-	demoScene->addLight("left light", pointLight);
+	demoScene->addLight(pointLight);
 
 	///Create an additional light and add it to the scene
 	pointLight = new rtLight(rtVec3f(50.0f, 40.0f, -60.0f), rtColorf(0.3f), rtColorf(0.9f), rtColorf(0.8f));
 	pointLight->setAmbientIntensity(1.0f);
 	pointLight->setIncidentIntensity(0.5f);
-	demoScene->addLight("right light", pointLight);
+	demoScene->addLight(pointLight);
 }
 
 void ofApp::update()
