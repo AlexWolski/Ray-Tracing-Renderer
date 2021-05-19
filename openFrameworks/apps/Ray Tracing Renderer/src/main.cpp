@@ -1,4 +1,3 @@
-#include "ofAppGLFWWindow.h"
 #include "ofAppRunner.cpp"
 #include "ofApp.h"
 

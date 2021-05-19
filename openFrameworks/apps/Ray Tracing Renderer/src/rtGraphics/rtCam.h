@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <chrono>
 #include "ofAppRunner.h"
 #include "ofImage.h"
 #include "ofPixels.h"
@@ -45,6 +46,14 @@ namespace rtGraphics
 		//An rtRenderer instance for this camera
 		rtRenderer renderer;
 
+		///Fps methods
+		//The time when the frame counting began
+		chrono::steady_clock::time_point fpsTimer;
+		//Number of frames rendered during this interval
+		int frameCounter;
+		//Number of framed rendered in the last second interval
+		int fps;
+
 		///Buffer methods
 		//Instantiates the frame buffer. If no dimensions are given, the window size is used
 		void createFrameBuffer();
@@ -52,6 +61,10 @@ namespace rtGraphics
 		///Camera methods
 		//Calculates the axes of the viewing coordinates
 		void calcAxes();
+
+		///FPS methods
+		void startFpsTimer();
+		void updateFps();
 
 	public:
 		///Constructors
@@ -72,6 +85,7 @@ namespace rtGraphics
 		float getFarClip() const;
 		int getMaxBounces() const;
 		renderMode getRenderMode() const;
+		int getFps() const;
 		shared_ptr<rtScene> getScene() const;
 		ofPixels* getBufferPixels();
 		rtVec3f getPosition() const;

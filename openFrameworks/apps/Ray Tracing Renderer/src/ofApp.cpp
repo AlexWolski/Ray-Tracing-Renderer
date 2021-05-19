@@ -2,6 +2,11 @@
 
 void ofApp::setup()
 {
+	//Enable depth test to allow for overlay graphics
+	ofEnableDepthTest();
+	//Show the FPS
+	showFps = true;
+
 	///Create the scene and camera
 	demoScene = make_shared<rtScene>();
 	mainCamera = make_shared<rtCam>(rtVec3f(0.0f, 0.0f, -100.0f), rtVec3f(0.0f, -25.0f, 0.0f), rtVec3f::up);
@@ -87,6 +92,16 @@ void ofApp::draw()
 	// If the camera isn't in real-time mode, draw the buffer each frame
 	if (!mainCamera->isEnabled())
 		mainCamera->draw();
+
+	if (showFps)
+		drawFps();
+}
+
+void ofApp::drawFps()
+{
+	int fps = mainCamera->getFps();
+	string fpsString = "FPS: " + to_string(fps);
+	ofDrawBitmapString(fpsString, 10, 20, -1);
 }
 
 void ofApp::keyPressed(int key)
@@ -98,6 +113,8 @@ void ofApp::keyPressed(int key)
 		mainCamera->enable();
 		//Set the rendering mode to ray tracing
 		mainCamera->setRenderMode(renderMode::rayTrace);
+		//Show the fps counter
+		showFps = true;
 	}
 	//When the 'm' key is pressed, render the scene using ray marching
 	else if (key == 'm' || key == 'M')
@@ -110,5 +127,7 @@ void ofApp::keyPressed(int key)
 		mainCamera->clearBuffer();
 		//Start rendering the scene without waiting for it to complete
 		mainCamera->render(false);
+		//Hide the fps counter
+		showFps = false;
 	}
 }
