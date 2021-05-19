@@ -27,11 +27,6 @@ namespace rtGraphics
 		//The index of the current triangle
 		int faceIndex;
 
-		//References to the vertex, face, and normal lists.
-		vecList& vertices = mesh.getVerts();
-		intList& faces = mesh.getFaces();
-		vecList& normals = mesh.getNormals();
-
 		//Iterate over all the triangles in the mesh
 		for (int faceIndex = 0; faceIndex < faces->size(); faceIndex++)
 		{

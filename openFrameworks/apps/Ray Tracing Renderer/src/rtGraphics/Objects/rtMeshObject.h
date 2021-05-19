@@ -13,12 +13,26 @@ namespace rtGraphics
 	{
 	private:
 		rtMesh mesh;
+		vecList vertices;
+		intList faces;
+		vecList normals;
 
 	public:
 		///Constructors
-		rtMeshObject() : mesh(rtMesh()) {}
-		rtMeshObject(rtMesh& mesh) : mesh(mesh) {}
-		rtMeshObject(rtMesh& mesh, rtMat& material) : rtObject(material), mesh(mesh) {}
+		rtMeshObject()
+		{
+			setMesh(rtMesh());
+		}
+
+		rtMeshObject(rtMesh& mesh)
+		{
+			setMesh(mesh);
+		}
+
+		rtMeshObject(rtMesh& mesh, rtMat& material) : rtObject(material)
+		{
+			setMesh(mesh);
+		}
 
 		///Getter & Setter
 		rtMesh& getMesh();
@@ -31,6 +45,16 @@ namespace rtGraphics
 
 	///In-line method definitions
 	//Getter & Setter
-	inline rtMesh& rtMeshObject::getMesh() { return mesh; }
-	inline void rtMeshObject::setMesh(rtMesh& mesh) { this->mesh = mesh; }
+	inline rtMesh& rtMeshObject::getMesh()
+	{
+		return mesh;
+	}
+
+	inline void rtMeshObject::setMesh(rtMesh& mesh)
+	{
+		this->mesh = mesh;
+		vertices = mesh.getVerts();
+		faces = mesh.getFaces();
+		normals = mesh.getNormals();
+	}
 }
