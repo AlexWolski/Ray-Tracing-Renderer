@@ -7,3 +7,4 @@
 #include "Objects/rtTorusObject.h"
 #include "Objects/rtPlaneObject.h"
 #include "Objects/rtCylinderObject.h"
+#include "Utilities/ObjImporter.h"

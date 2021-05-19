@@ -16,6 +16,9 @@
     <Filter Include="src\rtGraphics\Data Classes">
       <UniqueIdentifier>{acc51117-caf7-4538-a596-d44648317bff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\rtGraphics\Utilities">
+      <UniqueIdentifier>{ea10d946-6562-40e6-937b-96667e47291a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -118,6 +121,9 @@
     </ClInclude>
     <ClInclude Include="src\rtGraphics\Objects\rtCylinderObject.h">
       <Filter>src\rtGraphics\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rtGraphics\Utilities\ObjImporter.h">
+      <Filter>src\rtGraphics\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
