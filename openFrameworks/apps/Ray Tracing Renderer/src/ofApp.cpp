@@ -9,39 +9,18 @@ void ofApp::setup()
 
 	///Create the scene and camera
 	demoScene = make_shared<rtScene>();
-	mainCamera = make_shared<rtCam>(rtVec3f(0.0f, 0.0f, -100.0f), rtVec3f(0.0f, -25.0f, 0.0f), rtVec3f::up);
+	mainCamera = make_shared<rtCam>(rtVec3f(-90.0f, 70.0f, 0.0f), rtVec3f(0.0f, 50.0f, 0.0f), rtVec3f::up);
 	mainCamera->setFov(150.0f);
 	mainCamera->setScene(demoScene);
 
-	///Create a red, matte sphere and add it to the scene
-	rtMat shinyRed(rtColorf(0.2f, 0.0f, 0.0f), rtColorf::red, rtColorf::white, 200.0f);
-	rtObject* redSphere = new rtSphereObject(rtVec3f(25.0f, -25.0f, 0.0f), 20.0f, shinyRed);
-	demoScene->addObject(redSphere);
+	//Create materials
+	rtMat matteWhite(rtColorf(0.2f), rtColorf::white, rtColorf(0.4f), 20.0f);
+	rtMat matteBrown(rtColorf(0.2f), rtColorf(1.0, 0.56, 0.18), rtColorf(0.4f), 20.0f);
 
-	///Create a blue, reflective sphere and add it to the scene
-	rtMat reflectiveBlue(rtColorf(0.0f, 0.0f, 0.2f), rtColorf::blue, rtColorf::white, 500.0f, 0.3f);
-	rtObject* blueSphere = new rtSphereObject(rtVec3f(-25.0f, -25.0f, 0.0f), 20.0f, reflectiveBlue);
-	demoScene->addObject(blueSphere);
-	
-	///Create a mesh and add it to the scene
-	rtMesh triangleMesh;
-	triangleMesh.addVert(rtVec3f(-50.0f, 0.0f, 0.0f));
-	triangleMesh.addVert(rtVec3f(0.0f, 50.0f, 0.0f));
-	triangleMesh.addVert(rtVec3f(50.0f, 0.0f, 0.0f));
-	triangleMesh.addFace(0, 1, 2);
-
-	rtMat matteGreen(rtColorf(0.0f, 0.2f, 0.0f), rtColorf::green, rtColorf(0.6f), 20.0f);
-	rtObject* triangle = new rtMeshObject(triangleMesh, matteGreen);
-	demoScene->addObject(triangle);
-
-	//Create a torus and add it to the scene
-	rtTorusObject* greenTorus = new rtTorusObject(rtVec3f(0.0f, -60.0f, -20.0f), 20.0f, 5.0f, matteGreen);
-	demoScene->addObject(greenTorus);
-
-
-	//Create a blue cylinder and add it to the scene
-	rtCylinderObject* blueCylinder = new rtCylinderObject(rtVec3f(50.0f, 80.0f, 0.0f), 10.0f, reflectiveBlue);
-	demoScene->addObject(blueCylinder);
+	//Create a fox
+	rtMesh foxMesh = ObjImoprter::loadOBJ("Models\\fox.obj");
+	rtObject* fox = new rtMeshObject(foxMesh, matteBrown);
+	demoScene->addObject(fox);
 
 	//Create a box surrounding the scene
 	rtMesh boxMesh;
@@ -61,29 +40,20 @@ void ofApp::setup()
 	boxMesh.addFace(2, 6, 7); boxMesh.addFace(7, 3, 2);		//Top Wall
 	boxMesh.addFace(4, 0, 1); boxMesh.addFace(1, 5, 4);		//Bottom Wall
 
-	rtMat matteWhite(rtColorf(0.2f), rtColorf::white, rtColorf(0.4f), 20.0f);
 	rtObject* box = new rtMeshObject(boxMesh, matteWhite);
 	demoScene->addObject(box);
 
-	//Create a ground plane under the scene
-	rtPlaneObject* whitePlane = new rtPlaneObject(rtVec3f(0.0f, -70.0f, 0.0f), rtVec3f(0.0f, 1.0f, 0.0f), matteWhite);
-	demoScene->addObject(whitePlane);
-
 	///Create a light and add it to the scene
-	rtLight* pointLight = new rtLight(rtVec3f(-50.0f, 40.0f, -60.0f), rtColorf(0.3f), rtColorf(0.9f), rtColorf(0.8f));
+	rtLight* pointLight = new rtLight(rtVec3f(-50.0f, 70.0f, -60.0f), rtColorf(0.3f), rtColorf(0.9f), rtColorf(0.8f));
 	pointLight->setAmbientIntensity(1.0f);
 	pointLight->setIncidentIntensity(0.5f);
 	demoScene->addLight(pointLight);
 
 	///Create an additional light and add it to the scene
-	pointLight = new rtLight(rtVec3f(50.0f, 40.0f, -60.0f), rtColorf(0.3f), rtColorf(0.9f), rtColorf(0.8f));
+	pointLight = new rtLight(rtVec3f(-50.0f, 70.0f, 60.0f), rtColorf(0.3f), rtColorf(0.9f), rtColorf(0.8f));
 	pointLight->setAmbientIntensity(1.0f);
 	pointLight->setIncidentIntensity(0.5f);
 	demoScene->addLight(pointLight);
-
-	rtMesh foxMesh = ObjImoprter::loadOBJ("Models\\fox.obj");
-	rtObject* fox = new rtMeshObject(foxMesh, matteWhite);
-	demoScene->addObject(fox);
 }
 
 void ofApp::update()
