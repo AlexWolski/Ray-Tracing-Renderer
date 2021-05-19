@@ -3,12 +3,12 @@
 namespace rtGraphics
 {
 	//Ray-Sphere Intersection
-	shared_ptr<rtRayHit> rtSphereObject::rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint)
+	rtRayHit rtSphereObject::rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, rtRayHit originPoint)
 	{
 		//Create a struct to store the ray cast data.
-		shared_ptr<rtRayHit> hitData = make_shared<rtRayHit>();
+		rtRayHit hitData;
 		//By default, set the hit flag to false
-		hitData->hit = false;
+		hitData.hit = false;
 
 		//Define an intermediate variable M as the vector from the sphere center to the ray origin
 		rtVec3f M = P - center;
@@ -38,7 +38,7 @@ namespace rtGraphics
 		float t;
 
 		//If the ray is on the object surface, ignore the intersection at that point
-		if (originPoint != nullptr && originPoint->hitObject == this)
+		if (originPoint.hitObject == this)
 		{
 			//Get the absolute value of each intersection distance
 			float tSubAbs = abs(tSub);
@@ -71,11 +71,11 @@ namespace rtGraphics
 		hitNormal.normalize();
 
 		//Store the hit data into the struct
-		hitData->hit = true;
-		hitData->hitObject = this;
-		hitData->distance = t;
-		hitData->hitPoint = hitPoint;
-		hitData->hitNormal = hitNormal;
+		hitData.hit = true;
+		hitData.hitObject = this;
+		hitData.distance = t;
+		hitData.hitPoint = hitPoint;
+		hitData.hitNormal = hitNormal;
 
 		//Return the intersection data
 		return hitData;
@@ -83,11 +83,11 @@ namespace rtGraphics
 
 
 	//Sphere signed distance function
-	shared_ptr<rtRayHit> rtSphereObject::sdf(rtVec3f P)
+	rtRayHit rtSphereObject::sdf(rtVec3f P)
 	{
-		shared_ptr<rtRayHit> distData = make_shared<rtRayHit>();
-		distData->distance = (P - center).magnitude() - radius;
-		distData->hitObject = this;
+		rtRayHit distData;
+		distData.distance = (P - center).magnitude() - radius;
+		distData.hitObject = this;
 
 		return distData;
 	}

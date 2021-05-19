@@ -3,17 +3,17 @@
 namespace rtGraphics
 {
 	//Ray-Torus Intersection
-	shared_ptr<rtRayHit> rtTorusObject::rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, shared_ptr<rtRayHit> originPoint)
+	rtRayHit rtTorusObject::rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, rtRayHit originPoint)
 	{
 		//To-do: Implement torus ray intersection
-		shared_ptr<rtRayHit> hitData = make_shared<rtRayHit>();
-		hitData->hit = false;
+		rtRayHit hitData;
+		hitData.hit = false;
 		return hitData;
 	}
 
 
 	//Torus signed distance function
-	shared_ptr<rtRayHit> rtTorusObject::sdf(rtVec3f P)
+	rtRayHit rtTorusObject::sdf(rtVec3f P)
 	{
 		rtVec3f localPoint = P - center;
 
@@ -31,9 +31,9 @@ namespace rtGraphics
 		float distance = majorDist - minorRadius;
 
 		//Construct the rtRayHit struct and return it
-		shared_ptr<rtRayHit> distData = make_shared<rtRayHit>();
-		distData->distance = distance;
-		distData->hitObject = this;
+		rtRayHit distData;
+		distData.distance = distance;
+		distData.hitObject = this;
 
 		return distData;
 	}
