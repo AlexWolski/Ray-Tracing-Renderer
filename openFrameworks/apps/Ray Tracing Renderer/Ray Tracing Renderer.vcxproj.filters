@@ -125,5 +125,8 @@
     <ClInclude Include="src\rtGraphics\Utilities\ObjImporter.h">
       <Filter>src\rtGraphics\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="src\rtGraphics\Data Classes\rtBoundingBox.h">
+      <Filter>src\rtGraphics\Data Classes</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
