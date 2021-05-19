@@ -207,6 +207,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ofApp.h" />
+    <ClInclude Include="src\rtGraphics\BVH.h" />
     <ClInclude Include="src\rtGraphics\Data Classes\Data Types.h" />
     <ClInclude Include="src\rtGraphics\Data Classes\rtBoundingBox.h" />
     <ClInclude Include="src\rtGraphics\Data Classes\rtColorf.h" />

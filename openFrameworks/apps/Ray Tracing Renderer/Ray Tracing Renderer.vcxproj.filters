@@ -128,5 +128,8 @@
     <ClInclude Include="src\rtGraphics\Data Classes\rtBoundingBox.h">
       <Filter>src\rtGraphics\Data Classes</Filter>
     </ClInclude>
+    <ClInclude Include="src\rtGraphics\BVH.h">
+      <Filter>src\rtGraphics</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
