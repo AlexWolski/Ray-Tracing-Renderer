@@ -110,65 +110,64 @@ namespace rtGraphics
 			sourceFace = originPoint.hitFaceIndex;
 		}
 
+		//Get a list all the objects that were intersected
+		vector<int> intersectData = faceBVH.intersect(P, D);
+
 		//The distance to the closest intersection point
 		float tmin = farClip;
+		//The index of the current triangle
+		int faceIndex;
 
-		//Test the BVH for intersection
-		pair<bool, int> intersectData = faceBVH.intersect(P, D);
-
-		//If the ray doesn't intersect the BVH, return an empty hitData instance
-		if (!intersectData.first)
-			return hitData;
-
-		//If the ray did intersect the BVH, get the face index
-		int faceIndex = intersectData.second;
-
-		//If the ray origin is on the current face, then it does not intersect
-		if (onSurface && sourceFace == faceIndex)
-			return hitData;
-
-		//Get the array of vertex indices for the given face
-		array<int, 3>& face = faces->at(faceIndex);
-		//Get the first vertex
-		rtVec3f p0 = vertices->at(face.at(0));
-		//Get the normal using the face index
-		rtVec3f normal = normals->at(faceIndex);
-
-		//Calculate the plane constant
-		float k = p0.dot(normal);
-		//Calculate the distance to the plane intersection point
-		float t = (k - P.dot(normal)) / (D.dot(normal));
-
-		//If the ray is visible, determine if the ray hit the triangle
-		if (t > nearClip && t < tmin)
+		//Iterate over all the triangles in the mesh
+		for (int faceIndex : intersectData)
 		{
-			//Calculate the intersection point using t
-			rtVec3f r = P + (D * t);
+			//If the ray origin is on the current face, then it does not intersect
+			if (onSurface && sourceFace == faceIndex)
+				continue;
 
-			//Get the remaining two points
-			rtVec3f p1 = vertices->at(face.at(1));
-			rtVec3f p2 = vertices->at(face.at(2));
+			//Get the array of vertex indices for the given face
+			array<int, 3>& face = faces->at(faceIndex);
+			//Get the first vertex
+			rtVec3f p0 = vertices->at(face.at(0));
+			//Get the normal using the face index
+			rtVec3f normal = normals->at(faceIndex);
 
-			//Find the edge vertices
-			rtVec3f e0 = p1 - p0;
-			rtVec3f e1 = p2 - p1;
-			rtVec3f e2 = p0 - p2;
+			//Calculate the plane constant
+			float k = p0.dot(normal);
+			//Calculate the distance to the plane intersection point
+			float t = (k - P.dot(normal)) / (D.dot(normal));
 
-			//If the hit point is on the inside of each edge vector, it is inside the triangle
-			if ((e0.getCrossed(r - p0)).dot(normal) >= 0 &&
-				(e1.getCrossed(r - p1)).dot(normal) >= 0 &&
-				(e2.getCrossed(r - p2)).dot(normal) >= 0)
+			//If the ray is visible, determine if the ray hit the triangle
+			if (t > nearClip && t < tmin)
 			{
-				//Update the distance of the closest intersection
-				tmin = t;
+				//Calculate the intersection point using t
+				rtVec3f r = P + (D * t);
 
-				//Store the hit data into the struct
-				hitData.hit = true;
-				hitData.hitObject = this;
-				hitData.distance = tmin;
-				hitData.hitPoint = r;
-				hitData.hitNormal = normal;
-				hitData.hitFaceIndex = faceIndex;
+				//Get the remaining two points
+				rtVec3f p1 = vertices->at(face.at(1));
+				rtVec3f p2 = vertices->at(face.at(2));
+
+				//Find the edge vertices
+				rtVec3f e0 = p1 - p0;
+				rtVec3f e1 = p2 - p1;
+				rtVec3f e2 = p0 - p2;
+
+				//If the hit point is on the inside of each edge vector, it is inside the triangle
+				if ((e0.getCrossed(r - p0)).dot(normal) >= 0 &&
+					(e1.getCrossed(r - p1)).dot(normal) >= 0 &&
+					(e2.getCrossed(r - p2)).dot(normal) >= 0)
+				{
+					//Update the distance of the closest intersection
+					tmin = t;
+
+					//Store the hit data into the struct
+					hitData.hit = true;
+					hitData.hitObject = this;
+					hitData.distance = tmin;
+					hitData.hitPoint = r;
+					hitData.hitNormal = normal;
+					hitData.hitFaceIndex = faceIndex;
+				}
 			}
 		}
 
