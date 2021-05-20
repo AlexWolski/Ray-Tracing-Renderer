@@ -22,7 +22,7 @@ namespace rtGraphics
 		{
 			rtBoundingBox boundingBox;
 			T object;
-			shared_ptr<ObjectNode> left, right;
+			shared_ptr<ObjectNode> left, right = nullptr;
 		};
 
 		//A list of primitive objects to store and their bounding boxes
@@ -100,14 +100,16 @@ namespace rtGraphics
 		for (primitivePair pair : primitives)
 		{
 			rtBoundingBox boundingBox = pair.first;
+			rtVec3f minBB = boundingBox.getMin();
+			rtVec3f maxBB = boundingBox.getMax();
 
 			//Update the maximum and minimum points
 			for (int axis = 0; axis < 3; axis++)
 			{
-				if (boundingBox[axis] < min[axis])
-					min[axis] = boundingBox[axis];
-				if (boundingBox[axis] > max[axis])
-					max[axis] = boundingBox[axis];
+				if (minBB[axis] < min[axis])
+					min[axis] = minBB[axis];
+				if (maxBB[axis] > max[axis])
+					max[axis] = maxBB[axis];
 			}
 		}
 
@@ -115,6 +117,7 @@ namespace rtGraphics
 	}
 
 	//Finds the axis in which the given objects are the most spread out
+	//TO-DO: Move to the bounding box class
 	template <class T>
 	inline int BVH<T>::getLongestAxis(rtBoundingBox boundingBox)
 	{
