@@ -1,4 +1,6 @@
 #pragma once
+
+#include <stdlib.h>
 #include "rtObject.h"
 #include "rtMesh.h"
 #include "../BVH.h"

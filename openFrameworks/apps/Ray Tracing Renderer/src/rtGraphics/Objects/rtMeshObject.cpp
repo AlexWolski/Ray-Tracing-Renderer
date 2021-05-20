@@ -77,6 +77,16 @@ namespace rtGraphics
 			}
 		}
 
+		//If the bounding volume is too thin on an axis, increase its width
+		for (int axis = 0; axis < 3; axis++)
+		{
+			if (abs(max[axis] - min[axis]) < 0.001f)
+			{
+				max += 0.1f;
+				min -= 0.1f;
+			}
+		}
+
 		return rtBoundingBox(min, max);
 	}
 
