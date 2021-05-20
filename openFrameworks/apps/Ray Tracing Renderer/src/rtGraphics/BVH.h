@@ -62,6 +62,17 @@ namespace rtGraphics
 	inline void BVH<T>::construct(primitiveList primitives)
 	{
 		computeCentroids();
+
+		//Calculate the bounding box that encapsulates all the primitives
+		rtBoundingBox rootBoundingBox = encapsulae(primitives);
+
+		//Create the root node
+		rootNode.reset();
+		rootNode = make_shared<ObjectNode>();
+		rootNode->boundingBox = rootBoundingBox;
+
+		//Recursively build the BVH
+		branchNode(rootNode, primitives);
 	}
 
 	//Compute the centroid of each bounding box
