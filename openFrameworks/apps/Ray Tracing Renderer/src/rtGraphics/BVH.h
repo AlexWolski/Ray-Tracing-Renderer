@@ -38,8 +38,10 @@ namespace rtGraphics
 		BVH() {};
 		BVH(primitiveList primitives);
 
-		//Creates a new binary object tree from the given objects
+		//Construct the tree given a list of primitives and their bounding boxes
 		void construct(primitiveList primitives);
+		//Creates a bounding box that encapsulates the given primitives
+		rtBoundingBox encapsulae(primitiveList primitives);
 	};
 
 
@@ -63,14 +65,39 @@ namespace rtGraphics
 	{
 		centroids.clear();
 
-		for (pair<rtBoundingBox, T> primitive : primitives)
+		for (primitivePair pair : primitives)
 		{
-			rtBoundingBox boundingBox = primitive.first;
+			rtBoundingBox boundingBox = pair.first;
 
 			rtVec3f boxSize = boundingBox.getMax() - boundingBox.getMin();
 			rtVec3f centroid = boundingBox.getMin() + (boxSize * 0.5f);
 
 			centroids.push_back(centroid);
 		}
+	}
+
+	//Creates a bounding box that encapsulates the given primitives
+	template <class T>
+	inline rtBoundingBox BVH<T>::encapsulae(primitiveList primitives)
+	{
+		rtVec3f min(INFINITY);
+		rtVec3f max(-INFINITY);
+
+		//Loop throuh all objects in the list
+		for (primitivePair pair : primitives)
+		{
+			rtBoundingBox boundingBox = pair.first;
+
+			//Update the maximum and minimum points
+			for (int axis = 0; axis < 3; axis++)
+			{
+				if (boundingBox[axis] < min[axis])
+					min[axis = boundingBox[axis];
+				if (boundingBox[axis] > max[axis])
+					max[axis = boundingBox[axis]
+			}
+		}
+
+		return rtBoundingBox(min, max);
 	}
 }
