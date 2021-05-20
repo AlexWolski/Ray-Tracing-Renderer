@@ -13,7 +13,8 @@ namespace rtGraphics
 	class BVH
 	{
 	public:
-		typedef vector<pair<rtBoundingBox, T>> primitiveInfo;
+		typedef pair<rtBoundingBox, T> primitivePair;
+		typedef vector<primitivePair> primitiveList;
 
 	private:
 		//A private, nested node class to form the binary tree
@@ -25,7 +26,7 @@ namespace rtGraphics
 		};
 
 		//A list of primitive objects to store and their bounding boxes
-		primitiveInfo primitives;
+		primitiveList primitives;
 		//The centroids of the bounding boxes
 		vector<rtVec3f> centroids;
 		//The root of the binary object tree
@@ -35,22 +36,23 @@ namespace rtGraphics
 
 	public:
 		BVH() {};
-		BVH(primitiveInfo primitives);
+		BVH(primitiveList primitives);
 
-		void construct(primitiveInfo primitives);
+		//Creates a new binary object tree from the given objects
+		void construct(primitiveList primitives);
 	};
 
 
 	//Constructor
 	template <class T>
-	inline BVH<T>::BVH(primitiveInfo primitives)
+	inline BVH<T>::BVH(primitiveList primitives)
 	{
 		construct(primitives);
 	}
 
 	//Construct the tree given a list of primitives and their bounding boxes
 	template <class T>
-	inline void BVH<T>::construct(primitiveInfo primitives)
+	inline void BVH<T>::construct(primitiveList primitives)
 	{
 		computeCentroids();
 	}

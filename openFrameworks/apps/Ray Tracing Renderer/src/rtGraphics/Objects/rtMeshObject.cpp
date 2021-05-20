@@ -37,7 +37,7 @@ namespace rtGraphics
 	//Create a BVH for the current mesh
 	inline void rtMeshObject::buildBVH()
 	{
-		BVH<int>::primitiveInfo faceInfo;
+		BVH<int>::primitiveList faceInfo;
 
 		//Populate the bounding box and primitive pair vector
 		for (int faceIndex = 0; faceIndex < faces->size(); faceIndex++)
