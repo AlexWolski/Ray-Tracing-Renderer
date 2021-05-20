@@ -39,12 +39,18 @@ namespace rtGraphics
 		//Find on which axis the bounding box is longest
 		int getLongestAxis(rtBoundingBox boundingBox);
 
+		//Recursively search the object tree for an intersection
+		pair<bool, T> intersect(shared_ptr<ObjectNode> subTreeRoot, rtVec3f P, rtVec3f D);
+		bool isLeaf(shared_ptr<ObjectNode> node);
+
 	public:
 		BVH() {};
 		BVH(primitiveList primitives);
 
 		//Construct the tree given a list of primitives and their bounding boxes
 		void construct(primitiveList primitives);
+		//Test the BVH for an intersection
+		pair<bool, T> intersect(rtVec3f P, rtVec3f D);
 	};
 
 
@@ -207,5 +213,54 @@ namespace rtGraphics
 		}
 
 		return maxAxis;
+	}
+
+	//Test the BVH for an intersection
+	template <class T>
+	inline pair<bool, T> BVH<T>::intersect(rtVec3f P, rtVec3f D)
+	{
+		return intersect(rootNode, P, D);
+	}
+
+	//Recursively search the object tree for an intersection
+	template <class T>
+	inline pair<bool, T> BVH<T>::intersect(shared_ptr<ObjectNode> subTreeRoot, rtVec3f P, rtVec3f D)
+	{
+		//Check if the ray intersects this node
+		bool intersects = subTreeRoot->boundingBox.intersect(P, D);
+
+		if (intersects)
+		{
+			//If the ray intersects and this is a leaf node, return the stored primitive
+			if (isLeaf(subTreeRoot))
+			{
+				return make_pair(true, subTreeRoot->object);
+			}
+			//If the ray intersects but this is not a leaf node, traverse the children nodes
+			else
+			{
+				pair<bool, T> leftResult = intersect(subTreeRoot->left, P, D);
+
+				if (leftResult.first)
+					return leftResult;
+
+				pair<bool, T> rightResult = intersect(subTreeRoot->left, P, D);
+
+				if (rightResult.first)
+					return rightResult;
+			}
+		}
+
+		//If the ray doesn't intersect, return false
+		return make_pair(false, subTreeRoot->object);
+	}
+
+	template <class T>
+	inline bool BVH<T>::isLeaf(shared_ptr<ObjectNode> node)
+	{
+		if (!node->left && !node->right)
+			return true;
+
+		return false;
 	}
 }
