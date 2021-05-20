@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 #include <utility>
 #include "Data Classes/rtBoundingBox.h"
@@ -15,8 +16,20 @@ namespace rtGraphics
 		typedef vector<pair<rtBoundingBox, T>> primitiveInfo;
 
 	private:
+		//A private, nested node class to form the binary tree
+		struct ObjectNode
+		{
+			rtBoundingBox boundingBox;
+			T object;
+			shared_ptr<ObjectNode> left, right;
+		};
+
+		//A list of primitive objects to store and their bounding boxes
 		primitiveInfo primitives;
+		//The centroids of the bounding boxes
 		vector<rtVec3f> centroids;
+		//The root of the binary object tree
+		shared_ptr<ObjectNode> rootNode;
 
 		void computeCentroids();
 
@@ -27,6 +40,8 @@ namespace rtGraphics
 		void construct(primitiveInfo primitives);
 	};
 
+
+	//Constructor
 	template <class T>
 	inline BVH<T>::BVH(primitiveInfo primitives)
 	{
