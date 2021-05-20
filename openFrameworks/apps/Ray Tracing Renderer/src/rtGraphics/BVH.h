@@ -30,7 +30,14 @@ namespace rtGraphics
 		//The root of the binary object tree
 		shared_ptr<ObjectNode> rootNode;
 
+		//A helper function that splits a group of primitives into two children nodes
+		void branchNode(shared_ptr<ObjectNode> subTreeRoot, primitiveList primitives);
+		//Creates a bounding box that encapsulates the given primitives
+		rtBoundingBox encapsulae(primitiveList primitives);
+		//Compute the midpoint of a bounding box
 		rtVec3f computeCentroid(rtBoundingBox boundingBox);
+		//Find on which axis the bounding box is longest
+		int getLongestAxis(rtBoundingBox boundingBox);
 
 	public:
 		BVH() {};
@@ -38,13 +45,6 @@ namespace rtGraphics
 
 		//Construct the tree given a list of primitives and their bounding boxes
 		void construct(primitiveList primitives);
-		//A helper function that splits a group of primitives into two children nodes
-		void branchNode(shared_ptr<ObjectNode> subTreeRoot, primitiveList primitives);
-
-		//Creates a bounding box that encapsulates the given primitives
-		rtBoundingBox encapsulae(primitiveList primitives);
-		//Find on which axis the bounding box is longest
-		int getLongestAxis(rtBoundingBox boundingBox);
 	};
 
 
@@ -69,16 +69,6 @@ namespace rtGraphics
 
 		//Recursively build the BVH
 		branchNode(rootNode, primitives);
-	}
-
-	//Compute the centroid of a bounding box
-	template <class T>
-	inline rtVec3f BVH<T>::computeCentroid(rtBoundingBox boundingBox)
-	{
-		rtVec3f boxSize = boundingBox.getMax() - boundingBox.getMin();
-		rtVec3f centroid = boundingBox.getMin() + (boxSize * 0.5f);
-
-		return centroid;
 	}
 
 	//A helper function that splits a group of primitives into two children nodes
@@ -183,6 +173,16 @@ namespace rtGraphics
 		}
 
 		return rtBoundingBox(min, max);
+	}
+
+	//Compute the midpoint of a bounding box
+	template <class T>
+	inline rtVec3f BVH<T>::computeCentroid(rtBoundingBox boundingBox)
+	{
+		rtVec3f boxSize = boundingBox.getMax() - boundingBox.getMin();
+		rtVec3f centroid = boundingBox.getMin() + (boxSize * 0.5f);
+
+		return centroid;
 	}
 
 	//Finds the axis in which the given objects are the most spread out
