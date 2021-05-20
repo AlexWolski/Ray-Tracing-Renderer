@@ -27,12 +27,10 @@ namespace rtGraphics
 
 		//A list of primitive objects to store and their bounding boxes
 		primitiveList primitives;
-		//The centroids of the bounding boxes
-		vector<rtVec3f> centroids;
 		//The root of the binary object tree
 		shared_ptr<ObjectNode> rootNode;
 
-		void computeCentroids();
+		rtVec3f computeCentroid(rtBoundingBox boundingBox);
 
 	public:
 		BVH() {};
@@ -61,8 +59,6 @@ namespace rtGraphics
 	template <class T>
 	inline void BVH<T>::construct(primitiveList primitives)
 	{
-		computeCentroids();
-
 		//Calculate the bounding box that encapsulates all the primitives
 		rtBoundingBox rootBoundingBox = encapsulae(primitives);
 
@@ -75,28 +71,90 @@ namespace rtGraphics
 		branchNode(rootNode, primitives);
 	}
 
-	//Compute the centroid of each bounding box
+	//Compute the centroid of a bounding box
 	template <class T>
-	inline void BVH<T>::computeCentroids()
+	inline rtVec3f BVH<T>::computeCentroid(rtBoundingBox boundingBox)
 	{
-		centroids.clear();
+		rtVec3f boxSize = boundingBox.getMax() - boundingBox.getMin();
+		rtVec3f centroid = boundingBox.getMin() + (boxSize * 0.5f);
 
-		for (primitivePair pair : primitives)
-		{
-			rtBoundingBox boundingBox = pair.first;
-
-			rtVec3f boxSize = boundingBox.getMax() - boundingBox.getMin();
-			rtVec3f centroid = boundingBox.getMin() + (boxSize * 0.5f);
-
-			centroids.push_back(centroid);
-		}
+		return centroid;
 	}
 
 	//A helper function that splits a group of primitives into two children nodes
 	template <class T>
 	inline void BVH<T>::branchNode(shared_ptr<ObjectNode> subTreeRoot, primitiveList primitives)
 	{
+		//If only one primitive remains, this is a leaf node
+		if (primitives.size() == 1)
+		{
+			primitivePair pair = primitives[0];
+			subTreeRoot->boundingBox = pair.first;
+			subTreeRoot->object = pair.second;
 
+			return;
+		}
+		//If there are two or more nodes remaining, recursively split them
+		else
+		{
+			//Create a bounding box for the primitives
+			rtBoundingBox boundingBox = encapsulae(primitives);
+			subTreeRoot->boundingBox = boundingBox;
+			//Determine the axis to split on
+			int splitAxis = getLongestAxis(boundingBox);
+
+			//Determine the threshold value between the two groups
+			float min = boundingBox.getMin()[splitAxis];
+			float max = boundingBox.getMax()[splitAxis];
+			float threshold = min + (max - min) * 0.5;
+
+			primitiveList leftGroup;
+			primitiveList rightGroup;
+
+			//Split all primitives into either the left group or right group
+			for (int primitiveIndex = 0; primitiveIndex < primitives.size(); primitiveIndex++)
+			{
+				primitivePair pair = primitives.at(primitiveIndex);
+				rtVec3f centroid = computeCentroid(pair.first);
+
+				if (centroid[splitAxis] < threshold)
+					leftGroup.push_back(pair);
+				else
+					rightGroup.push_back(pair);
+			}
+
+			//If one group is empty, forcibly split the groups
+			if (leftGroup.size() == 0)
+			{
+				for (int index = 0; index < rightGroup.size() / 2; index++)
+				{
+					leftGroup.push_back(rightGroup.back());
+					rightGroup.pop_back();
+				}
+			}
+
+			if (rightGroup.size() == 0)
+			{
+				for (int index = 0; index < leftGroup.size() / 2; index++)
+				{
+					rightGroup.push_back(leftGroup.back());
+					leftGroup.pop_back();
+				}
+			}
+
+			//Recursively generate the rest of the tree
+			if (leftGroup.size() > 0)
+			{
+				subTreeRoot->left = make_shared<ObjectNode>();
+				branchNode(subTreeRoot->left, leftGroup);
+			}
+
+			if (rightGroup.size() > 0)
+			{
+				subTreeRoot->right = make_shared<ObjectNode>();
+				branchNode(subTreeRoot->right, rightGroup);
+			}
+		}
 	}
 
 	//Creates a bounding box that encapsulates the given primitives
@@ -148,6 +206,6 @@ namespace rtGraphics
 			}
 		}
 
-		return maxRange;
+		return maxAxis;
 	}
 }
