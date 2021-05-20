@@ -2,6 +2,84 @@
 
 namespace rtGraphics
 {
+	///Constructors
+	rtMeshObject::rtMeshObject()
+	{
+		setMesh(rtMesh());
+	}
+
+	rtMeshObject::rtMeshObject(rtMesh& mesh)
+	{
+		setMesh(mesh);
+		buildBVH();
+	}
+
+	rtMeshObject::rtMeshObject(rtMesh& mesh, rtMat& material) : rtObject(material)
+	{
+		setMesh(mesh);
+		buildBVH();
+	}
+
+	///Getter & Setter
+	inline rtMesh& rtMeshObject::getMesh()
+	{
+		return mesh;
+	}
+
+	inline void rtMeshObject::setMesh(rtMesh& mesh)
+	{
+		this->mesh = mesh;
+		vertices = mesh.getVerts();
+		faces = mesh.getFaces();
+		normals = mesh.getNormals();
+	}
+
+	//Create a BVH for the current mesh
+	inline void rtMeshObject::buildBVH()
+	{
+		BVH<int>::primitiveInfo faceInfo;
+
+		//Populate the bounding box and primitive pair vector
+		for (int faceIndex = 0; faceIndex < faces->size(); faceIndex++)
+		{
+			rtBoundingBox faceBB = createFaceBB(faceIndex);
+			pair<rtBoundingBox, int> primitivePair = make_pair(faceBB, faceIndex);
+			faceInfo.push_back(primitivePair);
+		}
+
+		//Rebuild the BVH with the face data
+		faceBVH.construct(faceInfo);
+	}
+
+	//Create a bounding box for the specified face
+	inline rtBoundingBox rtMeshObject::createFaceBB(int faceIndex)
+	{
+		//Get the array of vertex indices for the given face
+		array<int, 3>& face = faces->at(faceIndex);
+
+		//The minimum and maximum values for each axis
+		rtVec3f min(INFINITY);
+		rtVec3f max(-INFINITY);
+
+		//Loop through all three vertices of the face
+		for (int vertexIndex = 0; vertexIndex < 3; vertexIndex++)
+		{
+			//Get the vertices
+			rtVec3f vertex = vertices->at(face.at(vertexIndex));
+
+			//Find the minimum and maximum of each axis
+			for (int axis = 0; axis < 3; axis++)
+			{
+				if (vertex[axis] < min[axis])
+					min[axis] = vertex[axis];
+				if (vertex[axis] > max[axis])
+					max[axis] = vertex[axis];
+			}
+		}
+
+		return rtBoundingBox(min, max);
+	}
+
 	//Ray-Mesh Intersection
 	rtRayHit rtMeshObject::rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, rtRayHit originPoint)
 	{

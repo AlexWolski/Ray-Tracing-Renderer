@@ -1,6 +1,7 @@
 #pragma once
 #include "rtObject.h"
 #include "rtMesh.h"
+#include "../BVH.h"
 
 namespace rtGraphics
 {
@@ -12,27 +13,24 @@ namespace rtGraphics
 	class rtMeshObject : public rtObject
 	{
 	private:
+		//The raw mesh data
 		rtMesh mesh;
 		rtMesh::vecList vertices;
 		rtMesh::intList faces;
 		rtMesh::vecList normals;
+		//A BVH containing each mesh face and its respective bounding box
+		BVH<int> faceBVH;
+
+		//Create a BVH for the current mesh
+		void buildBVH();
+		//Create a bounding box for the specified face
+		rtBoundingBox createFaceBB(int faceIndex);
 
 	public:
 		///Constructors
-		rtMeshObject()
-		{
-			setMesh(rtMesh());
-		}
-
-		rtMeshObject(rtMesh& mesh)
-		{
-			setMesh(mesh);
-		}
-
-		rtMeshObject(rtMesh& mesh, rtMat& material) : rtObject(material)
-		{
-			setMesh(mesh);
-		}
+		rtMeshObject();
+		rtMeshObject(rtMesh& mesh);
+		rtMeshObject(rtMesh& mesh, rtMat& material);
 
 		///Getter & Setter
 		rtMesh& getMesh();
@@ -42,19 +40,4 @@ namespace rtGraphics
 		rtRayHit rayIntersect(rtVec3f P, rtVec3f D, float nearClip, float farClip, rtRayHit originPoint);
 		rtRayHit sdf(rtVec3f P);
 	};
-
-	///In-line method definitions
-	//Getter & Setter
-	inline rtMesh& rtMeshObject::getMesh()
-	{
-		return mesh;
-	}
-
-	inline void rtMeshObject::setMesh(rtMesh& mesh)
-	{
-		this->mesh = mesh;
-		vertices = mesh.getVerts();
-		faces = mesh.getFaces();
-		normals = mesh.getNormals();
-	}
 }
