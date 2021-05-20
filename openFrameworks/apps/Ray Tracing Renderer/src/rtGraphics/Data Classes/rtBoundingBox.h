@@ -53,13 +53,13 @@ namespace rtGraphics
 
 			if (inv_direction >= 0.0f)
 			{
-				t0 = (min[axis] - P[axis]) * inv_direction;
-				t1 = (max[axis] - P[axis]) * inv_direction;
+				t0 = (min.at(axis) - P.at(axis)) * inv_direction;
+				t1 = (max.at(axis) - P.at(axis)) * inv_direction;
 			}
 			else
 			{
-				t0 = (max[axis] - P[axis]) * inv_direction;
-				t1 = (min[axis] - P[axis]) * inv_direction;
+				t0 = (max.at(axis) - P.at(axis)) * inv_direction;
+				t1 = (min.at(axis) - P.at(axis)) * inv_direction;
 			}
 
 			float tmin = t0 > nearClip ? t0 : nearClip;

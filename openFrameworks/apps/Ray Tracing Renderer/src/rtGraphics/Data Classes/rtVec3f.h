@@ -30,6 +30,7 @@ namespace rtGraphics
 		float getX() const;
 		float getY() const;
 		float getZ() const;
+		float at(int index) const;
 
 		///Vector Methods
 		float magnitude() const;
@@ -78,7 +79,7 @@ namespace rtGraphics
 		bool operator==(const rtVec3f& rhs) const;
 		bool operator!=(const rtVec3f& rhs) const;
 		//Array Index
-		float operator[](int index) const;
+		float& operator[](int index);
 	};
 
 	///In-line method definitions
@@ -126,6 +127,25 @@ namespace rtGraphics
 	inline float rtVec3f::getZ() const
 	{
 		return z;
+	}
+
+	inline float rtVec3f::at(int index) const
+	{
+		switch (index)
+		{
+		case 0:
+			return x;
+			break;
+		case 1:
+			return y;
+			break;
+		case 2:
+			return z;
+			break;
+		default:
+			throw std::out_of_range("Cannot access index " + index);
+			break;
+		}
 	}
 
 	//Vector Methods
@@ -381,7 +401,7 @@ namespace rtGraphics
 	}
 
 	//Array Index
-	inline float rtVec3f::operator[](int index) const
+	inline float& rtVec3f::operator[](int index)
 	{
 		switch (index)
 		{
